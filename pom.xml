@@ -31,7 +31,7 @@
     <groupId>org.abego.commons</groupId>
     <artifactId>abego-commons</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.5-SNAPSHOT</version>
+    <version>0.9.4</version>
 
     <name>abego Commons</name>
 

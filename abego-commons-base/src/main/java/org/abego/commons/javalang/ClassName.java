@@ -30,7 +30,7 @@ import static org.abego.commons.io.FileUtil.file;
 /**
  * A fully qualified name for a class.
  */
-public class ClassName extends FullyQualifiedName {
+public final class ClassName extends FullyQualifiedName {
 
     private ClassName(String fullyQualifiedClassName) {
         super(fullyQualifiedClassName);

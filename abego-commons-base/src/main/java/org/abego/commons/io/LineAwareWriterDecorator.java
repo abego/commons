@@ -76,6 +76,7 @@ public class LineAwareWriterDecorator extends LineSplittingWriter {
      * {@code characterArray}, {@code startOffset} and {@code length}) with
      * the original writer.</p>
      */
+    @Override
     protected void processLineContent(
             char[] characterArray, int startOffset, int length)
             throws IOException {
@@ -88,6 +89,7 @@ public class LineAwareWriterDecorator extends LineSplittingWriter {
      * <p>The default implementation writes the {@code lineSeparator}
      * with the original writer.</p>
      */
+    @Override
     protected void processLineSeparator(String lineSeparator)
             throws IOException {
         originalWriter().write(lineSeparator);

@@ -30,6 +30,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
+import static org.abego.commons.io.FileUtil.file;
+import static org.abego.commons.io.FileUtil.tempDirectoryForRun;
 import static org.abego.commons.io.FileUtil.tempFileForRun;
 import static org.abego.commons.io.ToFileInHeaderLineWriter.toFileInHeaderLineWriter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -73,5 +75,22 @@ class ToFileInHeaderLineWriterTest {
         Writer writer = toFileInHeaderLineWriter();
 
         assertThrows(IOException.class, writer::close);
+    }
+
+    @Test
+    void bug_ToFileInHeaderLineWriter_fails_when_directory_for_output_is_missing() throws IOException {
+        File dir = tempDirectoryForRun();
+
+        File file = file(dir, "sub/dir/hello.txt");
+        String text = "hello\nworld!";
+
+        Writer writer = toFileInHeaderLineWriter();
+
+        writer.write(file.getAbsolutePath());
+        writer.write("\n");
+        writer.write(text);
+        writer.close();
+
+        assertEquals(text, FileUtil.textOf(file));
     }
 }

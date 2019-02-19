@@ -33,7 +33,7 @@
             <val val="&quot;WeakerAccess&quot;"/>
         </annotation>
     </item>
-    <item name='org.abego.commons.javalang.FullyQualifiedName fullyQualifiedName'>
+    <item name="org.abego.commons.javalang.FullyQualifiedName fullName">
         <annotation name='org.jetbrains.annotations.NonNls'/>
     </item>
     <item name='org.abego.commons.javalang.JavaLangUtil'>

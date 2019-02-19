@@ -24,6 +24,8 @@
 
 package org.abego.commons.io;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -32,12 +34,10 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
-
 public class WriterUtil {
 
     WriterUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     // --- Factories ---

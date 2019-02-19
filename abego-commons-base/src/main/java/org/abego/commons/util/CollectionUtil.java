@@ -24,15 +24,16 @@
 
 package org.abego.commons.util;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.util.Collection;
 
-import static org.abego.commons.lang.StringUtil.singleQuotedString_noEscapes;
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
+import static org.abego.commons.lang.StringUtil.singleQuotedStringWithoutEscapes;
 
 public class CollectionUtil {
 
     CollectionUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     /**
@@ -41,15 +42,15 @@ public class CollectionUtil {
      *
      * <p>The text between the quotes is not escaped in any way.</p>
      *
-     * <p>See also {@link org.abego.commons.lang.StringUtil#singleQuotedString_noEscapes(Object)}.</p>
+     * <p>See also {@link org.abego.commons.lang.StringUtil#singleQuotedStringWithoutEscapes(Object)}.</p>
      */
-    public static String singleQuotedStringList_noEscapes(Collection<?> items) {
+    public static String singleQuotedStringListWithoutEscapes(Collection<?> items) {
         StringBuilder sb = new StringBuilder();
         for (Object item : items) {
             if (sb.length() > 0) {
                 sb.append(", ");
             }
-            sb.append(singleQuotedString_noEscapes(item));
+            sb.append(singleQuotedStringWithoutEscapes(item));
         }
         return sb.toString();
     }

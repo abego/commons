@@ -23,9 +23,10 @@
  */
 package org.abego.commons.javalang;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
 
 public class JavaLangUtil {
 
@@ -38,7 +39,7 @@ public class JavaLangUtil {
     public static final String INVALID_CHAR_REPLACEMENT_STRING = "_"; // NON-NLS
 
     JavaLangUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     public static boolean isValidJavaIdentifierCharButNotAtStart(

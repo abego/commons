@@ -31,7 +31,7 @@
     <groupId>org.abego.commons</groupId>
     <artifactId>abego-commons</artifactId>
     <packaging>pom</packaging>
-    <version>0.9.4-SNAPSHOT</version>
+    <version>0.9.4</version>
 
     <name>abego Commons</name>
 
@@ -50,8 +50,13 @@
 
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
 
+        <sonar.scm.provider>git</sonar.scm.provider>
+
+        <!-- version infos -->
         <abego-commons-base.version>${project.version}</abego-commons-base.version>
         <abego-commons-test.version>${project.version}</abego-commons-test.version>
+        <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
+        <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
         <junit-jupiter.version>5.3.2</junit-jupiter.version>
         <junit-platform-surefire-provider.version>1.1.0</junit-platform-surefire-provider.version>
         <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
@@ -72,6 +77,11 @@
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>${findbugs-jsr305.version}</version>
         </dependency>
     </dependencies>
 
@@ -95,6 +105,30 @@
                 </dependencies>
             </plugin>
 
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+                    <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.pitest</groupId>
@@ -110,5 +144,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

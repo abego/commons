@@ -23,13 +23,13 @@
  */
 package org.abego.commons.resourcebundle;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 public class ResourceBundleUtil {
 
     public static final String PROPERTIES_FILE_EXTENSION = "properties"; // NON-NLS
 
     ResourceBundleUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 }

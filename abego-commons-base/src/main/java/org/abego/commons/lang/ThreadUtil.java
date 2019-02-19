@@ -22,26 +22,31 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.misc;
+package org.abego.commons.lang;
 
-import org.junit.jupiter.api.Test;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class ThreadUtil {
 
-class RunOnCloseTest {
-
-    @Test
-    void happyPath() {
-        StringBuilder log = new StringBuilder();
-        Runnable runnable = () -> log.append("called\n");
-
-        log.append("start\n");
-        RunOnClose r = RunOnClose.runOnClose(runnable);
-        log.append("beforeClose\n");
-        r.close();
-        log.append("closed\n");
-
-        assertEquals("start\nbeforeClose\ncalled\nclosed\n", log.toString());
+    ThreadUtil() {
+        throw new MustNotInstantiateException();
     }
 
+    /**
+     * Pause the execution of the currently executing thread for
+     * <code>millis</code> milliseconds.
+     *
+     * <p>This is wrapper around {@link Thread#sleep(long)} that catches
+     * {@link InterruptedException}s, setting the thread's interrupted flag in
+     * those cases.</p>
+     *
+     * @throws IllegalArgumentException if the value of {@code millis} is negative
+     */
+    public static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

@@ -22,32 +22,30 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.misc;
+package org.abego.commons.lang;
 
-import java.util.function.Consumer;
+public final class RunOnClose implements AutoCloseable {
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
+    private final Runnable runnable;
 
-public class RunOnCloseUtil {
-
-    RunOnCloseUtil() {
-        throwMustNotInstantiate();
+    private RunOnClose(Runnable runnable) {
+        this.runnable = runnable;
     }
 
     /**
-     * Set the value associated with the {@code setter} to
-     * {@code initialValue} and return a {@link RunOnClose} that
-     * {@link RunOnClose#close()} method will set the value to
-     * {@code onCloseValue}.
-     *
-     * <p>Typically this method is used in a {@code try}-with-resources
-     * statement to ensure a changed value is reset to an "original" value
-     * when the try block is exited.</p>
+     * Return a {@link RunOnClose} that {@link #close()} method will run the
+     * the value to {@code onCloseValue}.
      */
-    public static <T> RunOnClose resetOnClose(
-            Consumer<T> setter, T initialValue, T onCloseValue) {
-        setter.accept(initialValue);
-        Runnable runnable = () -> setter.accept(onCloseValue);
-        return RunOnClose.runOnClose(runnable);
+    public static RunOnClose runOnClose(Runnable runnable) {
+
+        return new RunOnClose(runnable);
+    }
+
+    /**
+     * Run this object's {@link Runnable}.
+     */
+    @Override
+    public void close() {
+        runnable.run();
     }
 }

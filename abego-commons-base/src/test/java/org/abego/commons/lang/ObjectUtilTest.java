@@ -27,21 +27,35 @@ package org.abego.commons.lang;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import static org.abego.commons.lang.ObjectUtil.checkType;
 import static org.abego.commons.lang.ObjectUtil.ignore;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ObjectUtilTest {
 
     @Test
-    void constructor() {
+    void constructorFails() {
         assertThrows(MustNotInstantiateException.class, ObjectUtil::new);
     }
 
     @Test
-    void doNothing_ok() {
+    void ignoreOk() {
         ignore(null);
         ignore("a");
         ignore(1);
         ignore(true);
+    }
+
+    @Test
+    void checkTypeOk() {
+        String s = checkType("foo", String.class);
+        assertEquals("foo", s);
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> checkType(1, String.class));
+        assertEquals("Object is not of type java.lang.String (but class java.lang.Integer)", e.getMessage());
+
+
     }
 }

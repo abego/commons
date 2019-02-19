@@ -40,12 +40,12 @@ public class FullyQualifiedName {
     public static final char QUALIFIED_NAME_PART_SEPARATOR_CHAR = '.'; // NON-NLS
     public static final String QUALIFIED_NAME_PART_SEPARATOR_REGEX = "\\."; // NON-NLS
 
-    private final String fullyQualifiedName;
+    private final String fullName;
     private final int endIndexOfPackagePath;
 
     FullyQualifiedName(String fullyQualifiedName) {
 
-        this.fullyQualifiedName = fullyQualifiedNameString(fullyQualifiedName);
+        this.fullName = fullyQualifiedNameString(fullyQualifiedName);
         endIndexOfPackagePath = fullyQualifiedName.lastIndexOf(QUALIFIED_NAME_PART_SEPARATOR_CHAR);
     }
 
@@ -76,16 +76,16 @@ public class FullyQualifiedName {
     }
 
     public String name() {
-        return fullyQualifiedName;
+        return fullName;
     }
 
     public String simpleName() {
-        return fullyQualifiedName.substring(endIndexOfPackagePath + 1);
+        return fullName.substring(endIndexOfPackagePath + 1);
     }
 
     public String parentPath() {
         return endIndexOfPackagePath < 1 ? "" :
-                fullyQualifiedName.substring(0, endIndexOfPackagePath);
+                fullName.substring(0, endIndexOfPackagePath);
     }
 
     public File parentDirectory(File rootDirectory) {
@@ -109,11 +109,11 @@ public class FullyQualifiedName {
             return false;
         }
         FullyQualifiedName that = (FullyQualifiedName) o;
-        return fullyQualifiedName.equals(that.fullyQualifiedName);
+        return fullName.equals(that.fullName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fullyQualifiedName);
+        return Objects.hash(fullName);
     }
 }

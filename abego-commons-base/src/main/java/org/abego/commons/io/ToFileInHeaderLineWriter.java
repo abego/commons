@@ -30,11 +30,13 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import static org.abego.commons.io.FileUtil.ensureDirectoryExists;
+
 /**
  * A writer that handles the first line as a file pathname and writes the
  * remaining lines to the file specified in the first line.
  */
-public class ToFileInHeaderLineWriter extends LineSplittingWriter {
+public final class ToFileInHeaderLineWriter extends LineSplittingWriter {
 
     private final StringBuilder firstLineContent = new StringBuilder();
     private final Charset charset;
@@ -69,8 +71,8 @@ public class ToFileInHeaderLineWriter extends LineSplittingWriter {
             throws IOException {
         if (lineIndex() == 0) {
             File outputFile = new File(firstLineContent.toString());
-            fileWriter =
-                    WriterUtil.writer(outputFile, charset);
+            ensureDirectoryExists(outputFile.getParentFile());
+            fileWriter = WriterUtil.writer(outputFile, charset);
         } else {
             fileWriter.write(lineSeparator);
         }

@@ -27,10 +27,14 @@ package org.abego.commons.lang;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.abego.commons.TestData.SAMPLE_TEXT;
 import static org.abego.commons.TestData.SAMPLE_TEXT_2;
 import static org.abego.commons.TestData.SAMPLE_TEXT_3;
 import static org.abego.commons.lang.ArrayUtil.array;
+import static org.abego.commons.lang.ArrayUtil.iterator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -43,7 +47,7 @@ class ArrayUtilTest {
     }
 
     @Test
-    void array_ok() {
+    void arrayOk() {
         String[] array = array(SAMPLE_TEXT, SAMPLE_TEXT_2, SAMPLE_TEXT_3);
 
         assertEquals(3, array.length);
@@ -53,7 +57,25 @@ class ArrayUtilTest {
     }
 
     @Test
-    void array_empty() {
+    void arrayTestCaseEmptyArrayOk() {
         assertEquals(0, array().length);
+    }
+
+    @Test
+    void iteratorOk() {
+        Iterator<String> iter = iterator(new String[]{"a", "b", "c"});
+
+        assertEquals("a", iter.next());
+        assertEquals("b", iter.next());
+        assertEquals("c", iter.next());
+
+    }
+
+    @Test
+    void iteratorTestCaseWrongNextAccessFails() {
+        Iterator<Object> iter = iterator(new Object[0]);
+
+        assertThrows(NoSuchElementException.class, iter::next);
+
     }
 }

@@ -27,6 +27,7 @@ package org.abego.commons.io;
 
 import org.abego.commons.lang.CharArrayRange;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ import static org.abego.commons.lang.CharacterUtil.CARRIAGE_RETURN_LINEFEED_STRI
 import static org.abego.commons.lang.CharacterUtil.CARRIAGE_RETURN_STRING;
 import static org.abego.commons.lang.CharacterUtil.NEWLINE_CHAR;
 import static org.abego.commons.lang.CharacterUtil.NEWLINE_STRING;
+import static org.abego.commons.lang.CharacterUtil.isLineSeparatorChar;
 
 /**
  * A writer that recognizes the text as a sequence of <em>lines</em>, separated
@@ -52,10 +54,6 @@ public abstract class LineSplittingWriter extends Writer {
 
     protected LineSplittingWriter() {
         super();
-    }
-
-    private static boolean isLineSeparatorChar(char c) {
-        return c == NEWLINE_CHAR || c == CARRIAGE_RETURN_CHAR;
     }
 
     public int lineIndex() {
@@ -178,6 +176,7 @@ public abstract class LineSplittingWriter extends Writer {
 
 
         @Override
+        @Nonnull
         public Iterator<Line> iterator() {
             return new LinesIterator();
         }
@@ -195,6 +194,10 @@ public abstract class LineSplittingWriter extends Writer {
             @Override
             public Line next() {
                 if (!hasNext()) {
+                    // The following line in never executed as all callers of
+                    // `next()` (of this private class) are checking for
+                    // `hasNext()`. However we need this check to silence
+                    // a warning.
                     throw new NoSuchElementException();
                 }
 
@@ -212,9 +215,15 @@ public abstract class LineSplittingWriter extends Writer {
             }
 
             private String scanLineSeparator() {
-                return consumeChar(NEWLINE_CHAR) ? NEWLINE_STRING :
-                        consumeChar(CARRIAGE_RETURN_CHAR) ?
-                                consumeChar(NEWLINE_CHAR) ? CARRIAGE_RETURN_LINEFEED_STRING : CARRIAGE_RETURN_STRING : "";
+                if (consumeChar(NEWLINE_CHAR)) {
+                    return NEWLINE_STRING;
+                }
+
+                if (consumeChar(CARRIAGE_RETURN_CHAR)) {
+                    return consumeChar(NEWLINE_CHAR)
+                            ? CARRIAGE_RETURN_LINEFEED_STRING : CARRIAGE_RETURN_STRING;
+                }
+                return "";
             }
 
             private char peekNextChar() {

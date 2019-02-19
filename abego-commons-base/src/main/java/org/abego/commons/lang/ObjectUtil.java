@@ -24,12 +24,15 @@
 
 package org.abego.commons.lang;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
+import javax.annotation.Nullable;
+import java.text.MessageFormat;
 
 public class ObjectUtil {
 
     ObjectUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     /**
@@ -44,7 +47,24 @@ public class ObjectUtil {
      * </pre>
      */
     public static void ignore(
-            @SuppressWarnings("unused") Object ignoredObject) {
+            @SuppressWarnings("unused") @Nullable Object ignoredObject) {
         // intentionally empty
     }
+
+    /**
+     * Throw an {@link IllegalArgumentException} if the <code>object</code>
+     * is not of the <code>expectedType</code>.
+     */
+    public static <T> T checkType(@Nullable Object object, Class<? extends T> expectedType) {
+        if (!(expectedType.isInstance(object))) {
+            throw new IllegalArgumentException(
+                    MessageFormat.format(
+                            "Object is not of type {0} (but {1})", //NON-NLS
+                            expectedType.getName(),
+                            (object == null ? "null" : object.getClass())));
+        }
+
+        return expectedType.cast(object);
+    }
+
 }

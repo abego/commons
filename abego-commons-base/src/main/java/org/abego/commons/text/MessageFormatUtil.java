@@ -23,14 +23,14 @@
  */
 package org.abego.commons.text;
 
-import java.text.MessageFormat;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
+import java.text.MessageFormat;
 
 public class MessageFormatUtil {
 
     MessageFormatUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     public static int maxArgumentIndexInMessageFormatPattern(String pattern) {

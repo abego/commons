@@ -24,17 +24,16 @@
 
 package org.abego.commons.lang;
 
-import org.abego.commons.misc.RunOnClose;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.io.PrintStream;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
-import static org.abego.commons.misc.RunOnCloseUtil.resetOnClose;
+import static org.abego.commons.lang.RunOnCloseUtil.resetOnClose;
 
 public class SystemUtil {
 
     SystemUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     /**

@@ -24,12 +24,15 @@
 
 package org.abego.commons.lang;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class ArrayUtil {
 
     ArrayUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     // --- Factories ---
@@ -37,5 +40,24 @@ public class ArrayUtil {
     @SafeVarargs
     public static <T> T[] array(T... items) {
         return items;
+    }
+
+    public static <T> Iterator<T> iterator(T[] array) {
+        return new Iterator<T>() {
+            int i = 0;
+
+            @Override
+            public boolean hasNext() {
+                return i < array.length;
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return array[i++];
+            }
+        };
     }
 }

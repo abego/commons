@@ -29,8 +29,8 @@ import java.util.function.Supplier;
 public class CachedValue<T> implements Supplier<T> {
 
     private final Supplier<T> valueProvider;
-    private volatile T value;
-    private volatile boolean hasValue = false;
+    private T value;
+    private boolean hasValue = false;
 
     private CachedValue(Supplier<T> valueProvider) {
         this.valueProvider = valueProvider;
@@ -42,16 +42,13 @@ public class CachedValue<T> implements Supplier<T> {
 
     @Override
     public T get() {
-        if (!hasValue) {
-            synchronized (this) {
-                if (!hasValue) {
-                    value = valueProvider.get();
-                    hasValue = true;
-                }
+        synchronized (this) {
+            if (!hasValue) {
+                value = valueProvider.get();
+                hasValue = true;
             }
+            return value;
         }
-
-        return value;
     }
 
 }

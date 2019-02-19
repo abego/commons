@@ -24,6 +24,7 @@
 
 package org.abego.commons.io;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -42,13 +43,14 @@ public class LineSeparatorsReplacingWriterDecorator
     }
 
     public static Writer lineSeparatorsReplacingWriterDecorator(
-            Writer writer, String lineSeparatorReplacement) {
+            Writer writer, @Nullable String lineSeparatorReplacement) {
         return lineSeparatorReplacement != null ?
                 new LineSeparatorsReplacingWriterDecorator(
                         writer,
                         lineSeparatorReplacement) : writer;
     }
 
+    @Override
     protected void processLineSeparator(String lineSeparator)
             throws IOException {
         originalWriter().write(lineSeparatorReplacement);

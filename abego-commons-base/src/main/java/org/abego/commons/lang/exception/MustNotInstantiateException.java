@@ -28,16 +28,11 @@ package org.abego.commons.lang.exception;
  * Exception to be thrown in a constructor of a class that must not have
  * instances, e.g. in a "Util" or "Helper" class.
  */
-public class MustNotInstantiateException extends RuntimeException {
+public final class MustNotInstantiateException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     public MustNotInstantiateException() {
         super("Class must not create instances");
     }
-
-    public static void throwMustNotInstantiate() {
-        throw new MustNotInstantiateException();
-    }
-
 }

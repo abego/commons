@@ -22,30 +22,59 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.misc;
+package org.abego.commons.seq;
 
-public class RunOnClose implements AutoCloseable {
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
-    private final Runnable runnable;
+final class EmptySeqImpl<T> implements Seq<T> {
 
-    private RunOnClose(Runnable runnable) {
-        this.runnable = runnable;
+    private static final EmptySeqImpl<?> instance = new EmptySeqImpl<>();
+
+    private EmptySeqImpl() {
     }
 
-    /**
-     * Return a {@link RunOnClose} that {@link #close()} method will run the
-     * the value to {@code onCloseValue}.
-     */
-    public static RunOnClose runOnClose(Runnable runnable) {
-
-        return new RunOnClose(runnable);
+    @SuppressWarnings("unchecked")
+    static <T> Seq<T> emptySeqImpl() {
+        return (Seq<T>) instance;
     }
 
-    /**
-     * Run this object's {@link Runnable}.
-     */
     @Override
-    public void close() {
-        runnable.run();
+    public long size() {
+        return 0;
     }
+
+    @Override
+    public T item(int index) {
+        throw new NoSuchElementException();
+    }
+
+    @Override
+    public Stream<T> stream() {
+        return Stream.empty();
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return Collections.emptyIterator();
+    }
+
+    // no need to overwrite equals/hashcode: there is only one EmptySeq
+    // instance and every other object is different from it. So the default
+    // implementation is fine.
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Seq)) return false;
+        return ((Seq<?>) o).isEmpty();
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
 }

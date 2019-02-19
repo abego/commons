@@ -24,7 +24,7 @@
 
 package org.abego.commons.lang;
 
-public class CharArrayRange {
+public final class CharArrayRange {
 
     private final char[] charArray;
     private final int startOffset;

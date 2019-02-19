@@ -26,7 +26,6 @@ package org.abego.commons.lang;
 
 import org.abego.commons.io.PrintStreamToBuffer;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
-import org.abego.commons.misc.RunOnClose;
 import org.junit.jupiter.api.Test;
 
 import java.io.PrintStream;

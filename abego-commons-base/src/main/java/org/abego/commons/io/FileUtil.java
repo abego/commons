@@ -23,8 +23,10 @@
  */
 package org.abego.commons.io;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.util.ScannerUtil;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,12 +39,11 @@ import java.text.MessageFormat;
 import java.util.Scanner;
 
 import static org.abego.commons.io.PrintWriterUtil.printWriter;
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
 
 public class FileUtil {
 
     FileUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     // --- Factories ---
@@ -153,7 +154,7 @@ public class FileUtil {
      *
      * <p>See also {@link File#createTempFile(String, String)}.</p>
      */
-    public static File tempFileForRun(String tempFileSuffix)
+    public static File tempFileForRun(@Nullable String tempFileSuffix)
             throws IOException {
         File file = File.createTempFile("abego", tempFileSuffix);
         file.deleteOnExit();
@@ -162,7 +163,7 @@ public class FileUtil {
 
     /**
      * Return a new temporary file with a suffix <code>tempFileSuffix</code> and
-     * the content of the resource <code>resourceName</code> of <code>class_</code>.
+     * the content of the resource <code>resourceName</code> of <code>theClass</code>.
      *
      * <p>The file will only exist during this virtual machine run and will
      * be deleted automatically when the virtual machine terminates
@@ -171,17 +172,17 @@ public class FileUtil {
      * <p>See also {@link File#createTempFile(String, String)}.</p>
      */
     public static File tempFileForRunFromResource(
-            Class<?> class_, String resourceName,
-            String tempFileSuffix)
+            Class<?> theClass, String resourceName,
+            @Nullable String tempFileSuffix)
             throws IOException {
         File file = tempFileForRun(tempFileSuffix);
-        copyResourceToFile(class_, resourceName, file);
+        copyResourceToFile(theClass, resourceName, file);
         return file;
     }
 
     /**
      * Return a new temporary file with  the content of the resource
-     * <code>resourceName</code> of <code>class_</code>.
+     * <code>resourceName</code> of <code>theClass</code>.
      *
      * <p>The file will only exist during this virtual machine run and will
      * be deleted automatically when the virtual machine terminates
@@ -190,9 +191,9 @@ public class FileUtil {
      * <p>See also {@link File#createTempFile(String, String)}.</p>
      */
     public static File tempFileForRunFromResource(
-            Class<?> class_, String resourceName)
+            Class<?> theClass, String resourceName)
             throws IOException {
-        return tempFileForRunFromResource(class_, resourceName, null);
+        return tempFileForRunFromResource(theClass, resourceName, null);
     }
 
     // --- Queries ---
@@ -342,7 +343,7 @@ public class FileUtil {
      *
      * <p>Do nothing when {@code directory} is {@code null}.</p>
      */
-    public static void ensureDirectoryExists(File directory)
+    public static void ensureDirectoryExists(@Nullable File directory)
             throws IOException {
         if (directory == null) {
             return;
@@ -364,16 +365,16 @@ public class FileUtil {
 
     /**
      * Copy (the content of) the resource <code>resourceName</code> of
-     * <code>class_</code> to <code>file</code>.
+     * <code>theClass</code> to <code>file</code>.
      */
-    public static void copyResourceToFile(Class<?> class_, String resourceName,
+    public static void copyResourceToFile(Class<?> theClass, String resourceName,
                                           File file) throws IOException {
         ensureDirectoryExists(file.getParentFile());
-        InputStream inputStream = class_.getResourceAsStream(resourceName);
+        InputStream inputStream = theClass.getResourceAsStream(resourceName);
         if (inputStream == null) {
             throw new IOException(MessageFormat.format(
                     "Resource `{0}` missing (for class {1})",  // NON-NLS
-                    resourceName, class_.getName()));
+                    resourceName, theClass.getName()));
         }
         InputStreamUtil.write(inputStream, file);
     }

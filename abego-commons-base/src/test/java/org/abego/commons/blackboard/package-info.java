@@ -22,19 +22,7 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.misc;
+@ParametersAreNonnullByDefault
+package org.abego.commons.blackboard;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-class RunOnCloseUtilTest {
-
-    @Test
-    void constructor() {
-        assertThrows(MustNotInstantiateException.class, RunOnCloseUtil::new);
-    }
-
-
-}
+import javax.annotation.ParametersAreNonnullByDefault;

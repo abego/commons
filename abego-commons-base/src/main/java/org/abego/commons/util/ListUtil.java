@@ -24,24 +24,25 @@
 
 package org.abego.commons.util;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.abego.commons.lang.StringUtil.stringOrNull;
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
 
 
 public class ListUtil {
 
     ListUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     // --- Factories ---
 
     @SafeVarargs
-    static <C> List<C> list(C... array) {
+    public static <C> List<C> list(C... array) {
         ArrayList<C> collection = new ArrayList<>();
         Collections.addAll(collection, array);
         return collection;
@@ -49,7 +50,7 @@ public class ListUtil {
 
     // --- Queries ---
 
-    static String nthItemAsStringOrNull(List<?> list, int i) {
+    public static String nthItemAsStringOrNull(List<?> list, int i) {
         Object item = i >= 0 && i < list.size() ? list.get(i) : null;
         return stringOrNull(item);
     }

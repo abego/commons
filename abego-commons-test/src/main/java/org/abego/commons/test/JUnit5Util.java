@@ -25,6 +25,7 @@
 package org.abego.commons.test;
 
 import org.abego.commons.io.FileUtil;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,14 +33,13 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class JUnit5Util {
 
     JUnit5Util() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     public static void assertTextContains(

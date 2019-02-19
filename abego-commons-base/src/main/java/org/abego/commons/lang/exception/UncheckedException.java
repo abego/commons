@@ -25,11 +25,17 @@
 package org.abego.commons.lang.exception;
 
 
+import javax.annotation.Nullable;
+
+/**
+ * An {@link UncheckedException} mainly serves as a wrapper when rethrowing
+ * a checked exception.
+ */
 public class UncheckedException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    private UncheckedException(String message, Throwable cause) {
+    private UncheckedException(String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 

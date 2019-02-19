@@ -22,29 +22,32 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.misc;
+package org.abego.commons.lang;
 
-import org.junit.jupiter.api.Test;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.util.function.Consumer;
 
-import static org.abego.commons.misc.RunOnCloseUtil.resetOnClose;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public final class RunOnCloseUtil {
 
-class ResetOnCloseTest {
+    RunOnCloseUtil() {
+        throw new MustNotInstantiateException();
+    }
 
-    @Test
-    void happyPath() {
-
-        StringBuilder log = new StringBuilder();
-        Consumer<String> setter = log::append;
-
-        log.append("start\n");
-        try (RunOnClose r = resetOnClose(setter, "init\n", "close\n")) {
-            log.append("inside\n");
-        }
-        log.append("end\n");
-
-        assertEquals("start\ninit\ninside\nclose\nend\n", log.toString());
+    /**
+     * Set the value associated with the {@code setter} to
+     * {@code initialValue} and return a {@link RunOnClose} that
+     * {@link RunOnClose#close()} method will set the value to
+     * {@code onCloseValue}.
+     *
+     * <p>Typically this method is used in a {@code try}-with-resources
+     * statement to ensure a changed value is reset to an "original" value
+     * when the try block is exited.</p>
+     */
+    public static <T> RunOnClose resetOnClose(
+            Consumer<T> setter, T initialValue, T onCloseValue) {
+        setter.accept(initialValue);
+        Runnable runnable = () -> setter.accept(onCloseValue);
+        return RunOnClose.runOnClose(runnable);
     }
 }

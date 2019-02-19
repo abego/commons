@@ -23,18 +23,19 @@
  */
 package org.abego.commons.util;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Properties;
 
 import static org.abego.commons.io.ReaderUtil.reader;
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
 
 public class PropertiesUtil {
 
     PropertiesUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     public static Properties readProperties(File file, Charset charset)

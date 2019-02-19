@@ -48,6 +48,11 @@
             <val val="&quot;unused&quot;"/>
         </annotation>
     </item>
+    <item name='org.abego.commons.lang.RunOnCloseUtil'>
+        <annotation name='java.lang.SuppressWarnings'>
+            <val val="&quot;WeakerAccess&quot;"/>
+        </annotation>
+    </item>
     <item name='org.abego.commons.lang.SystemUtil'>
         <annotation name='java.lang.SuppressWarnings'>
             <val val="&quot;WeakerAccess&quot;"/>

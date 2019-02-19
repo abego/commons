@@ -23,6 +23,8 @@
  */
 package org.abego.commons.io;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,12 +33,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
-
 public class ReaderUtil {
 
     ReaderUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     // --- Factories ---

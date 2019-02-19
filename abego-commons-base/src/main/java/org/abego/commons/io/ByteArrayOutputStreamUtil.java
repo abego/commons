@@ -24,17 +24,18 @@
 
 package org.abego.commons.io;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
 import static org.abego.commons.util.function.SupplierWithException.unchecked;
 
 public class ByteArrayOutputStreamUtil {
 
     ByteArrayOutputStreamUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     // --- Queries ---

@@ -23,6 +23,8 @@
  */
 package org.abego.commons.io;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,12 +32,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
-
 public class PrintWriterUtil {
 
     PrintWriterUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     /**
@@ -43,7 +43,7 @@ public class PrintWriterUtil {
      *
      * <p>Ensure the directory containing the file exists.</p>
      */
-    static PrintWriter printWriter(File file, Charset charset)
+    public static PrintWriter printWriter(File file, Charset charset)
             throws IOException {
         return printWriter(file, charset.name());
     }
@@ -54,7 +54,7 @@ public class PrintWriterUtil {
      *
      * <p>Ensure the directory containing the file exists.</p>
      */
-    static PrintWriter printWriter(File file, String charsetName)
+    public static PrintWriter printWriter(File file, String charsetName)
             throws IOException {
         File dir = file.getParentFile();
 
@@ -67,7 +67,7 @@ public class PrintWriterUtil {
      * Return a  {@link PrintWriter} for the {@code outputStream} and
      * {@code charset}.
      */
-    static PrintWriter printWriter(OutputStream outputStream, Charset charset) {
+    public static PrintWriter printWriter(OutputStream outputStream, Charset charset) {
         return new PrintWriter(
                 new OutputStreamWriter(outputStream, charset), true);
     }

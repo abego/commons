@@ -28,11 +28,16 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.commons.lang.ObjectUtil.ignore;
+import static org.abego.commons.lang.StringUtil.escaped;
 import static org.abego.commons.lang.StringUtil.firstChar;
 import static org.abego.commons.lang.StringUtil.hasText;
 import static org.abego.commons.lang.StringUtil.isNullOrEmpty;
+import static org.abego.commons.lang.StringUtil.join;
+import static org.abego.commons.lang.StringUtil.joinWithEmptyStringForNull;
 import static org.abego.commons.lang.StringUtil.lastChar;
-import static org.abego.commons.lang.StringUtil.singleQuotedString_noEscapes;
+import static org.abego.commons.lang.StringUtil.quoted;
+import static org.abego.commons.lang.StringUtil.singleQuoted;
+import static org.abego.commons.lang.StringUtil.singleQuotedStringWithoutEscapes;
 import static org.abego.commons.lang.StringUtil.string;
 import static org.abego.commons.lang.StringUtil.stringOrDefault;
 import static org.abego.commons.lang.StringUtil.unescapeCharacters;
@@ -101,11 +106,11 @@ class StringUtilTest {
 
     @Test
     void singleQuotedString_noEscapes_ok() {
-        assertEquals("null", singleQuotedString_noEscapes(null));
-        assertEquals("'abc'", singleQuotedString_noEscapes("abc"));
-        assertEquals("'a\nb\\nc'", singleQuotedString_noEscapes("a\nb\\nc"));
-        assertEquals("''", singleQuotedString_noEscapes(""));
-        assertEquals("'3'", singleQuotedString_noEscapes(3));
+        assertEquals("null", singleQuotedStringWithoutEscapes(null));
+        assertEquals("'abc'", singleQuotedStringWithoutEscapes("abc"));
+        assertEquals("'a\nb\\nc'", singleQuotedStringWithoutEscapes("a\nb\\nc"));
+        assertEquals("''", singleQuotedStringWithoutEscapes(""));
+        assertEquals("'3'", singleQuotedStringWithoutEscapes(3));
     }
 
     @Test
@@ -114,4 +119,88 @@ class StringUtilTest {
         assertEquals("a\\.$d", unescapeCharacters("a\\\\\\.\\$d"));
         assertEquals("", unescapeCharacters(""));
     }
+
+    @Test
+    void join_javaDocSample() {
+        String message = join("-", "Java", 3.14, null, true, '!');
+
+        assertEquals("Java-3.14-null-true-!", message);
+    }
+
+    @Test
+    void join_emptyNull_javaDocSample() {
+        String message = joinWithEmptyStringForNull("-", "Java", 3.14, null, true, '!');
+
+        assertEquals("Java-3.14--true-!", message);
+    }
+
+
+    @Test
+    void quotedOk() {
+        // null text
+        assertEquals("Nil", quoted(null, "Nil", true));
+        assertEquals("Nil", quoted(null, "Nil", false));
+        assertEquals("Nil", quoted(null, "Nil"));
+        assertEquals("null", quoted(null));
+
+        // simple text
+        assertEquals("'abc'", quoted("abc", "Nil", true));
+        assertEquals("\"abc\"", quoted("abc", "Nil", false));
+        assertEquals("\"abc\"", quoted("abc", "Nil"));
+        assertEquals("\"abc\"", quoted("abc"));
+
+        // text to escape
+        String t = "a\b\f\n\r\t\\\'\"\u0080\u0099 Z";
+        assertEquals("'a\\b\\f\\n\\r\\t\\\\\\'\"\\u0080\\u0099 Z'", quoted(t, "Nil", true));
+        assertEquals("\"a\\b\\f\\n\\r\\t\\\\'\\\"\\u0080\\u0099 Z\"", quoted(t, "Nil", false));
+        assertEquals("\"a\\b\\f\\n\\r\\t\\\\'\\\"\\u0080\\u0099 Z\"", quoted(t, "Nil"));
+        assertEquals("\"a\\b\\f\\n\\r\\t\\\\'\\\"\\u0080\\u0099 Z\"", quoted(t));
+    }
+
+    @Test
+    void singleQuotedOk() {
+        // null text
+        assertEquals("Nil", singleQuoted(null, "Nil"));
+        assertEquals("null", singleQuoted(null));
+
+        // simple text
+        assertEquals("'abc'", singleQuoted("abc", "Nil"));
+        assertEquals("'abc'", singleQuoted("abc"));
+
+        // text to escape
+        String t = "a\b\f\n\r\t\\\'\"\u0099Z";
+        assertEquals("'a\\b\\f\\n\\r\\t\\\\\\'\"\\u0099Z'", singleQuoted(t, "Nil"));
+        assertEquals("'a\\b\\f\\n\\r\\t\\\\\\'\"\\u0099Z'", singleQuoted(t));
+    }
+
+    @Test
+    void escapedOk() {
+        // null text
+        //noinspection ConstantConditions
+        assertThrows(NullPointerException.class, () -> escaped(null));
+
+        // simple text
+        assertEquals("abc", escaped("abc"));
+
+        // text to escape
+        String t = "a\b\f\n\r\t\\\'\"\u0099Z";
+        assertEquals("a\\b\\f\\n\\r\\t\\\\'\\\"\\u0099Z", escaped(t));
+    }
+
+    @Test
+    void escapedCharOk() {
+        assertEquals("a", escaped('a'));
+        assertEquals("\\b", escaped('\b'));
+        assertEquals("\\f", escaped('\f'));
+        assertEquals("\\n", escaped('\n'));
+        assertEquals("\\r", escaped('\r'));
+        assertEquals("\\t", escaped('\t'));
+        assertEquals("\\\\", escaped('\\'));
+        assertEquals("\'", escaped('\''));
+        assertEquals("\\\"", escaped('"'));
+        assertEquals("\\u0099", escaped('\u0099'));
+        assertEquals("Z", escaped('Z'));
+    }
+
+
 }

@@ -23,6 +23,7 @@
  */
 package org.abego.commons.io;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.util.ScannerUtil;
 
 import java.io.File;
@@ -34,12 +35,11 @@ import java.nio.file.Files;
 import java.util.Scanner;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
 
 public class InputStreamUtil {
 
     InputStreamUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     // --- Queries ---

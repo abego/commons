@@ -37,7 +37,7 @@ import static org.abego.commons.util.function.SupplierWithException.unchecked;
  *
  * <p>Use {@link #text()} to retrieve the printed text.</p>
  */
-public class PrintStreamToBuffer extends PrintStream {
+public final class PrintStreamToBuffer extends PrintStream {
     private final ByteArrayOutputStream outputStream;
 
     private PrintStreamToBuffer(ByteArrayOutputStream outputStream)

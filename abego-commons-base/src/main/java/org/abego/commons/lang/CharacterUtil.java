@@ -24,10 +24,31 @@
 
 package org.abego.commons.lang;
 
-public class CharacterUtil {
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
+public final class CharacterUtil {
+
     public static final char NEWLINE_CHAR = '\n'; // NON-NLS
     public static final char CARRIAGE_RETURN_CHAR = '\r'; // NON-NLS
+    public static final char BACKSLASH_CHAR = '\\'; // NON-NLS
+    public static final char BEL_CHAR = '\b'; // NON-NLS
+    public static final char DOUBLE_QUOTE_CHAR = '"'; // NON-NLS
+    public static final char FORM_FEED_CHAR = '\f'; // NON-NLS
+    public static final char SINGLE_QUOTE_CHAR = '\''; // NON-NLS
+    public static final char TAB_CHAR = '\t'; // NON-NLS
     public static final String CARRIAGE_RETURN_LINEFEED_STRING = "\r\n"; // NON-NLS
     public static final String NEWLINE_STRING = "\n"; // NON-NLS
     public static final String CARRIAGE_RETURN_STRING = "\r"; // NON-NLS
+    public static final int FIRST_PRINTABLE_ASCII_CHAR_VALUE = 32;
+    public static final int LAST_PRINTABLE_ASCII_CHAR_VALUE = 127;
+
+    CharacterUtil() {
+        throw new MustNotInstantiateException();
+    }
+
+    public static boolean isLineSeparatorChar(char c) {
+        return c == NEWLINE_CHAR || c == CARRIAGE_RETURN_CHAR;
+    }
+
+
 }

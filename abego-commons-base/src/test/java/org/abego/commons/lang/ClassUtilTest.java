@@ -28,6 +28,7 @@ import org.abego.commons.TestData;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static org.abego.commons.TestData.EMPTY_TXT_RESOURCE_NAME;
@@ -36,9 +37,12 @@ import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_TEXT;
 import static org.abego.commons.TestData.SAMPLE_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
+import static org.abego.commons.lang.ClassUtil.RESOURCE_NOT_FOUND_MESSAGE;
+import static org.abego.commons.lang.ClassUtil.resource;
 import static org.abego.commons.lang.ClassUtil.textOfResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClassUtilTest {
 
@@ -82,4 +86,23 @@ class ClassUtilTest {
 
         assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT, text);
     }
+
+
+    @Test
+    void resourceOk() {
+
+        URL url = resource(TestData.class, SAMPLE_TXT_RESOURCE_NAME);
+
+        assertTrue(url.getPath().endsWith("/org/abego/commons/sample.txt"));
+    }
+
+    @Test
+    void resourceTestCaseMissingOk() {
+
+        Exception e = assertThrows(Exception.class,
+                () -> resource(getClass(), MISSING_RESOURCE_NAME));
+
+        assertEquals(RESOURCE_NOT_FOUND_MESSAGE, e.getMessage());
+    }
+
 }

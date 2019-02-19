@@ -24,17 +24,18 @@
 
 package org.abego.commons.io;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
 import static org.abego.commons.io.PrintWriterUtil.printWriter;
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
 
 public class OutputStreamUtil {
 
     OutputStreamUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     /**

@@ -24,17 +24,16 @@
 
 package org.abego.commons.util;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.util.function.SupplierWithException;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
-
 public class ScannerUtil {
 
     ScannerUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     public static <E extends Exception> String textOf(SupplierWithException<Scanner, E> scannerFactory) throws E {

@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.abego.commons.util.CollectionUtil.singleQuotedStringList_noEscapes;
+import static org.abego.commons.util.CollectionUtil.singleQuotedStringListWithoutEscapes;
 import static org.abego.commons.util.ListUtil.list;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -51,8 +51,8 @@ class CollectionUtilTest {
 
     @Test
     void singleQuotedStringList_noEscapes_ok() {
-        assertEquals("", singleQuotedStringList_noEscapes(list()));
-        assertEquals(EXPECTED_1, singleQuotedStringList_noEscapes(LIST_1));
-        assertEquals(EXPECTED_2, singleQuotedStringList_noEscapes(LIST_2));
+        assertEquals("", singleQuotedStringListWithoutEscapes(list()));
+        assertEquals(EXPECTED_1, singleQuotedStringListWithoutEscapes(LIST_1));
+        assertEquals(EXPECTED_2, singleQuotedStringListWithoutEscapes(LIST_2));
     }
 }

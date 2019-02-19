@@ -24,12 +24,12 @@
 
 package org.abego.commons.lang;
 
-import static org.abego.commons.lang.exception.MustNotInstantiateException.throwMustNotInstantiate;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 public class ThrowableUtil {
 
     ThrowableUtil() {
-        throwMustNotInstantiate();
+        throw new MustNotInstantiateException();
     }
 
     /**

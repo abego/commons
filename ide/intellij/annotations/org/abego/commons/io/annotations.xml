@@ -68,7 +68,7 @@
             <val val="&quot;SameParameterValue&quot;"/>
         </annotation>
     </item>
-    <item name='org.abego.commons.io.ToFileInHeaderLineWriter'>
+    <item name='org.abego.commons.io.ToFileInHeaderLineWriter org.abego.commons.io.ToFileInHeaderLineWriter toFileInHeaderLineWriter(java.nio.charset.Charset)'>
         <annotation name='java.lang.SuppressWarnings'>
             <val val="&quot;WeakerAccess&quot;"/>
         </annotation>

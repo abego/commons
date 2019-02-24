@@ -36,7 +36,7 @@ import static org.abego.commons.seq.SeqNonEmptyWrapper.wrapped;
  * <li>calling {@link #isEmpty()} will always return <code>false</code>,</li>
  * <li>calling {@link #first()} or {@link #anyItem()} will never fail.</li>
  * </ul>
- * </p>
+ * 
  */
 public interface SeqNonEmpty<T> extends Seq<T> {
 

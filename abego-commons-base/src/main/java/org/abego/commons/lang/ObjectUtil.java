@@ -43,7 +43,7 @@ public class ObjectUtil {
      *
      * <b>Usage Example:</b>
      * <pre>
-     * assertThrows(Exception.class, () -> ignore(firstChar("")));
+     * assertThrows(Exception.class, () -&lt; ignore(firstChar("")));
      * </pre>
      */
     public static void ignore(

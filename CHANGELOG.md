@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## 0.9.5
+
+### New
+
+- Support Sonatype Nexus server
+
+### Improvements
+
+- Ignore Sonarlint issuestore
+- More details in README
+
+### Changes
+
+- Use IDEA jdk
+
+### Bug Fixes
+
+- Fix JavaDoc issues
+
+
 ## 0.9.4
 
 ### New

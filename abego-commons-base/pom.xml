@@ -30,7 +30,7 @@
     <parent>
         <artifactId>abego-commons</artifactId>
         <groupId>org.abego.commons</groupId>
-        <version>0.9.5-SNAPSHOT</version>
+        <version>0.9.5</version>
     </parent>
 
     <artifactId>abego-commons-base</artifactId>

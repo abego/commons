@@ -1,0 +1,4 @@
+class javax/swing/JComponent
+paint
+ (Ljava/awt/Graphics;)V
+ (L1java/awt/Graphics;)V

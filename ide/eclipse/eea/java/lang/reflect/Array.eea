@@ -1,0 +1,4 @@
+class java/lang/reflect/Array
+newInstance
+ (Ljava/lang/Class<*>;I)Ljava/lang/Object;
+ (Ljava/lang/Class<*>;I)L1java/lang/Object;

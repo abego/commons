@@ -1,0 +1,4 @@
+class org/stringtemplate/v4/ST$DebugState
+addAttrEvents
+ Lorg/stringtemplate/v4/misc/MultiMap<Ljava/lang/String;Lorg/stringtemplate/v4/debug/AddAttributeEvent;>;
+ Lorg/stringtemplate/v4/misc/MultiMap<Ljava/lang/String;L1org/stringtemplate/v4/debug/AddAttributeEvent;>;

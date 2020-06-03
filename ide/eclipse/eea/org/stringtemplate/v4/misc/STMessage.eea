@@ -1,0 +1,4 @@
+class org/stringtemplate/v4/misc/STMessage
+toString
+ ()Ljava/lang/String;
+ ()L1java/lang/String;

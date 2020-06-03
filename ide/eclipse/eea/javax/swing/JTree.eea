@@ -1,0 +1,4 @@
+class javax/swing/JTree
+convertValueToText
+ (Ljava/lang/Object;ZZZIZ)Ljava/lang/String;
+ (Ljava/lang/Object;ZZZIZ)L1java/lang/String;

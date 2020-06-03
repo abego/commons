@@ -1,0 +1,4 @@
+class java/awt/Toolkit
+getScreenSize
+ ()Ljava/awt/Dimension;
+ ()L1java/awt/Dimension;

@@ -1,0 +1,10 @@
+class java/lang/Class
+forName
+ (Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class<*>;
+ (Ljava/lang/String;ZLjava/lang/ClassLoader;)L1java/lang/Class<*>;
+getName
+ ()Ljava/lang/String;
+ ()L1java/lang/String;
+getResourceAsStream
+ (Ljava/lang/String;)Ljava/io/InputStream;
+ (Ljava/lang/String;)Ljava/io/InputStream;

@@ -1,0 +1,7 @@
+class java/time/Duration
+ofMillis
+ (J)Ljava/time/Duration;
+ (J)L1java/time/Duration;
+ofSeconds
+ (J)Ljava/time/Duration;
+ (J)L1java/time/Duration;

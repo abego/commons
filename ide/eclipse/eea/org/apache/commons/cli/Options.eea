@@ -1,0 +1,4 @@
+class org/apache/commons/cli/Options
+addOption
+ (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)Lorg/apache/commons/cli/Options;
+ (Ljava/lang/String;Ljava/lang/String;ZLjava/lang/String;)L1org/apache/commons/cli/Options;

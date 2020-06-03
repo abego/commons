@@ -1,0 +1,7 @@
+class org/stringtemplate/v4/Interpreter
+getEvalTemplateEventStack
+ (Lorg/stringtemplate/v4/InstanceScope;Z)Ljava/util/List<Lorg/stringtemplate/v4/debug/EvalTemplateEvent;>;
+ (Lorg/stringtemplate/v4/InstanceScope;Z)L1java/util/List<L1org/stringtemplate/v4/debug/EvalTemplateEvent;>;
+getEvents
+ ()Ljava/util/List<Lorg/stringtemplate/v4/debug/InterpEvent;>;
+ ()L1java/util/List<L1org/stringtemplate/v4/debug/InterpEvent;>;

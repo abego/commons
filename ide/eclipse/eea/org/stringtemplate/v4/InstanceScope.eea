@@ -1,0 +1,13 @@
+class org/stringtemplate/v4/InstanceScope
+<init>
+ (Lorg/stringtemplate/v4/InstanceScope;Lorg/stringtemplate/v4/ST;)V
+ (Lorg/stringtemplate/v4/InstanceScope;L1org/stringtemplate/v4/ST;)V
+childEvalTemplateEvents
+ Ljava/util/List<Lorg/stringtemplate/v4/debug/EvalTemplateEvent;>;
+ L1java/util/List<L1org/stringtemplate/v4/debug/EvalTemplateEvent;>;
+events
+ Ljava/util/List<Lorg/stringtemplate/v4/debug/InterpEvent;>;
+ L1java/util/List<L1org/stringtemplate/v4/debug/InterpEvent;>;
+st
+ Lorg/stringtemplate/v4/ST;
+ L1org/stringtemplate/v4/ST;

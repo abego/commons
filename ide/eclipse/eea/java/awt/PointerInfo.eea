@@ -1,0 +1,4 @@
+class java/awt/PointerInfo
+getLocation
+ ()Ljava/awt/Point;
+ ()L1java/awt/Point;

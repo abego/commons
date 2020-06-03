@@ -1,0 +1,4 @@
+class java/awt/Frame
+getTitle
+ ()Ljava/lang/String;
+ ()L1java/lang/String;

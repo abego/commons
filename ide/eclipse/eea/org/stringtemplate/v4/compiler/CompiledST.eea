@@ -1,0 +1,7 @@
+class org/stringtemplate/v4/compiler/CompiledST
+formalArguments
+ Ljava/util/Map<Ljava/lang/String;Lorg/stringtemplate/v4/compiler/FormalArgument;>;
+ Ljava/util/Map<L1java/lang/String;L1org/stringtemplate/v4/compiler/FormalArgument;>;
+template
+ Ljava/lang/String;
+ L1java/lang/String;

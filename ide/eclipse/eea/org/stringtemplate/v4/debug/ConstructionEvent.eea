@@ -1,0 +1,4 @@
+class org/stringtemplate/v4/debug/ConstructionEvent
+getFileName
+ ()Ljava/lang/String;
+ ()L0java/lang/String;

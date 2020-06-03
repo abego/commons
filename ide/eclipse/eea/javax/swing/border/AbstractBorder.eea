@@ -1,0 +1,7 @@
+class javax/swing/border/AbstractBorder
+getBorderInsets
+ (Ljava/awt/Component;Ljava/awt/Insets;)Ljava/awt/Insets;
+ (L1java/awt/Component;L1java/awt/Insets;)Ljava/awt/Insets;
+paintBorder
+ (Ljava/awt/Component;Ljava/awt/Graphics;IIII)V
+ (L1java/awt/Component;L1java/awt/Graphics;IIII)V

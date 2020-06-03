@@ -1,0 +1,4 @@
+class org/apache/commons/cli/DefaultParser
+parse
+ (Lorg/apache/commons/cli/Options;[Ljava/lang/String;)Lorg/apache/commons/cli/CommandLine;
+ (Lorg/apache/commons/cli/Options;[Ljava/lang/String;)L1org/apache/commons/cli/CommandLine;

@@ -1,0 +1,10 @@
+class org/yaml/snakeyaml/events/Event
+getEndMark
+ ()Lorg/yaml/snakeyaml/error/Mark;
+ ()L1org/yaml/snakeyaml/error/Mark;
+getEventId
+ ()Lorg/yaml/snakeyaml/events/Event$ID;
+ ()L1org/yaml/snakeyaml/events/Event$ID;
+getStartMark
+ ()Lorg/yaml/snakeyaml/error/Mark;
+ ()L1org/yaml/snakeyaml/error/Mark;

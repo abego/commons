@@ -1,0 +1,13 @@
+class java/util/Map
+entrySet
+ ()Ljava/util/Set<Ljava/util/Map$Entry<TK;TV;>;>;
+ ()L1java/util/Set<L1java/util/Map$Entry<TK;TV;>;>;
+get
+ (Ljava/lang/Object;)TV;
+ (Ljava/lang/Object;)T0V;
+keySet
+ ()Ljava/util/Set<TK;>;
+ ()L1java/util/Set<TK;>;
+putAll
+ (Ljava/util/Map<+TK;+TV;>;)V
+ (L1java/util/Map<+TK;+TV;>;)V

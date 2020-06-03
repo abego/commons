@@ -1,0 +1,4 @@
+class org/stringtemplate/v4/misc/ErrorBuffer
+errors
+ Ljava/util/List<Lorg/stringtemplate/v4/misc/STMessage;>;
+ L1java/util/List<L1org/stringtemplate/v4/misc/STMessage;>;

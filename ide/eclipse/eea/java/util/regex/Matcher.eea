@@ -1,0 +1,4 @@
+class java/util/regex/Matcher
+replaceAll
+ (Ljava/lang/String;)Ljava/lang/String;
+ (Ljava/lang/String;)L1java/lang/String;

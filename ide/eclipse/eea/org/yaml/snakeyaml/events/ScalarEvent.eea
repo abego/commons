@@ -1,0 +1,4 @@
+class org/yaml/snakeyaml/events/ScalarEvent
+getValue
+ ()Ljava/lang/String;
+ ()L1java/lang/String;

@@ -1,0 +1,7 @@
+class java/util/stream/Stream
+concat
+ <T:Ljava/lang/Object;>(Ljava/util/stream/Stream<+TT;>;Ljava/util/stream/Stream<+TT;>;)Ljava/util/stream/Stream<TT;>;
+ <T:Ljava/lang/Object;>(Ljava/util/stream/Stream<+TT;>;Ljava/util/stream/Stream<+TT;>;)L1java/util/stream/Stream<TT;>;
+empty
+ <T:Ljava/lang/Object;>()Ljava/util/stream/Stream<TT;>;
+ <T:Ljava/lang/Object;>()L1java/util/stream/Stream<TT;>;

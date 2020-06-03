@@ -1,0 +1,13 @@
+class java/awt/Component
+getBounds
+ ()Ljava/awt/Rectangle;
+ ()L1java/awt/Rectangle;
+getLocation
+ ()Ljava/awt/Point;
+ ()L1java/awt/Point;
+getSize
+ ()Ljava/awt/Dimension;
+ ()L1java/awt/Dimension;
+paint
+ (Ljava/awt/Graphics;)V
+ (L1java/awt/Graphics;)V

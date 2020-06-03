@@ -1,0 +1,10 @@
+class org/stringtemplate/v4/ST
+getAttributes
+ ()Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;
+ ()L0java/util/Map<L1java/lang/String;L0java/lang/Object;>;
+impl
+ Lorg/stringtemplate/v4/compiler/CompiledST;
+ L1org/stringtemplate/v4/compiler/CompiledST;
+toString
+ ()Ljava/lang/String;
+ ()L1java/lang/String;

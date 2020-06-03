@@ -1,0 +1,7 @@
+class java/awt/Robot
+createScreenCapture
+ (Ljava/awt/Rectangle;)Ljava/awt/image/BufferedImage;
+ (Ljava/awt/Rectangle;)L1java/awt/image/BufferedImage;
+getPixelColor
+ (II)Ljava/awt/Color;
+ (II)L1java/awt/Color;

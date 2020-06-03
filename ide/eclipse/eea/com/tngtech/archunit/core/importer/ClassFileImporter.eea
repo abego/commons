@@ -1,0 +1,4 @@
+class com/tngtech/archunit/core/importer/ClassFileImporter
+importPackages
+ ([Ljava/lang/String;)Lcom/tngtech/archunit/core/domain/JavaClasses;
+ ([Ljava/lang/String;)L1com/tngtech/archunit/core/domain/JavaClasses;

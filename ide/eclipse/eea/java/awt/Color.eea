@@ -1,0 +1,40 @@
+class java/awt/Color
+BLACK
+ Ljava/awt/Color;
+ L1java/awt/Color;
+DARK_GRAY
+ Ljava/awt/Color;
+ L1java/awt/Color;
+GRAY
+ Ljava/awt/Color;
+ L1java/awt/Color;
+LIGHT_GRAY
+ Ljava/awt/Color;
+ L1java/awt/Color;
+RED
+ Ljava/awt/Color;
+ L1java/awt/Color;
+WHITE
+ Ljava/awt/Color;
+ L1java/awt/Color;
+black
+ Ljava/awt/Color;
+ L1java/awt/Color;
+darkGray
+ Ljava/awt/Color;
+ L1java/awt/Color;
+gray
+ Ljava/awt/Color;
+ L1java/awt/Color;
+lightGray
+ Ljava/awt/Color;
+ L1java/awt/Color;
+pink
+ Ljava/awt/Color;
+ L1java/awt/Color;
+red
+ Ljava/awt/Color;
+ L1java/awt/Color;
+white
+ Ljava/awt/Color;
+ L1java/awt/Color;

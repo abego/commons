@@ -1,0 +1,7 @@
+class java/lang/Process
+getErrorStream
+ ()Ljava/io/InputStream;
+ ()L1java/io/InputStream;
+getInputStream
+ ()Ljava/io/InputStream;
+ ()L1java/io/InputStream;

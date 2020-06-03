@@ -1,0 +1,4 @@
+class org/yaml/snakeyaml/parser/Parser
+peekEvent
+ ()Lorg/yaml/snakeyaml/events/Event;
+ ()L1org/yaml/snakeyaml/events/Event;

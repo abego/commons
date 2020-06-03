@@ -1,0 +1,4 @@
+class org/stringtemplate/v4/debug/InterpEvent
+scope
+ Lorg/stringtemplate/v4/InstanceScope;
+ L1org/stringtemplate/v4/InstanceScope;

@@ -1,0 +1,4 @@
+class javax/swing/text/Highlighter
+addHighlight
+ (IILjavax/swing/text/Highlighter$HighlightPainter;)Ljava/lang/Object;
+ (IILjavax/swing/text/Highlighter$HighlightPainter;)L1java/lang/Object;

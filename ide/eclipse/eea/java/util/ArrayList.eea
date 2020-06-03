@@ -1,0 +1,4 @@
+class java/util/ArrayList
+toArray
+ <T:Ljava/lang/Object;>([TT;)[TT;
+ <T:Ljava/lang/Object;>([TT;)[1TT;

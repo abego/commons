@@ -1,0 +1,4 @@
+class java/nio/file/Files
+walk
+ (Ljava/nio/file/Path;[Ljava/nio/file/FileVisitOption;)Ljava/util/stream/Stream<Ljava/nio/file/Path;>;
+ (Ljava/nio/file/Path;[Ljava/nio/file/FileVisitOption;)L1java/util/stream/Stream<L1java/nio/file/Path;>;

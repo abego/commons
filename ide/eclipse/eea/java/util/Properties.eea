@@ -1,0 +1,4 @@
+class java/util/Properties
+stringPropertyNames
+ ()Ljava/util/Set<Ljava/lang/String;>;
+ ()Ljava/util/Set<L1java/lang/String;>;

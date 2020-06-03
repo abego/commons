@@ -25,8 +25,12 @@
 package org.abego.commons.lang;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.eclipse.jdt.annotation.Nullable;
 
-public class ThrowableUtil {
+@SuppressWarnings("WeakerAccess")
+public final class ThrowableUtil {
+
+    public static final String DEFAULT_EXCEPTION_MESSAGE_SEPARATOR = ":\n";
 
     ThrowableUtil() {
         throw new MustNotInstantiateException();
@@ -42,6 +46,43 @@ public class ThrowableUtil {
             message = throwable.getClass().getName();
         }
         return message;
+    }
+
+    public static String allMessages(Throwable throwable,
+                                     String messageSeparator) {
+        StringBuilder result = new StringBuilder();
+        appendAllMessages(throwable, result, messageSeparator);
+        return result.toString();
+    }
+
+    public static void appendAllMessages(
+            @Nullable Throwable throwable, StringBuilder stringBuilder,
+            String messageSeparator) {
+        @Nullable Throwable ex = throwable;
+        while (ex != null) {
+
+            String message = ex.getMessage();
+            if (StringUtil.hasText(message)) {
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append(messageSeparator);
+                }
+                stringBuilder.append(message);
+            }
+
+            ex = ex.getCause();
+        }
+    }
+
+    public static String allMessagesOrClassName(Throwable throwable) {
+        return allMessagesOrClassName(throwable,
+                DEFAULT_EXCEPTION_MESSAGE_SEPARATOR);
+    }
+
+    public static String allMessagesOrClassName(Throwable throwable,
+                                                String messageSeparator) {
+        String result = allMessages(throwable, messageSeparator);
+
+        return !result.isEmpty() ? result : throwable.getClass().getName();
     }
 
 }

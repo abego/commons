@@ -24,7 +24,8 @@
 
 package org.abego.commons.io;
 
-import javax.annotation.Nullable;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.Writer;
 

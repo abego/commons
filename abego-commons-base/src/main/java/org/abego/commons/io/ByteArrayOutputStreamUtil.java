@@ -27,12 +27,14 @@ package org.abego.commons.io;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import static org.abego.commons.util.function.SupplierWithException.unchecked;
+import static org.abego.commons.lang.exception.UncheckedException.newUncheckedException;
 
-public class ByteArrayOutputStreamUtil {
+@SuppressWarnings("WeakerAccess")
+public final class ByteArrayOutputStreamUtil {
 
     ByteArrayOutputStreamUtil() {
         throw new MustNotInstantiateException();
@@ -42,8 +44,11 @@ public class ByteArrayOutputStreamUtil {
 
     public static String textOf(ByteArrayOutputStream outputStream,
                                 String charsetName) {
-        return unchecked(
-                () -> new String(outputStream.toByteArray(), charsetName));
+        try {
+            return new String(outputStream.toByteArray(), charsetName);
+        } catch (UnsupportedEncodingException e) {
+            throw newUncheckedException(e);
+        }
     }
 
     public static String textOf(ByteArrayOutputStream outputStream,

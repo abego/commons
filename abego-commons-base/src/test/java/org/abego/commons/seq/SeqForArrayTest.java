@@ -26,9 +26,8 @@ package org.abego.commons.seq;
 
 import org.junit.jupiter.api.Test;
 
-import static org.abego.commons.lang.ArrayUtil.array;
 import static org.abego.commons.seq.SeqForArray.ARRAY_MUST_NOT_BE_EMPTY_MESSAGE;
-import static org.abego.commons.seq.SeqForArray.seqForArray;
+import static org.abego.commons.seq.SeqForArray.newSeqForArray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -36,18 +35,18 @@ class SeqForArrayTest extends AbstractSeqTest {
 
     @Override
     Seq<String> singleItemSeq() {
-        return seqForArray(array("a"));
+        return newSeqForArray(SINGLE_ITEM_ARRAY);
     }
 
     @Override
     Seq<String> helloSeq() {
-        return seqForArray(array("h", "e", "l", "l", "o"));
+        return newSeqForArray(HELLO_ARRAY);
     }
 
     @Test
     void noItemsFails() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                () -> seqForArray(new String[0]));
+                () -> newSeqForArray(new String[0]));
         assertEquals(ARRAY_MUST_NOT_BE_EMPTY_MESSAGE, e.getMessage());
     }
 }

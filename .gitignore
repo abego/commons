@@ -1,6 +1,11 @@
 .idea/sonarlint/issuestore
 target
 tmp
+bin
+**/.settings
+**/.classpath
+**/.project
+**/*.iml
 
 # blockFrom: https://raw.githubusercontent.com/github/gitignore/master/Global/JetBrains.gitignore with: AutoImport
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm

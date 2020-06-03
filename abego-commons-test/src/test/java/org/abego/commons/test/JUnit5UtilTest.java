@@ -26,15 +26,20 @@ package org.abego.commons.test;
 
 import org.abego.commons.io.FileUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.range.IntRange;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
+import static org.abego.commons.range.IntRangeDefault.newIntRange;
+import static org.abego.commons.test.JUnit5Util.assertIntRangeEquals;
 import static org.abego.commons.test.JUnit5Util.assertTextContains;
 import static org.abego.commons.test.JUnit5Util.assertTextOfFileEquals;
+import static org.abego.commons.test.JUnit5Util.assertThrowsWithMessage;
+import static org.abego.commons.test.JUnit5Util.castOrFail;
 import static org.abego.commons.test.TestData.SAMPLE_ISO_8859_1_TXT_TEXT;
 import static org.abego.commons.test.TestData.SAMPLE_TEXT_2;
 import static org.abego.commons.test.TestData.SAMPLE_TXT_RESOURCE_NAME;
@@ -66,7 +71,7 @@ class JUnit5UtilTest {
     }
 
     @Test
-    void assertTextOfFileEquals_ok() throws IOException {
+    void assertTextOfFileEquals_ok() {
         File file = FileUtil.tempFileForRunFromResource(
                 TestData.class, SAMPLE_TXT_RESOURCE_NAME);
 
@@ -81,7 +86,7 @@ class JUnit5UtilTest {
     }
 
     @Test
-    void assertTextOfFileEquals_withCharset() throws IOException {
+    void assertTextOfFileEquals_withCharset() {
         File file = FileUtil.tempFileForRunFromResource(
                 TestData.class, TestData.SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
 
@@ -95,4 +100,69 @@ class JUnit5UtilTest {
                         file.getAbsolutePath(), SAMPLE_TEXT_2, SAMPLE_ISO_8859_1_TXT_TEXT);
         assertEquals(expected, e.getMessage());
     }
+
+    @Test
+    public void assertThrowsWithMessageOK() {
+        // Throws
+        assertThrowsWithMessage(
+                IllegalArgumentException.class, "foo", () -> {
+                    throw new IllegalArgumentException("foo");
+                });
+
+        // Throws, but wrong message
+        AssertionFailedError e = assertThrows(AssertionFailedError.class, () -> assertThrowsWithMessage(
+                IllegalArgumentException.class, "foo", () -> {
+                    throw new IllegalArgumentException("bar");
+                }));
+        assertEquals("Expected exception message: 'foo', got: 'bar' ==> expected: <foo> but was: <bar>", e.getMessage());
+
+        // Throws, but wrong type
+        e = assertThrows(AssertionFailedError.class, () -> assertThrowsWithMessage(
+                IllegalArgumentException.class, "foo", () -> {
+                    throw new IllegalStateException("foo");
+                }));
+        assertEquals("Unexpected exception type thrown ==> expected: <java.lang.IllegalArgumentException> but was: <java.lang.IllegalStateException>", e.getMessage());
+
+        // Does not throw
+        e = assertThrows(AssertionFailedError.class, () -> assertThrowsWithMessage(
+                IllegalArgumentException.class, "foo", () -> {
+                }));
+        assertEquals("Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.", e.getMessage());
+    }
+
+    @Test
+    public void assertIntRangeEqualsOK() {
+        IntRange range1 = newIntRange(2, 5);
+
+        // OK
+        assertIntRangeEquals(2, 5, range1);
+
+        // wrong start
+        AssertionFailedError e = assertThrows(AssertionFailedError.class, () -> assertIntRangeEquals(3, 5, range1));
+        assertEquals("expected: <3..5> but was: <2..5>", e.getMessage());
+
+        // wrong end
+        e = assertThrows(AssertionFailedError.class, () -> assertIntRangeEquals(2, 7, range1));
+        assertEquals("expected: <2..7> but was: <2..5>", e.getMessage());
+
+        // wrong start and end
+        e = assertThrows(AssertionFailedError.class, () -> assertIntRangeEquals(3, 7, range1));
+        assertEquals("expected: <3..7> but was: <2..5>", e.getMessage());
+    }
+
+    @Test
+    public void castOrFailOK() {
+        Object o1 = "foo";
+
+        // OK case
+        String s = castOrFail(String.class, o1);
+        assertEquals("foo", s);
+
+        // Fail case
+        AssertionFailedError e = assertThrows(AssertionFailedError.class, () -> castOrFail(Double.class, o1));
+        assertEquals("expected java.lang.Double, got java.lang.String", e.getMessage());
+
+
+    }
+
 }

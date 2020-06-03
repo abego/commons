@@ -31,9 +31,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
-public class ReaderUtil {
+public final class ReaderUtil {
 
     ReaderUtil() {
         throw new MustNotInstantiateException();
@@ -41,9 +44,51 @@ public class ReaderUtil {
 
     // --- Factories ---
 
+    /**
+     * Returns a {@link Reader} for the given {@code file}, assuming its text
+     * is encoded using the given {@code charset}.
+     */
     public static Reader reader(File file, Charset charset)
             throws FileNotFoundException {
         return new BufferedReader(new InputStreamReader(
                 new FileInputStream(file), charset));
+    }
+
+    /**
+     * Returns a {@link Reader} for the given {@code file}, assuming its text
+     * is encoded using the given {@code charset}.
+     *
+     * <p>Same as {@link #reader(File, Charset)}, but throws
+     * {@link UncheckedIOException}</p>s instead of checked exceptions.
+     */
+    public static Reader newReader(File file, Charset charset) {
+        try {
+            return reader(file, charset);
+        } catch (FileNotFoundException e) {
+            //noinspection DuplicateStringLiteralInspection
+            throw new UncheckedIOException(
+                    String.format(
+                            "Error when creating reader for file '%s'", //NON-NLS
+                            file.getAbsolutePath()),
+                    e);
+        }
+    }
+
+    /**
+     * Returns a {@link Reader} for the given {@code file}, assuming its text
+     * is UTF-8 encoded.
+     *
+     * <p>Similar to {@link #reader(File, Charset)}, but throws
+     * {@link UncheckedIOException}</p>s instead of checked exceptions.
+     */
+    public static Reader newReader(File file) {
+        return newReader(file, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Returns a {@link Reader} for the given {@code text}.
+     */
+    public static Reader newReader(String text) {
+        return new StringReader(text);
     }
 }

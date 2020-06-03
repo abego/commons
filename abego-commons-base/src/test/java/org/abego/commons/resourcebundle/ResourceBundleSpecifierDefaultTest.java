@@ -24,26 +24,14 @@
 
 package org.abego.commons.resourcebundle;
 
-import org.junit.jupiter.api.Test;
+import java.io.File;
 
-import static org.abego.commons.io.FileUtil.file;
-import static org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault.resourceBundleSpecifier;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault.newResourceBundleSpecifierDefault;
 
-class ResourceBundleSpecifierDefaultTest {
+class ResourceBundleSpecifierDefaultTest extends ResourceBundleSpecifierTest {
 
-    @Test
-    void equals_ok() {
-        ResourceBundleSpecifier s1 = resourceBundleSpecifier(file("sample.properties"));
-        ResourceBundleSpecifier s1b = resourceBundleSpecifier(file("sample.properties"));
-        ResourceBundleSpecifier s2 = resourceBundleSpecifier(file("sample2.properties"));
-
-        assertEquals(s1, s1);
-        assertEquals(s1, s1b);
-
-        assertNotEquals(s1, s2);
-
-        assertNotEquals(s1, "sample.properties");
+    @Override
+    ResourceBundleSpecifier newTestee(File resourceBundleFile) {
+        return newResourceBundleSpecifierDefault(resourceBundleFile);
     }
 }

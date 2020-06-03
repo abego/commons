@@ -26,7 +26,7 @@
  * Stuff related to types of the "java.lang.exception" package, including
  * new, general subclasses of Exception.
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.lang.exception;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

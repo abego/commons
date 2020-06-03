@@ -24,31 +24,36 @@
 
 package org.abego.commons.util.function;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.function.Supplier;
 
-public class CachedValue<T> implements Supplier<T> {
+public final class CachedValue<T> implements Supplier<@NonNull T> {
 
-    private final Supplier<T> valueProvider;
+    private final Supplier<@NonNull T> valueProvider;
+    @Nullable
     private T value;
-    private boolean hasValue = false;
 
-    private CachedValue(Supplier<T> valueProvider) {
+    private CachedValue(Supplier<@NonNull T> valueProvider) {
         this.valueProvider = valueProvider;
     }
 
-    public static <T> CachedValue<T> cachedValue(Supplier<T> valueProvider) {
+    public static <T> CachedValue<T> cachedValue(Supplier<@NonNull T> valueProvider) {
         return new CachedValue<>(valueProvider);
     }
 
-    @Override
-    public T get() {
+    public @NonNull T get() {
         synchronized (this) {
-            if (!hasValue) {
-                value = valueProvider.get();
-                hasValue = true;
-            }
-            return value;
+            @Nullable T v = value;
+            return v != null ? v : initValue();
         }
+    }
+
+    private @NonNull T initValue() {
+        @NonNull T valueNonNull = valueProvider.get();
+        value = valueNonNull;
+        return valueNonNull;
     }
 
 }

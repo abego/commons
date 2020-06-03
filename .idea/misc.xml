@@ -11,6 +11,8 @@
       <entry_point TYPE="field" FQNAME="org.abego.commons.stringevaluator.StringEvaluator.InvalidDelimiterException serialVersionUID" />
       <entry_point TYPE="field" FQNAME="org.abego.commons.timeout.TimeoutUncheckedException serialVersionUID" />
       <entry_point TYPE="field" FQNAME="org.abego.commons.lang.exception.UncheckedException serialVersionUID" />
+      <entry_point TYPE="method" FQNAME="org.abego.commons.lang.StringUtil$2 java.lang.Character item(int i)" />
+      <entry_point TYPE="method" FQNAME="org.abego.commons.var.VarTest$1 void set(java.lang.Integer value)" />
     </entry_points>
     <pattern value="org.abego.commons.seq.AbstractSeq" />
     <pattern value="org.abego.commons.util.function.ByteConsumer" method="accept" />
@@ -354,6 +356,11 @@
     <pattern value="org.abego.commons.io.LineAwareWriterDecoratorTest.WriterWithLineNumbers" method="processLineContent" />
     <pattern value="org.abego.commons.io.LineAwareWriterDecoratorTest.WriterWithLineNumbers" method="processLineSeparator" />
     <pattern value="org.abego.commons.seq.MappedSeq" method="size" />
+    <pattern value="org.abego.commons.lang.StringUtil$2" method="size" />
+    <pattern value="org.abego.commons.util.ImplForLoadServiceTestInterfaceWithNonPublicClass" />
+    <pattern value="org.abego.commons.util.ImplForLoadServiceTestInterfaceWithPrivateConstructor" />
+    <pattern value="org.abego.commons.util.ImplForLoadServiceTestInterfaceWithPublicClass" />
+    <pattern value="org.abego.commons.util.ImplForLoadServiceTestInterfaceWithPrivateConstructor" method="ImplForLoadServiceTestInterfaceWithPrivateConstructor" />
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavaScriptSettings">

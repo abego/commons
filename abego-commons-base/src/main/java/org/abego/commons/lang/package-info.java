@@ -23,9 +23,9 @@
  */
 
 /**
- * Stuff related to types of the "java.lang" package (like String, Array, Iterable, ...)
+ * Stuff related to types of the "java.lang" package (like String, Array, Iterable).
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.lang;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

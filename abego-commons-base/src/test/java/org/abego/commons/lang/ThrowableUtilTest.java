@@ -27,6 +27,8 @@ package org.abego.commons.lang;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import static org.abego.commons.lang.ThrowableUtil.allMessages;
+import static org.abego.commons.lang.ThrowableUtil.allMessagesOrClassName;
 import static org.abego.commons.lang.ThrowableUtil.messageOrClassName;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,4 +48,25 @@ class ThrowableUtilTest {
         assertEquals("abc",
                 messageOrClassName(new IllegalArgumentException("abc")));
     }
+
+    @Test
+    void allMessagesOK() {
+        IllegalArgumentException e1 = new IllegalArgumentException("foo");
+        IllegalArgumentException e2 = new IllegalArgumentException("bar", e1);
+
+        assertEquals("bar---foo", allMessages(e2, "---"));
+    }
+
+    @Test
+    void allMessagesOrClassNameOK() {
+        IllegalArgumentException e1 = new IllegalArgumentException("foo");
+        IllegalArgumentException e2 = new IllegalArgumentException("bar", e1);
+
+        assertEquals("bar:\nfoo", allMessagesOrClassName(e2));
+
+        IllegalStateException e3 = new IllegalStateException();
+
+        assertEquals("java.lang.IllegalStateException", allMessagesOrClassName(e3, "---"));
+    }
+
 }

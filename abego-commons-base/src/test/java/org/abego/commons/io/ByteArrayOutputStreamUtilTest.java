@@ -27,6 +27,8 @@ package org.abego.commons.io;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ByteArrayOutputStreamUtilTest {
@@ -34,5 +36,13 @@ class ByteArrayOutputStreamUtilTest {
     @Test
     void constructor() {
         assertThrows(MustNotInstantiateException.class, ByteArrayOutputStreamUtil::new);
+    }
+
+    @Test
+    void textOf_unsupportedCharset() {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        assertThrows(Exception.class, () ->
+                ByteArrayOutputStreamUtil.textOf(stream, "Unsupported"));
     }
 }

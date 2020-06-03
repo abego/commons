@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.abego.commons.TestData.SAMPLE_TEXT;
-import static org.abego.commons.io.PrintStreamToBuffer.printStreamToBuffer;
+import static org.abego.commons.io.PrintStreamToBuffer.newPrintStreamToBuffer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -43,7 +43,7 @@ class OutputStreamUtilTest {
 
     @Test
     void write_ok() {
-        PrintStreamToBuffer stream = printStreamToBuffer();
+        PrintStreamToBuffer stream = newPrintStreamToBuffer();
 
         OutputStreamUtil.write(SAMPLE_TEXT, stream, UTF_8);
 

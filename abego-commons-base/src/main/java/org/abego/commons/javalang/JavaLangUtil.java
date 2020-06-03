@@ -28,7 +28,8 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
 
-public class JavaLangUtil {
+@SuppressWarnings("WeakerAccess")
+public final class JavaLangUtil {
 
     /**
      * The String used instead of "invalid" characters when converting a text

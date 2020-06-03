@@ -24,15 +24,18 @@
 
 package org.abego.commons.resourcebundle;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.util.Objects.requireNonNull;
 import static org.abego.commons.lang.StringUtil.string;
 
-class ResourceBundleSpecifierDefault implements ResourceBundleSpecifier {
+final class ResourceBundleSpecifierDefault implements ResourceBundleSpecifier {
     private static final String BUNDLE_FILE_NAME_REGEX =
             "([^_.]+)(?:_([^_.]+))?(?:_([^_.]+))?(?:_([^_.]+))?\\.(properties)"; // NON-NLS
     /**
@@ -64,47 +67,48 @@ class ResourceBundleSpecifierDefault implements ResourceBundleSpecifier {
                     resourceBundleFile.getAbsolutePath()));
         }
 
-        this.bundleBaseName = partMatcher.group(1);
+        this.bundleBaseName = requireNonNull(partMatcher.group(1), "bundleBaseName must not be null"); //NON-NLS
         this.language = string(partMatcher.group(2));
         this.country = string(partMatcher.group(3));
         this.platform = string(partMatcher.group(4));
-        this.fileExtension = partMatcher.group(5);
+        this.fileExtension = requireNonNull(partMatcher.group(5), "fileExtension must not be null"); //NON-NLS
     }
 
-    static ResourceBundleSpecifier resourceBundleSpecifier(File resourceBundleFile) {
+    static ResourceBundleSpecifierDefault newResourceBundleSpecifierDefault(File resourceBundleFile) {
         return new ResourceBundleSpecifierDefault(resourceBundleFile);
     }
 
     @Override
-    public String bundleBaseName() {
+    public String getBundleBaseName() {
         return bundleBaseName;
     }
 
     @Override
-    public String language() {
+    public String getLanguage() {
         return language;
     }
 
     @Override
-    public String country() {
+    public String getCountry() {
         return country;
     }
 
     @Override
-    public String platform() {
+    public String getPlatform() {
         return platform;
     }
 
     @Override
-    public String fileExtension() {
+    public String getFileExtension() {
         return fileExtension;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (!(o instanceof ResourceBundleSpecifierDefault)) return false;
         ResourceBundleSpecifierDefault that = (ResourceBundleSpecifierDefault) o;
+        //noinspection CallToSuspiciousStringMethod
         return bundleBaseName.equals(that.bundleBaseName) &&
                 language.equals(that.language) &&
                 country.equals(that.country) &&

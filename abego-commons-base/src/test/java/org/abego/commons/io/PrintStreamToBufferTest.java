@@ -27,14 +27,14 @@ package org.abego.commons.io;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.commons.TestData.SAMPLE_TEXT;
-import static org.abego.commons.io.PrintStreamToBuffer.printStreamToBuffer;
+import static org.abego.commons.io.PrintStreamToBuffer.newPrintStreamToBuffer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PrintStreamToBufferTest {
 
     @Test
     void case_happyPath() {
-        PrintStreamToBuffer stream = printStreamToBuffer();
+        PrintStreamToBuffer stream = newPrintStreamToBuffer();
 
         // printed text can be accessed via #getText (and #toString)
         stream.print(SAMPLE_TEXT);

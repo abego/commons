@@ -28,7 +28,6 @@ import org.abego.commons.io.FileUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.abego.commons.io.FileUtil.file;
 import static org.abego.commons.javalang.FullyQualifiedName.fullyQualifiedName;
@@ -84,7 +83,7 @@ class FullyQualifiedNameTest {
     }
 
     @Test
-    void parentDirectory_simpleName() throws IOException {
+    void parentDirectory_simpleName() {
         File root = FileUtil.tempDirectoryForRun();
         FullyQualifiedName name = fullyQualifiedName("foo");
 
@@ -92,7 +91,7 @@ class FullyQualifiedNameTest {
     }
 
     @Test
-    void parentDirectory_nameWithPackage() throws IOException {
+    void parentDirectory_nameWithPackage() {
         File root = FileUtil.tempDirectoryForRun();
         FullyQualifiedName name = fullyQualifiedName("foo.bar");
 

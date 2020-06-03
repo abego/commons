@@ -26,7 +26,7 @@
  * A Blackboard can hold a collection of items and can be used as a mean of
  * communication between multiple threads.
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.blackboard;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

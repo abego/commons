@@ -27,9 +27,11 @@ package org.abego.commons.seq;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.abego.commons.seq.SeqForList.LIST_MUST_NOT_BE_EMPTY_MESSAGE;
+import static org.abego.commons.seq.SeqForList.newSeqForList;
+import static org.abego.commons.seq.SeqUtil.newSeq;
+import static org.abego.commons.util.ListUtil.list;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -38,26 +40,18 @@ class SeqForListTest extends AbstractSeqTest {
 
     @Override
     Seq<String> singleItemSeq() {
-        List<String> list = new ArrayList<>();
-        list.add("a");
-        return Seq.newSeq(list);
+        return newSeq(list(SINGLE_ITEM_ARRAY));
     }
 
     @Override
     Seq<String> helloSeq() {
-        List<String> list = new ArrayList<>();
-        list.add("h");
-        list.add("e");
-        list.add("l");
-        list.add("l");
-        list.add("o");
-        return Seq.newSeq(list);
+        return newSeq(list(HELLO_ARRAY));
     }
 
     @Test
     void noItemsFails() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                () -> SeqForList.seqForList(new ArrayList<String>()));
+                () -> newSeqForList(new ArrayList<String>()));
         assertEquals(LIST_MUST_NOT_BE_EMPTY_MESSAGE, e.getMessage());
     }
 }

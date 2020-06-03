@@ -23,9 +23,9 @@
  */
 
 /**
- * abego Commons - A collection of utilities to simplify Java development
+ * abego Commons - A collection of utilities to simplify Java development.
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

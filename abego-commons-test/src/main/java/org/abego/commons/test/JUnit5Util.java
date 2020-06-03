@@ -26,14 +26,19 @@ package org.abego.commons.test;
 
 import org.abego.commons.io.FileUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.range.IntRange;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
+import static java.lang.String.format;
+import static org.abego.commons.lang.ClassUtil.classNameOrNull;
+import static org.abego.commons.range.IntRangeDefault.newIntRange;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class JUnit5Util {
@@ -56,7 +61,7 @@ public class JUnit5Util {
     public static void assertTextOfFileEquals(
             final String expected,
             final File file,
-            final Charset charset) throws FileNotFoundException {
+            final Charset charset) {
         assertEquals(
                 expected,
                 FileUtil.textOf(file, charset),
@@ -67,10 +72,33 @@ public class JUnit5Util {
 
     public static void assertTextOfFileEquals(
             final String expected,
-            final File file) throws FileNotFoundException {
+            final File file) {
 
         assertTextOfFileEquals(expected, file, StandardCharsets.UTF_8);
     }
 
+    public static <T extends Throwable> T assertThrowsWithMessage(
+            Class<T> expectedType,
+            String expectedMessage, Executable executable) {
+        T result = assertThrows(expectedType, executable);
+        assertEquals(expectedMessage, result.getMessage(),
+                () -> format("Expected exception message: '%s', got: '%s'", //NON-NLS
+                        expectedMessage, result.getMessage()));
+        return result;
+    }
+
+    public static void assertIntRangeEquals(int expectedStart,
+                                            int expectedEnd,
+                                            IntRange intRange) {
+        assertEquals(newIntRange(expectedStart, expectedEnd), intRange);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T castOrFail(Class<T> type, Object object) {
+        if (!type.isInstance(object)) {
+            fail(format("expected %s, got %s", type.getName(), classNameOrNull(object))); //NON-NLS
+        }
+        return (T) object;
+    }
 
 }

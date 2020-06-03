@@ -24,22 +24,11 @@
 
 package org.abego.commons.util;
 
-import org.abego.commons.TestData;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
-import org.abego.commons.resourcebundle.ResourceBundleUtil;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Properties;
-
-import static org.abego.commons.TestData.SAMPLE_PROPERTIES_KEY_1;
-import static org.abego.commons.TestData.SAMPLE_PROPERTIES_KEY_2;
-import static org.abego.commons.TestData.SAMPLE_PROPERTIES_RESOURCE_NAME;
-import static org.abego.commons.TestData.SAMPLE_PROPERTIES_VALUE_1;
-import static org.abego.commons.TestData.SAMPLE_PROPERTIES_VALUE_2;
-import static org.abego.commons.io.FileUtil.tempFileForRunFromResource;
+import static org.abego.commons.util.PropertiesUtil.toPropertyKey;
+import static org.abego.commons.util.PropertiesUtil.toPropertyValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -50,16 +39,31 @@ class PropertiesUtilTest {
         assertThrows(MustNotInstantiateException.class, PropertiesUtil::new);
     }
 
+
     @Test
-    void readProperties_ok() throws IOException {
-        File file = tempFileForRunFromResource(
-                TestData.class, SAMPLE_PROPERTIES_RESOURCE_NAME,
-                "." + ResourceBundleUtil.PROPERTIES_FILE_EXTENSION); // NON-NLS
+    void asPropertyKeyOK() {
+        assertEquals("", toPropertyKey(""));
+        assertEquals("foo", toPropertyKey("foo"));
+        assertEquals("123", toPropertyKey("123"));
+        assertEquals("a\\:b", toPropertyKey("a:b"));
+        assertEquals("a\\=b", toPropertyKey("a=b"));
+        assertEquals("a\\:\\=b", toPropertyKey("a:=b"));
+        assertEquals("a\\:\\=b", toPropertyKey("a:=b"));
+        assertEquals("foo\\ ", toPropertyKey("foo "));
+        assertEquals("\\ foo\\ ", toPropertyKey(" foo "));
+        assertEquals("\\\t\\\tfoo", toPropertyKey("\t\tfoo"));
+    }
 
-        Properties properties =
-                PropertiesUtil.readProperties(file, StandardCharsets.UTF_8);
-
-        assertEquals(SAMPLE_PROPERTIES_VALUE_1, properties.getProperty(SAMPLE_PROPERTIES_KEY_1));
-        assertEquals(SAMPLE_PROPERTIES_VALUE_2, properties.getProperty(SAMPLE_PROPERTIES_KEY_2));
+    @Test
+    void asPropertyValueOK() {
+        assertEquals("", toPropertyValue(""));
+        assertEquals("foo", toPropertyValue("foo"));
+        assertEquals("\\ foo", toPropertyValue(" foo"));
+        assertEquals("foo ", toPropertyValue("foo "));
+        assertEquals("foo\\nbar", toPropertyValue("foo\nbar"));
+        assertEquals("foo\\tbar", toPropertyValue("foo\tbar"));
+        assertEquals("foo\\\\bar", toPropertyValue("foo\\bar"));
+        assertEquals("\\   foo", toPropertyValue("   foo"));
+        assertEquals("#foo", toPropertyValue("#foo"));
     }
 }

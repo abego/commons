@@ -24,10 +24,14 @@
 
 package org.abego.commons.seq;
 
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -43,37 +47,13 @@ import java.util.stream.Stream;
  */
 public interface Seq<T> extends Iterable<T> {
 
-    /**
-     * Return a {@link Seq} with the items of the given <code>list</code>.
-     *
-     * <p>The list must not change after the Seq is created.</p>
-     */
-    static <T> Seq<T> newSeq(List<T> list) {
-        return SeqHelper.newSeq(list);
-    }
-
-    /**
-     * Return a {@link Seq} with the given <code>items</code>.
-     *
-     * <p> Instead of multiple individual items you may also pass an array of type
-     * <code>T[]</code> with <code>items</code>.
-     */
-    @SafeVarargs
-    static <T> Seq<T> newSeq(T... items) {
-        return SeqHelper.newSeq(items);
-    }
-
-    /**
-     * Return an (/the) empty Seq, i.e. a Seq with no items.
-     */
-    static <T> Seq<T> emptySeq() {
-        return SeqHelper.emptySeq();
-    }
+    String MORE_THAN_ONE_ELEMENT_MESSAGE = "More than one element"; //NON-NLS
+    String NO_SUCH_ELEMENT_MESSAGE = "No such element"; //NON-NLS
 
     /**
      * Return the size of the sequence.
      */
-    long size();
+    int size();
 
     /**
      * Return the <code>index</code>-ed item in the sequence.
@@ -83,9 +63,41 @@ public interface Seq<T> extends Iterable<T> {
     T item(int index);
 
     /**
+     * Return the index of the first occurrence of the specified item in this
+     * Seq, or -1 if this Seq does not contain the item.
+     * <p>
+     * {@link Objects#equals(Object, Object)} is used to check for the occurrence.
+     */
+    default int indexOf(@Nullable T item) {
+        int i = 0;
+        for (T o : this) {
+            if ((Objects.equals(item, o)))
+                return i;
+            i++;
+        }
+        return -1;
+    }
+
+    /**
+     * Return {@code true} when the Seq contains the specified item,
+     * {@code false} otherwise.
+     * <p>
+     * {@link Objects#equals(Object, Object)} is used to check for the occurrence.
+     */
+    default boolean contains(@Nullable T item) {
+        return indexOf(item) >= 0;
+    }
+
+    /**
      * Return the items of the sequence as a {@link Stream}.
      */
-    Stream<T> stream();
+    default Stream<T> stream() {
+        Stream.Builder<T> builder = Stream.builder();
+        for (T o : this) {
+            builder.add(o);
+        }
+        return builder.build();
+    }
 
     /**
      * Return <code>true</code> when the sequence is empty,
@@ -93,6 +105,17 @@ public interface Seq<T> extends Iterable<T> {
      */
     default boolean isEmpty() {
         return size() == 0;
+    }
+
+    /**
+     * Return <code>true</code> when the sequence has one or more items,
+     * <code>false</code> otherwise.
+     * <p>
+     * It is equivalent to {@code !isEmpty()}.
+     * </p>
+     */
+    default boolean hasItems() {
+        return !isEmpty();
     }
 
     /**
@@ -116,12 +139,54 @@ public interface Seq<T> extends Iterable<T> {
     }
 
     /**
-     * Returns a {@link Seq} consisting of the items of this sequence that match
+     * Returns a new {@link Seq} consisting of the items of this sequence that match
      * the <code>predicate</code>.
+     *
+     * <p>See {@link SeqUtil#filter(Seq, Predicate)} for a default implementation.</p>
+     *
+     * <p>This method has no default implementation to avoid cyclic dependencies.</p>
      */
-    default Seq<T> filter(Predicate<T> condition) {
-        return newSeq(stream().filter(condition).collect(Collectors.toList()));
-    }
+    Seq<T> filter(Predicate<T> condition);
+
+    /**
+     * Returns a new {@link Seq} consisting of the results of applying the given
+     * <code>mapper</code> function to the elements of this Seq.
+     *
+     * <p>See {@link SeqUtil#map(Seq, Function)} for a default implementation.</p>
+     *
+     * <p>This method has no default implementation to avoid cyclic dependencies.</p>
+     */
+    <R> Seq<R> map(Function<? super T, ? extends R> mapper);
+
+    /**
+     * Returns a new {@link Seq} consisting of the elements of this Seq
+     * sorted by the given <code>sortKey</code>.
+     */
+    <S extends Comparable<S>> Seq<T> sortedBy(Function<T, S> sortKey);
+
+    /**
+     * Return a new {@link Seq} consisting of the elements of this Seq
+     * sorted in ascending order, according to the {@linkplain Comparable
+     * natural ordering} of its elements.
+     *
+     * <p>All elements in the Seq must implement the {@link Comparable}
+     * interface.  Furthermore, all elements in the Seq must be
+     * <i>mutually comparable</i> (that is, {@code e1.compareTo(e2)}
+     * must not throw a {@code ClassCastException} for any elements
+     * {@code e1} and {@code e2} in the Seq).
+     */
+    Seq<T> sorted();
+
+    /**
+     * Return a new {@link Seq} consisting of the elements of this Seq
+     * sorted in ascending order, according to the given <code>comparator</code>.
+     *
+     * <p>All elements in this list must be <i>mutually comparable</i> using the
+     * specified comparator (that is, {@code c.compare(e1, e2)} must not throw
+     * a {@code ClassCastException} for any elements {@code e1} and {@code e2}
+     * in the list).
+     */
+    Seq<T> sorted(Comparator<? super T> comparator);
 
     /**
      * Return the one and only item of this sequence.
@@ -131,7 +196,7 @@ public interface Seq<T> extends Iterable<T> {
      */
     default T singleItem() {
         if (!hasSingleItem()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException(size() > 1 ? MORE_THAN_ONE_ELEMENT_MESSAGE : NO_SUCH_ELEMENT_MESSAGE);
         }
         return first();
     }
@@ -143,12 +208,13 @@ public interface Seq<T> extends Iterable<T> {
      * Throw a {@link NoSuchElementException} when the sequence contains more
      * than one item.
      */
+    @Nullable
     default T singleItemOrNull() {
         if (!hasSingleItem()) {
             if (isEmpty()) {
                 return null;
             }
-            throw new NoSuchElementException();
+            throw new NoSuchElementException(MORE_THAN_ONE_ELEMENT_MESSAGE);
         }
         return first();
     }
@@ -157,6 +223,7 @@ public interface Seq<T> extends Iterable<T> {
      * Return any item of this sequence, or <code>null</code> when
      * the sequence is empty.
      */
+    @Nullable
     default T anyItemOrNull() {
         return isEmpty() ? null : anyItem();
     }
@@ -175,6 +242,18 @@ public interface Seq<T> extends Iterable<T> {
         return first();
     }
 
+    default String joined(CharSequence separator, Function<T, String> mapToString) {
+        return String.join(separator, map(mapToString));
+    }
+
+    default String joined(CharSequence separator) {
+        return joined(separator, Object::toString);
+    }
+
+    default String joined() {
+        return joined("");
+    }
+
     /**
      * Return <code>true</code> if the specified <code>object</code> is a
      * {@link Seq} and equal to this Seq, return <code>false</code> otherwise.
@@ -186,7 +265,7 @@ public interface Seq<T> extends Iterable<T> {
      * <p>This definition ensures that the equals method works properly
      * across different implementations of the Seq interface.
      */
-    boolean equals(Object object);
+    boolean equals(@Nullable Object object);
 
     /**
      * Return the hash code value for this {@link Seq}.

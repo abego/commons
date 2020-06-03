@@ -28,110 +28,25 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.abego.commons.resourcebundle.ResourceBundleSpecifier.resourceBundleSpecifier;
-import static org.abego.commons.resourcebundle.ResourceBundleUtil.PROPERTIES_FILE_EXTENSION;
+import static org.abego.commons.io.FileUtil.file;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ResourceBundleSpecifierTest {
+abstract class ResourceBundleSpecifierTest {
 
-
-    @Test
-    void resourceBundleSpecifier_complete() {
-        File file = new File("sub/dir/Sample_de_CH_Unix.properties");
-
-        ResourceBundleSpecifier bs = resourceBundleSpecifier(file);
-
-        assertEquals("Sample", bs.bundleBaseName());
-        assertEquals("de", bs.language());
-        assertEquals("CH", bs.country());
-        assertEquals("Unix", bs.platform());
-        assertEquals(PROPERTIES_FILE_EXTENSION, bs.fileExtension());
-    }
+    abstract ResourceBundleSpecifier newTestee(File resourceBundleFile);
 
     @Test
-    void resourceBundleSpecifier_noPlatform() {
-        File file = new File("sub/dir/Sample_de_CH.properties");
+    void equals_ok() {
+        ResourceBundleSpecifier s1 = newTestee(file("sample.properties"));
+        ResourceBundleSpecifier s1b = newTestee(file("sample.properties"));
+        ResourceBundleSpecifier s2 = newTestee(file("sample2.properties"));
 
-        ResourceBundleSpecifier bs = resourceBundleSpecifier(file);
+        assertEquals(s1, s1);
+        assertEquals(s1, s1b);
 
-        assertEquals("Sample", bs.bundleBaseName());
-        assertEquals("de", bs.language());
-        assertEquals("CH", bs.country());
-        assertEquals("", bs.platform());
-        assertEquals(PROPERTIES_FILE_EXTENSION, bs.fileExtension());
+        assertNotEquals(s1, s2);
+
+        assertNotEquals(s1, "sample.properties");
     }
-
-    @Test
-    void resourceBundleSpecifier_language() {
-        File file = new File("sub/dir/Sample_de.properties");
-
-        ResourceBundleSpecifier bs = resourceBundleSpecifier(file);
-
-        assertEquals("Sample", bs.bundleBaseName());
-        assertEquals("de", bs.language());
-        assertEquals("", bs.country());
-        assertEquals("", bs.platform());
-        assertEquals(PROPERTIES_FILE_EXTENSION, bs.fileExtension());
-    }
-
-    @Test
-    void resourceBundleSpecifier_minimal() {
-        File file = new File("sub/dir/Sample.properties");
-
-        ResourceBundleSpecifier bs = resourceBundleSpecifier(file);
-
-        assertEquals("Sample", bs.bundleBaseName());
-        assertEquals("", bs.language());
-        assertEquals("", bs.country());
-        assertEquals("", bs.platform());
-        assertEquals(PROPERTIES_FILE_EXTENSION, bs.fileExtension());
-    }
-
-    @Test
-    void resourceBundleSpecifier_wrongExtension() {
-        File file = new File("Sample.txt"); // no "*.properties" file
-
-        assertThrows(IllegalArgumentException.class,
-                () -> resourceBundleSpecifier(file));
-    }
-
-    @Test
-    void resourceBundleSpecifier_equals() {
-        File file = new File("sub/dir/Sample.properties");
-        ResourceBundleSpecifier bs1a = resourceBundleSpecifier(file);
-        ResourceBundleSpecifier bs1b = resourceBundleSpecifier(file);
-        File file2 = new File("sub/dir/Sample_de.properties");
-        ResourceBundleSpecifier bs2 = resourceBundleSpecifier(file2);
-
-
-        assertEquals(bs1a, bs1a);
-        assertEquals(bs1a, bs1b);
-        assertEquals(bs1b, bs1a);
-
-        assertEquals(bs2, bs2);
-
-        assertNotEquals(bs1a, bs2);
-    }
-
-    @Test
-    void resourceBundleSpecifier_hashCode() {
-        File file = new File("sub/dir/Sample.properties");
-        ResourceBundleSpecifier bs1a = resourceBundleSpecifier(file);
-        ResourceBundleSpecifier bs1b = resourceBundleSpecifier(file);
-        File file2 = new File("sub/dir/Sample_de.properties");
-        ResourceBundleSpecifier bs2 = resourceBundleSpecifier(file2);
-
-
-        assertEquals(bs1a.hashCode(), bs1a.hashCode());
-        assertEquals(bs1a.hashCode(), bs1b.hashCode());
-        assertEquals(bs1b.hashCode(), bs1a.hashCode());
-
-        assertEquals(bs2.hashCode(), bs2.hashCode());
-
-        assertNotEquals(bs1a.hashCode(), bs2.hashCode());
-    }
-
-
 }

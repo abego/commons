@@ -23,10 +23,10 @@
  */
 
 /**
- * Stuff related to "polling", i.e. the process of waiting for a certain
- * state and periodically checking if the state is reached.
+ * Stuff related to "polling" (the process of waiting for a certain
+ * state and periodically checking if the state is reached).
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.polling;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

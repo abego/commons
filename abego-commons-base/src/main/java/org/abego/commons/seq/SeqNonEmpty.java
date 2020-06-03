@@ -24,11 +24,6 @@
 
 package org.abego.commons.seq;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-import static org.abego.commons.seq.SeqNonEmptyWrapper.wrapped;
-
 /**
  * A non-empty sequence of items of type T.
  *
@@ -38,64 +33,6 @@ import static org.abego.commons.seq.SeqNonEmptyWrapper.wrapped;
  * </ul>
  */
 public interface SeqNonEmpty<T> extends Seq<T> {
-
-    /**
-     * Return a {@link Seq} with the items of the given <code>list</code> or
-     * throw a {@link IllegalArgumentException} when the list is empty.
-     *
-     * <p>The list must not change after the Seq is created.</p>
-     */
-    static <T> SeqNonEmpty<T> with(List<T> list) {
-        return SeqForList.seqForList(list);
-    }
-
-    /**
-     * Return a {@link Seq} with the given <code>items</code> or
-     * throw a {@link IllegalArgumentException} when no items are given.
-     *
-     * <p> Instead of multiple individual items you may also pass a non-empty
-     * array of type <code>T[]</code> with <code>items</code>.
-     */
-    @SafeVarargs
-    static <T> SeqNonEmpty<T> with(T... items) {
-        return seqNonEmpty(Seq.newSeq(items));
-    }
-
-    /**
-     * Return the <code>seq</code> as a {@link SeqNonEmpty} or throw a
-     * {@link IllegalArgumentException} when seq is empty.
-     */
-    static <T> SeqNonEmpty<T> seqNonEmpty(Seq<T> seq) {
-        return seqNonEmptyOrElseThrow(seq, IllegalArgumentException::new);
-    }
-
-    /**
-     * Return the <code>seq</code> as a {@link SeqNonEmpty} or <code>other</code>
-     * when seq is empty.
-     */
-    static <T> SeqNonEmpty<T> seqNonEmptyOrElse(Seq<T> seq, SeqNonEmpty<T> other) {
-        if (seq instanceof SeqNonEmpty) {
-            return (SeqNonEmpty<T>) seq;
-        }
-        return seq.isEmpty() ? other : wrapped(seq);
-    }
-
-    static <T> SeqNonEmpty<T> seqNonEmptyOrElseGet(Seq<T> seq, Supplier<SeqNonEmpty<T>> other) {
-        if (seq instanceof SeqNonEmpty) {
-            return (SeqNonEmpty<T>) seq;
-        }
-        return seq.isEmpty() ? other.get() : wrapped(seq);
-    }
-
-    static <T, X extends Throwable> SeqNonEmpty<T> seqNonEmptyOrElseThrow(Seq<T> seq, Supplier<? extends X> exceptionSupplier) throws X {
-        if (seq instanceof SeqNonEmpty) {
-            return (SeqNonEmpty<T>) seq;
-        }
-        if (seq.isEmpty()) {
-            throw exceptionSupplier.get();
-        }
-        return wrapped(seq);
-    }
 
     @Override
     default boolean isEmpty() {

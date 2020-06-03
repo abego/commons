@@ -28,7 +28,7 @@
  *
  * <p>A StringEvaluator may be used as a simple templating engine.</p>
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.stringevaluator;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

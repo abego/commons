@@ -23,9 +23,10 @@
  */
 
 /**
- * Stuff related to types of the "java.util" package (like Collection, Properties, ...)
+ * Stuff related to types of the "java.util" package
+ * (like Collection, Properties, ...).
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.util;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

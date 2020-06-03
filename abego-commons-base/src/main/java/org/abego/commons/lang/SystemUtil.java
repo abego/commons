@@ -28,9 +28,10 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.io.PrintStream;
 
+import static java.util.Objects.requireNonNull;
 import static org.abego.commons.lang.RunOnCloseUtil.resetOnClose;
 
-public class SystemUtil {
+public final class SystemUtil {
 
     SystemUtil() {
         throw new MustNotInstantiateException();
@@ -53,7 +54,8 @@ public class SystemUtil {
      * </pre>
      */
     public static RunOnClose systemOutRedirect(PrintStream newStream) {
-        return resetOnClose(System::setOut, newStream, System.out);
+        return resetOnClose(System::setOut, newStream,
+                requireNonNull(System.out, "System.out must not be null")); //NON-NLS
     }
 
     /**
@@ -73,8 +75,17 @@ public class SystemUtil {
      * </pre>
      */
     public static RunOnClose systemErrRedirect(PrintStream newStream) {
-        return resetOnClose(System::setErr, newStream, System.err);
+        return resetOnClose(System::setErr, newStream,
+                requireNonNull(System.err, "System.err must not be null")); //NON-NLS
     }
 
 
+    /**
+     * Return the line separator of the current system, as provided by {@code  System.getProperty("line.separator")}.
+     *
+     * <p>The value may differ from {@link System#lineSeparator()} that always returns the same String per platform.</p>
+     */
+    public static String getLineSeparator() {
+        return requireNonNull(System.getProperty("line.separator"), "System property 'line.separator' not defined"); //NON-NLS
+    }
 }

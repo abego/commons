@@ -24,7 +24,7 @@
 
 package org.abego.commons.stringevaluator;
 
-import org.abego.commons.lang.StringUtil;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.abego.commons.io.FileUtil.runIOCode;
 import static org.abego.commons.lang.StringUtil.unescapeCharacters;
 
 @SuppressWarnings("WeakerAccess")
@@ -111,14 +112,11 @@ public final class StringEvaluator {
     }
 
     public String valueOf(String string) {
-        try {
+        return runIOCode(() -> {
             StringWriter writer = new StringWriter();
             evaluateString(string, writer);
             return writer.toString();
-        } catch (IOException e) {
-            // code never reached as StringWriter does not throw IOExceptions
-            throw new StringEvaluatorException("Internal error"); // NON-NLS
-        }
+        });
     }
 
     public void setTermValue(String term, String termValue) {
@@ -137,9 +135,10 @@ public final class StringEvaluator {
         return rightTermDelimiter;
     }
 
+    @Nullable
     private String termValue(String term) {
         for (TermEvaluator e : termEvaluators) {
-            String s = e.valueOf(term);
+            @Nullable String s = e.valueOf(term);
             if (s != null) {
                 return s;
             }
@@ -149,7 +148,7 @@ public final class StringEvaluator {
 
     private void evaluateTerm(String term,
                               Writer writer) throws IOException {
-        String value = termValue(term);
+        @Nullable String value = termValue(term);
         if (value == null) {
             writer.write(leftTermDelimiter());
             writer.write(term);
@@ -167,7 +166,7 @@ public final class StringEvaluator {
             String text = m.group(1);
             String term = m.group(2);
 
-            if (StringUtil.hasText(text)) {
+            if (text != null && !text.isEmpty()) {
                 writer.write(unescapeCharacters(text));
             }
 
@@ -180,22 +179,24 @@ public final class StringEvaluator {
     @FunctionalInterface
     public interface TermEvaluator {
 
+        /**
+         * Return the value of the term, or {@code null} when the term cannot be evaluated (by this TermEvaluator)
+         */
+        @Nullable
         String valueOf(String term);
     }
 
+    @SuppressWarnings("serial")
     public static class StringEvaluatorException extends RuntimeException {
-
-        private static final long serialVersionUID = -7952498625909958911L;
 
         private StringEvaluatorException(String message) {
             super(message);
         }
     }
 
+    @SuppressWarnings("serial")
     public static class InvalidDelimiterException
             extends StringEvaluatorException {
-
-        private static final long serialVersionUID = -4270839190505681169L;
 
         private InvalidDelimiterException() {
             super(String.format("'%s' must not be used as a term delimiter", //NON-NLS

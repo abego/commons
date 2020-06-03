@@ -23,9 +23,9 @@
  */
 
 /**
- * Stuff to support testing (typically only used in the "test" phase)
+ * Stuff to support testing (typically only used in the "test" phase).
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.test;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

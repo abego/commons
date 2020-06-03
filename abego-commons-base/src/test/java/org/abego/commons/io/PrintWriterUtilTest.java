@@ -35,7 +35,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.abego.commons.TestData.SAMPLE_TEXT;
 import static org.abego.commons.io.FileUtil.tempDirectoryForRun;
 import static org.abego.commons.io.FileUtil.tempFileForRun;
-import static org.abego.commons.io.PrintStreamToBuffer.printStreamToBuffer;
 import static org.abego.commons.io.PrintWriterUtil.printWriter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,7 +71,7 @@ class PrintWriterUtilTest {
 
     @Test
     void printWriter_OutputStream_Charset_ok() {
-        PrintStreamToBuffer outputStream = printStreamToBuffer();
+        PrintStreamToBuffer outputStream = PrintStreamToBuffer.newPrintStreamToBuffer();
 
         PrintWriter writer = printWriter(outputStream, UTF_8);
         writer.print(SAMPLE_TEXT);
@@ -93,4 +92,5 @@ class PrintWriterUtilTest {
 
         assertEquals(SAMPLE_TEXT, FileUtil.textOf(file));
     }
+
 }

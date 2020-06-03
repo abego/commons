@@ -24,7 +24,7 @@
 
 package org.abego.commons.util.function;
 
-import static org.abego.commons.lang.exception.UncheckedException.uncheckedException;
+import static org.abego.commons.lang.exception.UncheckedException.newUncheckedException;
 
 /**
  * As {@link java.util.function.Supplier} but the get method may throw an
@@ -46,7 +46,7 @@ public interface SupplierWithException<T, E extends Throwable> {
         try {
             return supplierWithException.get();
         } catch (Exception e) {
-            throw uncheckedException(e);
+            throw newUncheckedException(e);
         }
     }
 

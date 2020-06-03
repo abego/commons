@@ -29,12 +29,14 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class WriterUtil {
+public final class WriterUtil {
 
     WriterUtil() {
         throw new MustNotInstantiateException();
@@ -42,22 +44,62 @@ public class WriterUtil {
 
     // --- Factories ---
 
-    public static Writer writer(File file) throws FileNotFoundException {
+    public static Writer writer(File file) {
 
         return writer(file, StandardCharsets.UTF_8);
     }
 
-    public static Writer writer(File file, Charset charset)
-            throws FileNotFoundException {
-
-        return new OutputStreamWriter(new FileOutputStream(file), charset);
+    public static Writer writer(File file, Charset charset) {
+        try {
+            FileUtil.ensureFileExists(file);
+            return new OutputStreamWriter(new FileOutputStream(file), charset);
+        } catch (FileNotFoundException e) {
+            //noinspection DuplicateStringLiteralInspection
+            throw new UncheckedIOException(
+                    String.format(
+                            "Error when creating Writer for '%s'", //NON-NLS
+                            file.getAbsolutePath()),
+                    e);
+        }
     }
 
-    public static Writer writer(File file, String charsetName)
-            throws FileNotFoundException {
+    public static Writer writer(File file, String charsetName) {
 
         return writer(file, Charset.forName(charsetName));
     }
 
 
+    /**
+     * Write {@code text} to {@code file} using the UTF-8 charset.
+     */
+    public static void write(final File file, final String text) {
+        write(file, text, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * Write {@code text} to {@code file} using {@code charset}.
+     */
+    public static void write(
+            final File file,
+            final String text,
+            final Charset charset) {
+
+        write(file, text, charset.name());
+    }
+
+    /**
+     * Write {@code text} to {@code file} using the {@link Charset} named
+     * <code>charsetName</code>.
+     */
+    public static void write(
+            final File file,
+            final String text,
+            final String charsetName) {
+
+        try (Writer output = writer(file, charsetName)) {
+            output.write(text);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 }

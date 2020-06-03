@@ -26,7 +26,7 @@ package org.abego.commons.lang;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
-public class ThreadUtil {
+public final class ThreadUtil {
 
     ThreadUtil() {
         throw new MustNotInstantiateException();
@@ -49,4 +49,27 @@ public class ThreadUtil {
             Thread.currentThread().interrupt();
         }
     }
+
+    /**
+     * Run the {@code runnable} in a new {@link Thread} and return
+     * that new Thread.
+     *
+     * @deprecated use {@link #runAsync(Runnable)} instead
+     */
+    @Deprecated
+    public static Thread runInNewThread(Runnable runnable) {
+        return runAsync(runnable);
+    }
+
+    /**
+     * Run the {@code runnable} asynchronously, in a new {@link Thread} and return
+     * that new Thread.
+     */
+    public static Thread runAsync(Runnable runnable) {
+
+        Thread thread = new Thread(runnable);
+        thread.start();
+        return thread;
+    }
+
 }

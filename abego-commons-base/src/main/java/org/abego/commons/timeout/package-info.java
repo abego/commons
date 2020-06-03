@@ -23,10 +23,10 @@
  */
 
 /**
- * Stuff dealing with "timeout", i.e. the termination of a function before it
- * completed its computation, typically because exceeding a given duration.
+ * Stuff dealing with "timeout" (the termination of a function before it
+ * completed its computation, typically because exceeding a given duration).
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.timeout;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

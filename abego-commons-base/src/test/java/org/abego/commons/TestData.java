@@ -42,6 +42,7 @@ public class TestData {
     public static final String EMPTY_TXT_TEXT = ""; // NON-NLS
 
     public static final String SAMPLE_TXT_RESOURCE_NAME = "sample.txt"; // NON-NLS
+    public static final String SAMPLE_TXT_RESOURCE_FULL_NAME = "org/abego/commons/sample.txt"; // NON-NLS
     public static final String SAMPLE_TXT_TEXT = "aäñ"; // NON-NLS
 
     public static final String SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME = "sample-ISO-8859-1.txt"; // NON-NLS

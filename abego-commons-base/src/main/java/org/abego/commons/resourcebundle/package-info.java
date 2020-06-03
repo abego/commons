@@ -25,7 +25,7 @@
 /**
  * Stuff related to ResourceBundles.
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.resourcebundle;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

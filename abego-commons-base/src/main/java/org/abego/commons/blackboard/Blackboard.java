@@ -25,11 +25,9 @@
 package org.abego.commons.blackboard;
 
 import org.abego.commons.seq.Seq;
+import org.eclipse.jdt.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
-
-import static org.abego.commons.blackboard.BlackboardDefault.newBlackboardDefault;
 
 /**
  * A Blackboard holds a collection of items.
@@ -44,10 +42,6 @@ import static org.abego.commons.blackboard.BlackboardDefault.newBlackboardDefaul
  * threads are involved here, the main thread and the EventDispatchThread. </p>
  */
 public interface Blackboard<T> {
-
-    static <T> Blackboard<T> newBlackboard() {
-        return newBlackboardDefault();
-    }
 
     /**
      * Return all items of this Blackboard, in the order they were added.

@@ -25,19 +25,20 @@
 package org.abego.commons.util;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
-import org.abego.commons.util.function.SupplierWithException;
+import org.eclipse.jdt.annotation.NonNull;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.function.Supplier;
 
-public class ScannerUtil {
+public final class ScannerUtil {
 
     ScannerUtil() {
         throw new MustNotInstantiateException();
     }
 
-    public static <E extends Exception> String textOf(SupplierWithException<Scanner, E> scannerFactory) throws E {
-        String result = "";
+    public static String textOf(Supplier<@NonNull Scanner> scannerFactory) {
+        @NonNull String result = "";
 
         try (Scanner scanner = scannerFactory.get()) {
             result = scanner.useDelimiter("\\A").next(); // NON-NLS
@@ -48,4 +49,5 @@ public class ScannerUtil {
 
         return result;
     }
+
 }

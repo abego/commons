@@ -27,8 +27,8 @@ package org.abego.commons.timeout;
 /**
  * As {@link java.util.concurrent.TimeoutException} but as an unchecked exception.
  */
+@SuppressWarnings("serial")
 public class TimeoutUncheckedException extends RuntimeException {
-    private static final long serialVersionUID = 7043312987965962259L;
 
     public TimeoutUncheckedException() {
     }

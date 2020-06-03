@@ -30,7 +30,7 @@ import java.util.Collection;
 
 import static org.abego.commons.lang.StringUtil.singleQuotedStringWithoutEscapes;
 
-public class CollectionUtil {
+public final class CollectionUtil {
 
     CollectionUtil() {
         throw new MustNotInstantiateException();
@@ -53,5 +53,16 @@ public class CollectionUtil {
             sb.append(singleQuotedStringWithoutEscapes(item));
         }
         return sb.toString();
+    }
+
+    /**
+     * Add all items of the <code>iterable</code> to the <code>collection</code>
+     * and return the <code>collection</code>.
+     */
+    public static <S, T extends S> Collection<S> addAll(Collection<S> collection, Iterable<T> iterable) {
+        for (T i : iterable) {
+            collection.add(i);
+        }
+        return collection;
     }
 }

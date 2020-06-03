@@ -26,30 +26,19 @@ package org.abego.commons.seq;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
-import java.util.List;
-
 import static org.abego.commons.lang.IterableUtil.areEqual;
-import static org.abego.commons.seq.SeqForArray.seqForArray;
-import static org.abego.commons.seq.SeqForList.seqForList;
 
 final class SeqHelper {
+
     SeqHelper() {
         throw new MustNotInstantiateException();
     }
 
-    static <T> Seq<T> newSeq(List<T> list) {
-        return list.isEmpty() ? Seq.emptySeq() : seqForList(list);
-    }
-
-    static <T> Seq<T> newSeq(T[] items) {
-        return items.length == 0 ? Seq.emptySeq() : seqForArray(items);
-    }
-
     static <T> Seq<T> emptySeq() {
-        return EmptySeqImpl.emptySeqImpl();
+        return EmptySeq.newEmptySeq();
     }
 
-    static boolean seqsAreEquals(Seq<?> seq, Seq<?> other) {
+    static boolean seqsAreEqual(Seq<?> seq, Seq<?> other) {
         if (seq == other) return true;
         return areEqual(seq, other);
     }

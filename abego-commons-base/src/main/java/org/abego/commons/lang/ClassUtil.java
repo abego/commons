@@ -26,45 +26,22 @@ package org.abego.commons.lang;
 
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.lang.exception.UncheckedException;
+import org.eclipse.jdt.annotation.Nullable;
 
+import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.MissingResourceException;
 
-import static org.abego.commons.io.InputStreamUtil.textOf;
-import static org.abego.commons.lang.exception.UncheckedException.uncheckedException;
+import static java.lang.String.format;
+import static org.abego.commons.lang.exception.UncheckedException.newUncheckedException;
 
-public class ClassUtil {
+public final class ClassUtil {
 
     static final String RESOURCE_NOT_FOUND_MESSAGE = "Resource not found"; //NON-NLS
 
     ClassUtil() {
         throw new MustNotInstantiateException();
-    }
-
-    /**
-     * Return the text of the resource <code>resourceName</code> of
-     * <code>theClass</code>, assuming the text is encoded with the {@link Charset}
-     * <code>charset</code>.
-     */
-    public static String textOfResource(
-            Class<?> theClass, String resourceName, Charset charset) {
-        try {
-            return textOf(theClass.getResourceAsStream(resourceName), charset);
-        } catch (Exception e) {
-            throw uncheckedException(String.format(
-                    "Error when accessing resource `%s` of class `%s`.", // NON-NLS
-                    resourceName, theClass.getName()), e);
-        }
-    }
-
-    /**
-     * Return the text of the resource <code>resourceName</code> of
-     * <code>theClass</code>, assuming the text is UTF-8 encoded.
-     */
-    public static String textOfResource(Class<?> theClass, String resourceName) {
-        return textOfResource(theClass, resourceName, StandardCharsets.UTF_8);
     }
 
     /**
@@ -83,5 +60,67 @@ public class ClassUtil {
         return url;
     }
 
+    /**
+     * Return the resource <code>resourceName</code> of <code>theClass</code> as an {@link InputStream},
+     * throw a {@link MissingResourceException} when the resource does not exist.
+     *
+     * <p>For details see {@link Class#getResourceAsStream(String)}</p>
+     */
+    public static InputStream resourceAsStream(Class<?> theClass, String resourceName) {
+
+        InputStream stream = theClass.getResourceAsStream(resourceName);
+        if (stream == null) {
+            throw new MissingResourceException(
+                    RESOURCE_NOT_FOUND_MESSAGE, theClass.getName(), resourceName);
+        }
+        return stream;
+    }
+
+    /**
+     * Return the name of the class of the {@code object}, or {@code null}
+     * when {@code object} is {@code null}.
+     */
+    @Nullable
+    public static String classNameOrNull(@Nullable Object object) {
+        return object != null ? object.getClass().getName() : null;
+    }
+
+    /**
+     * Return the package of <code>theClass</code> as a path, i.e. the name of
+     * the package with the dots (".") replaced by "/".
+     */
+    public static String packagePath(Class<?> theClass) {
+        return theClass.getPackage().getName().replaceAll("\\.", "/");
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static <T> T newInstanceOfClassNamed(String className, Class<T> expectedType) {
+        try {
+            Class<?> aClass = Class.forName(className);
+            Object instance = aClass.getConstructor().newInstance();
+            if (!expectedType.isInstance(instance)) {
+                throw newUncheckedException(
+                        format("%s expected, got %s", //NON-NLS
+                                expectedType.getName(),
+                                instance.getClass().getName()));
+            }
+            return expectedType.cast(instance);
+
+        } catch (UncheckedException e) {
+            throw e;
+        } catch (Exception e) {
+            throw newUncheckedException(
+                    format("Error when loading '%s'", className), e); //NON-NLS
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T requireType(@Nullable Object object, Class<T> type) {
+        if (!type.isInstance(object)) {
+            throw new IllegalArgumentException(format("Expected type %s, got %s" //NON-NLS
+                    , type.getName(), classNameOrNull(object)));
+        }
+        return (T) object;
+    }
 
 }

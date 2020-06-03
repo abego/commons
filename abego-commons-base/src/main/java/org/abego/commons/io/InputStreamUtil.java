@@ -26,20 +26,31 @@ package org.abego.commons.io;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.util.ScannerUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.Scanner;
 
+import static java.nio.file.Files.copy;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.abego.commons.io.FileUtil.runIOCode;
 
-public class InputStreamUtil {
+public final class InputStreamUtil {
 
     InputStreamUtil() {
         throw new MustNotInstantiateException();
+    }
+
+    // --- Factories ---
+
+    public static InputStream newInputStream(String text, Charset charset) {
+        return new ByteArrayInputStream(text.getBytes(charset));
+    }
+
+    public static InputStream newInputStream(String text) {
+        return newInputStream(text, StandardCharsets.UTF_8);
     }
 
     // --- Queries ---
@@ -61,8 +72,8 @@ public class InputStreamUtil {
     /**
      * Write the content of the <code>inputStream</code> to <code>file</code>.
      */
-    public static void write(InputStream inputStream, File file) throws IOException {
-        Files.copy(inputStream, file.toPath(), REPLACE_EXISTING);
+    public static void write(InputStream inputStream, File file) {
+        runIOCode(() -> copy(inputStream, file.toPath(), REPLACE_EXISTING));
     }
 
 }

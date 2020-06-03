@@ -25,11 +25,14 @@
 package org.abego.commons.lang;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.text.MessageFormat;
 
-public class ObjectUtil {
+import static org.abego.commons.lang.ClassUtil.classNameOrNull;
+
+public final class ObjectUtil {
 
     ObjectUtil() {
         throw new MustNotInstantiateException();
@@ -43,11 +46,11 @@ public class ObjectUtil {
      *
      * <b>Usage Example:</b>
      * <pre>
-     * assertThrows(Exception.class, () -&lt; ignore(firstChar("")));
+     * assertThrows(Exception.class, () -&gt; ignore(firstChar("")));
      * </pre>
      */
-    public static void ignore(
-            @SuppressWarnings("unused") @Nullable Object ignoredObject) {
+    @SuppressWarnings("EmptyMethod")
+    public static void ignore(@Nullable Object ignoredObject) {
         // intentionally empty
     }
 
@@ -60,11 +63,20 @@ public class ObjectUtil {
             throw new IllegalArgumentException(
                     MessageFormat.format(
                             "Object is not of type {0} (but {1})", //NON-NLS
-                            expectedType.getName(),
-                            (object == null ? "null" : object.getClass())));
+                            expectedType.getName(), classNameOrNull(object)));
         }
 
         return expectedType.cast(object);
     }
+
+    /**
+     * Return the {@code value} when it is not {@code null}, otherwise return the {@code otherValue}.
+     *
+     * <p>In some programming languages this operation is performed by an "Elvis" operator ("?:").</p>
+     */
+    public static <T> @NonNull T valueOrElse(@Nullable T value, @NonNull T otherValue) {
+        return value != null ? value : otherValue;
+    }
+
 
 }

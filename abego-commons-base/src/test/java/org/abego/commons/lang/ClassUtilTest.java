@@ -26,21 +26,21 @@ package org.abego.commons.lang;
 
 import org.abego.commons.TestData;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.lang.exception.UncheckedException;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
-import static org.abego.commons.TestData.EMPTY_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.MISSING_RESOURCE_NAME;
-import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME;
-import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_TEXT;
 import static org.abego.commons.TestData.SAMPLE_TXT_RESOURCE_NAME;
-import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
 import static org.abego.commons.lang.ClassUtil.RESOURCE_NOT_FOUND_MESSAGE;
+import static org.abego.commons.lang.ClassUtil.classNameOrNull;
+import static org.abego.commons.lang.ClassUtil.newInstanceOfClassNamed;
+import static org.abego.commons.lang.ClassUtil.packagePath;
 import static org.abego.commons.lang.ClassUtil.resource;
-import static org.abego.commons.lang.ClassUtil.textOfResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -50,43 +50,6 @@ class ClassUtilTest {
     void constructor() {
         assertThrows(MustNotInstantiateException.class, ClassUtil::new);
     }
-
-    @Test
-    void textOfResource_ok() {
-
-        String text = textOfResource(TestData.class, SAMPLE_TXT_RESOURCE_NAME);
-
-        assertEquals(SAMPLE_TXT_TEXT, text);
-
-    }
-
-    @Test
-    void textOfResource_emptyResource() {
-
-        String text = textOfResource(TestData.class, EMPTY_TXT_RESOURCE_NAME);
-
-        assertEquals("", text);
-    }
-
-    @Test
-    void textOfResource_resourceMissing() {
-
-        Exception e = assertThrows(Exception.class,
-                () -> textOfResource(getClass(), MISSING_RESOURCE_NAME));
-
-        assertEquals(
-                "Error when accessing resource `missing.txt` of class `org.abego.commons.lang.ClassUtilTest`.",  // NON-NLS
-                e.getMessage());
-    }
-
-    @Test
-    void textOfResource_Charset_ok() {
-        String text = textOfResource(
-                TestData.class, SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME, StandardCharsets.ISO_8859_1);
-
-        assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT, text);
-    }
-
 
     @Test
     void resourceOk() {
@@ -104,5 +67,57 @@ class ClassUtilTest {
 
         assertEquals(RESOURCE_NOT_FOUND_MESSAGE, e.getMessage());
     }
+
+    @Test
+    void packagePath_Ok() {
+
+        String packagePath = packagePath(TestData.class);
+
+        assertEquals("org/abego/commons", packagePath);
+    }
+
+    @Test
+    void classNameOrNull_Ok() {
+
+        String className = classNameOrNull("");
+
+        assertEquals("java.lang.String", className);
+
+        assertNull(classNameOrNull(null));
+
+    }
+
+    @Test
+    void newInstanceOfClassNamed_OK() {
+        String s = newInstanceOfClassNamed("java.lang.String", String.class);
+        assertNotNull(s);
+    }
+
+    @Test
+    void newInstanceOfClassNamed_UnknownClass() {
+        UncheckedException e = assertThrows(UncheckedException.class,
+                () -> newInstanceOfClassNamed("com.example.UnknownClass", String.class));
+        assertEquals("Error when loading 'com.example.UnknownClass'", e.getMessage());
+    }
+
+    @Test
+    void newInstanceOfClassNamed_UnexpectedType() {
+        UncheckedException e = assertThrows(UncheckedException.class,
+                () -> newInstanceOfClassNamed("java.lang.Object", String.class));
+        assertEquals("java.lang.String expected, got java.lang.Object", e.getMessage());
+    }
+
+    @Test
+    void requireType() {
+
+        String s = ClassUtil.requireType("foo", String.class);
+        assertEquals("foo", s);
+
+        Exception e = assertThrows(Exception.class,
+                () -> ClassUtil.requireType("foo", Float.class));
+        assertEquals("Expected type java.lang.Float, got java.lang.String", e.getMessage());
+
+    }
+
 
 }

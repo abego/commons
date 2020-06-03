@@ -23,16 +23,20 @@
  */
 package org.abego.commons.javalang;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Objects;
 
-import static org.abego.commons.lang.exception.UncheckedException.uncheckedException;
+import static org.abego.commons.lang.exception.UncheckedException.newUncheckedException;
 
 /**
  * A Fully Qualified Name, as defined in chapter 6.7 of "The Java® Language Specification
  * Java SE 11 Edition".
  */
+@SuppressWarnings("WeakerAccess")
 public class FullyQualifiedName {
     /**
      * The character used to separate the (identifier) parts of a qualified name
@@ -58,7 +62,7 @@ public class FullyQualifiedName {
     public static String fullyQualifiedNameString(String text) {
 
         if (!isFullyQualifiedName(text)) {
-            throw uncheckedException(MessageFormat.format(
+            throw newUncheckedException(MessageFormat.format(
                     "Fully qualified name expected. Got {0}", text)); // NON-NLS
         }
         return text;
@@ -66,7 +70,7 @@ public class FullyQualifiedName {
 
     public static boolean isFullyQualifiedName(String text) {
 
-        String[] names = text.split("\\.", -1); // NON-NLS
+        @NonNull String[] names = text.split("\\.", -1); // NON-NLS
         for (String name : names) {
             if (!JavaLangUtil.isJavaIdentifier(name)) {
                 return false;
@@ -101,7 +105,7 @@ public class FullyQualifiedName {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -109,6 +113,7 @@ public class FullyQualifiedName {
             return false;
         }
         FullyQualifiedName that = (FullyQualifiedName) o;
+        //noinspection CallToSuspiciousStringMethod
         return fullName.equals(that.fullName);
     }
 

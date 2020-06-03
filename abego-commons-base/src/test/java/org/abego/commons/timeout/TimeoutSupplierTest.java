@@ -39,12 +39,12 @@ class TimeoutSupplierTest {
         // very simple test, just to use the TimeoutSupplier interface and avoid
         // an "unused interface" warning
 
-        TimeoutSupplier ts = new MyTimeoutSupplier();
+        MyTimeoutSupplier ts = new MyTimeoutSupplier();
 
         assertEquals(Duration.ofMillis(10), ts.timeout());
     }
 
-    private class MyTimeoutSupplier implements TimeoutSupplier {
+    private static class MyTimeoutSupplier implements TimeoutSupplier {
         @Override
         public Duration timeout() {
             return TIMEOUT_DURATION;

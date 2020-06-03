@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.abego.commons.lang.ObjectUtil.checkType;
 import static org.abego.commons.lang.ObjectUtil.ignore;
+import static org.abego.commons.lang.ObjectUtil.valueOrElse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -51,11 +52,26 @@ class ObjectUtilTest {
     void checkTypeOk() {
         String s = checkType("foo", String.class);
         assertEquals("foo", s);
+    }
 
+    @Test
+    void checkType_failOk() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                 () -> checkType(1, String.class));
-        assertEquals("Object is not of type java.lang.String (but class java.lang.Integer)", e.getMessage());
+        assertEquals("Object is not of type java.lang.String (but java.lang.Integer)", e.getMessage());
+    }
 
+    @Test
+    void checkType_nullFailOk() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> checkType(null, String.class));
+        assertEquals("Object is not of type java.lang.String (but null)", e.getMessage());
+    }
 
+    @Test
+    void valueOrElseOK() {
+
+        assertEquals("foo", valueOrElse("foo", "bar"));
+        assertEquals("bar", valueOrElse(null, "bar"));
     }
 }

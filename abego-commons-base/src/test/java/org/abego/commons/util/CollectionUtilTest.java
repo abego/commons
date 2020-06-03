@@ -24,14 +24,20 @@
 
 package org.abego.commons.util;
 
+import org.abego.commons.lang.IterableUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import static org.abego.commons.util.CollectionUtil.addAll;
 import static org.abego.commons.util.CollectionUtil.singleQuotedStringListWithoutEscapes;
 import static org.abego.commons.util.ListUtil.list;
+import static org.abego.commons.util.ListUtil.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CollectionUtilTest {
@@ -50,9 +56,19 @@ class CollectionUtilTest {
     }
 
     @Test
-    void singleQuotedStringList_noEscapes_ok() {
+    void singleQuotedStringListWithoutEscapes_ok() {
         assertEquals("", singleQuotedStringListWithoutEscapes(list()));
         assertEquals(EXPECTED_1, singleQuotedStringListWithoutEscapes(LIST_1));
         assertEquals(EXPECTED_2, singleQuotedStringListWithoutEscapes(LIST_2));
+    }
+
+    @Test
+    void addAll_OK() {
+        List<String> result = new ArrayList<>();
+
+        Collection<String> coll = addAll(result, toList("a", "b", "c"));
+
+        assertSame(result, coll);
+        assertEquals("abc", IterableUtil.textOf(result));
     }
 }

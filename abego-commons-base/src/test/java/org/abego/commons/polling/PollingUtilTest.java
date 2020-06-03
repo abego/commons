@@ -54,13 +54,13 @@ class PollingUtilTest {
 
     @Test
     void pollNoFailOk() {
-        Duration timeout = Duration.ofMillis(20);
+        Duration timeout = Duration.ofMillis(100);
         long waitTimeMillis = 5;
         long endTime = System.currentTimeMillis() + waitTimeMillis;
 
         Long t = pollNoFail(System::currentTimeMillis, i -> i >= endTime, timeout);
 
-        assertTrue(t >= endTime);
+        assertTrue(t >= endTime, () -> "Expected t >= endTime, got t=" + t + ", endTime=" + endTime);
     }
 
     @Test

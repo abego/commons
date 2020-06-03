@@ -23,10 +23,10 @@
  */
 
 /**
- * Stuff related to the Java programming language, especially
- * its syntactical elements like "identifier", "qualified names", etc..
+ * Java programming language related stuff, especially
+ * its syntactical elements (like "identifier", "qualified names", ...)
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.javalang;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

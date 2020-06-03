@@ -27,7 +27,7 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.text.MessageFormat;
 
-public class MessageFormatUtil {
+public final class MessageFormatUtil {
 
     MessageFormatUtil() {
         throw new MustNotInstantiateException();

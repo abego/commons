@@ -37,7 +37,7 @@ import java.util.function.UnaryOperator;
 import static java.lang.System.currentTimeMillis;
 import static org.abego.commons.lang.ThreadUtil.sleep;
 
-public class PollingUtil {
+public final class PollingUtil {
 
     private static final int MAX_SLEEP_BETWEEN_POLLS_MILLIS = 100;
 

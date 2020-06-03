@@ -25,12 +25,13 @@
 package org.abego.commons.io;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import static org.abego.commons.io.ByteArrayOutputStreamUtil.textOf;
-import static org.abego.commons.util.function.SupplierWithException.unchecked;
 
 /**
  * A PrintStream that prints to an internal buffer.
@@ -46,9 +47,13 @@ public final class PrintStreamToBuffer extends PrintStream {
         this.outputStream = outputStream;
     }
 
-    public static PrintStreamToBuffer printStreamToBuffer() {
-        return unchecked(
-                () -> new PrintStreamToBuffer(new ByteArrayOutputStream()));
+    public static PrintStreamToBuffer newPrintStreamToBuffer() {
+        try {
+            return new PrintStreamToBuffer(new ByteArrayOutputStream());
+        } catch (IOException e) {
+            // never reached. Will never throw an IOException.
+            throw new UncheckedIOException(e);
+        }
     }
 
     public String text() {

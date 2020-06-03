@@ -28,10 +28,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.abego.commons.lang.IterableUtil.hashCodeForIterable;
-import static org.abego.commons.seq.SeqHelper.seqsAreEquals;
-
-final class SeqForList<T> implements SeqNonEmpty<T> {
+@SuppressWarnings("squid:S2160")
+// --> 'Subclasses that add fields should override "equals"'
+// (No need to override "equals" as AbstractSeq implements "equals" in an abstract way using the iterator)
+final class SeqForList<T> extends AbstractSeq<T> implements SeqNonEmpty<T> {
 
     static final String LIST_MUST_NOT_BE_EMPTY_MESSAGE = "list must not be empty"; //NON-NLS
     private final List<T> list;
@@ -40,7 +40,7 @@ final class SeqForList<T> implements SeqNonEmpty<T> {
         this.list = list;
     }
 
-    static <T> SeqForList<T> seqForList(List<T> list) {
+    static <T> SeqForList<T> newSeqForList(List<T> list) {
         if (list.isEmpty()) {
             throw new IllegalArgumentException(LIST_MUST_NOT_BE_EMPTY_MESSAGE);
         }
@@ -53,7 +53,7 @@ final class SeqForList<T> implements SeqNonEmpty<T> {
     }
 
     @Override
-    public long size() {
+    public int size() {
         return list.size();
     }
 
@@ -65,17 +65,6 @@ final class SeqForList<T> implements SeqNonEmpty<T> {
     @Override
     public Stream<T> stream() {
         return list.stream();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Seq)) return false;
-        return seqsAreEquals(this, (Seq<?>) o);
-    }
-
-    @Override
-    public int hashCode() {
-        return hashCodeForIterable(this);
     }
 
 }

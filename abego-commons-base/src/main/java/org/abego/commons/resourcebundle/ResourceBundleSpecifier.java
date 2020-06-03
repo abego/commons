@@ -24,24 +24,18 @@
 
 package org.abego.commons.resourcebundle;
 
-import java.io.File;
-
 public interface ResourceBundleSpecifier {
 
-    static ResourceBundleSpecifier resourceBundleSpecifier(File resourceBundleFile) {
-        return ResourceBundleSpecifierDefault.resourceBundleSpecifier(resourceBundleFile);
-    }
+    String getBundleBaseName();
 
-    String bundleBaseName();
+    String getLanguage();
 
-    String language();
+    String getCountry();
 
-    String country();
-
-    String platform();
+    String getPlatform();
 
     /**
      * Return the extension of the ResourceBundle file, without the '.'.
      */
-    String fileExtension();
+    String getFileExtension();
 }

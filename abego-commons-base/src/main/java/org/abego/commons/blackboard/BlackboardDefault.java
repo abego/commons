@@ -26,19 +26,22 @@ package org.abego.commons.blackboard;
 
 import org.abego.commons.lang.IterableUtil;
 import org.abego.commons.seq.Seq;
+import org.eclipse.jdt.annotation.Nullable;
 
-import javax.annotation.Nullable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
+import static org.abego.commons.seq.SeqUtil.newSeq;
 
-final class BlackboardDefault<T> implements Blackboard<T> {
+
+public final class BlackboardDefault<T> implements Blackboard<T> {
     private final List<T> itemList = new ArrayList<>();
 
     private BlackboardDefault() {
+        // empty
     }
 
     public static <T> BlackboardDefault<T> newBlackboardDefault() {
@@ -49,14 +52,14 @@ final class BlackboardDefault<T> implements Blackboard<T> {
     public boolean isEmpty() {
         synchronized (itemList) {
             return itemList.isEmpty();
-        }
+        } // '}' in same line as last statement to avoid wrong code coverage info
     }
 
     @Override
     public Seq<T> items() {
         synchronized (itemList) {
-            return Seq.newSeq(new ArrayList<>(itemList));
-        }
+            return newSeq(new ArrayList<>(itemList));
+        } // '}' in same line as last statement to avoid wrong code coverage info
     }
 
     @Override
@@ -70,12 +73,12 @@ final class BlackboardDefault<T> implements Blackboard<T> {
                 }
             }
             return null;
-        }
+        } // '}' in same line as last statement to avoid wrong code coverage info
     }
 
     @Override
     public T itemWith(Predicate<T> condition) {
-        T result = itemWithOrNull(condition);
+        @Nullable T result = itemWithOrNull(condition);
         if (result == null) {
             throw new NoSuchElementException();
         }
@@ -89,14 +92,14 @@ final class BlackboardDefault<T> implements Blackboard<T> {
 
     @Override
     public boolean contains(T item) {
-        return itemWithOrNull(i -> i.equals(item)) != null;
+        return itemWithOrNull(i -> i != null && i.equals(item)) != null;
     }
 
     @Override
     public String text() {
         synchronized (itemList) {
             return IterableUtil.textOf(itemList, "\n");
-        }
+        } // '}' in same line as last statement to avoid wrong code coverage info
     }
 
     @Override

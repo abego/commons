@@ -26,18 +26,71 @@ package org.abego.commons.lang;
 
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
-public class IterableUtil {
+@SuppressWarnings("WeakerAccess")
+public final class IterableUtil {
     private static final String SEPARATOR_DEFAULT = "";
     private static final String EMPTY_TEXT_DEFAULT = "";
-    private static final String NULL_TEXT_DEFAULT = "null";
 
     IterableUtil() {
         throw new MustNotInstantiateException();
+    }
+
+    @SafeVarargs
+    public static <T> Iterable<T> toIterable(T... items) {
+        return new VarArgsIterable<>(items);
+    }
+
+    /**
+     * Append the texts of the <code>items</code>, stringed together to a single
+     * text, to the given <code>stringBuilder</code>.
+     *
+     * <p>Use <code>textOfItem(item)</code> as the text for an individual item.
+     * When an item is <code>null</code> use the <code>nullValueText</code>.</p>
+     *
+     * <p>Use <code>separator</code> to separate subsequent item texts.</p>
+     *
+     * @param items         the items those texts should be joined. Elements in
+     *                      <code>items</code> may be <code>null</code>.
+     * @param separator     the text used to separate subsequent item texts.
+     *                      [Default: ""]
+     * @param emptyText     the text used when items contains no item.
+     *                      [Default: ""]
+     * @param textOfItem    <code>textOfItem(item)</code> returns the text of
+     *                      the given <code>item</code>.
+     *                      [Default: Object::toString]
+     * @param nullValueText the text to use as an item's text when the item is
+     *                      <code>null</code>.
+     *                      [Default: "null"]
+     */
+    public static <T> void appendTextOf(
+            StringBuilder stringBuilder,
+            Iterable<T> items,
+            CharSequence separator,
+            String emptyText,
+            Function<T, String> textOfItem,
+            CharSequence nullValueText) {
+        boolean addSeparator = false;
+        boolean isEmpty = true;
+        for (@Nullable T item : items) {
+            isEmpty = false;
+            // Add a separator, but not before the first item
+            if (addSeparator)
+                stringBuilder.append(separator);
+            else
+                addSeparator = true;
+
+            stringBuilder.append(item == null ? nullValueText : textOfItem.apply(item));
+        }
+        if (isEmpty)
+            stringBuilder.append(emptyText);
     }
 
     /**
@@ -70,19 +123,8 @@ public class IterableUtil {
             Function<T, String> textOfItem,
             CharSequence nullValueText) {
         StringBuilder sb = new StringBuilder();
-        boolean addSeparator = false;
-        boolean isEmpty = true;
-        for (T item : items) {
-            isEmpty = false;
-            // Add a separator, but not before the first item
-            if (addSeparator)
-                sb.append(separator);
-            else
-                addSeparator = true;
-
-            sb.append(item == null ? nullValueText : textOfItem.apply(item));
-        }
-        return isEmpty ? emptyText : sb.toString();
+        appendTextOf(sb, items, separator, emptyText, textOfItem, nullValueText);
+        return sb.toString();
     }
 
     /**
@@ -93,7 +135,7 @@ public class IterableUtil {
      * using default values for omitted parameter.</p>
      */
     public static <T> String textOf(Iterable<T> items) {
-        return textOf(items, SEPARATOR_DEFAULT, EMPTY_TEXT_DEFAULT, Object::toString, NULL_TEXT_DEFAULT);
+        return textOf(items, SEPARATOR_DEFAULT, EMPTY_TEXT_DEFAULT, Object::toString, StringUtil.NULL_STRING);
     }
 
     /**
@@ -106,7 +148,7 @@ public class IterableUtil {
     public static <T> String textOf(
             Iterable<T> items,
             CharSequence separator) {
-        return textOf(items, separator, EMPTY_TEXT_DEFAULT, Object::toString, NULL_TEXT_DEFAULT);
+        return textOf(items, separator, EMPTY_TEXT_DEFAULT, Object::toString, StringUtil.NULL_STRING);
     }
 
     /**
@@ -120,7 +162,17 @@ public class IterableUtil {
             Iterable<T> items,
             CharSequence separator,
             Function<T, String> textOfItem) {
-        return textOf(items, separator, EMPTY_TEXT_DEFAULT, textOfItem, NULL_TEXT_DEFAULT);
+        return textOf(items, separator, EMPTY_TEXT_DEFAULT, textOfItem, StringUtil.NULL_STRING);
+    }
+
+    /**
+     * Return the texts of the <code>items</code>, stringed together to a single
+     * text.
+     *
+     * <p>Same as {@link IterableUtil#textOf(Iterable, CharSequence)} (preferred)</p>
+     */
+    public static <T> String join(CharSequence separator, Iterable<T> items) {
+        return textOf(items, separator);
     }
 
     public static boolean areEqual(
@@ -156,9 +208,67 @@ public class IterableUtil {
      */
     public static int hashCodeForIterable(Iterable<?> iterable) {
         int hashCode = 1;
-        for (Object e : iterable) {
+        for (@Nullable Object e : iterable) {
             hashCode = 31 * hashCode + (e == null ? 0 : e.hashCode());
         }
         return hashCode;
+    }
+
+    public static boolean isEmpty(Iterable<?> iterable) {
+        return !iterable.iterator().hasNext();
+    }
+
+    public static int size(Iterable<?> iterable) {
+        int result = 0;
+
+        for (@SuppressWarnings("unused") Object o : iterable) {
+            result++;
+        }
+
+        return result;
+    }
+
+    /**
+     * Return iterable as a String starting with the class name and followed
+     * by a <tt>", "</tt> (comma and space) separated list of the items of the
+     * Seq in brackets (`[...]`), each item converted using {@link String#valueOf(Object)}.
+     *
+     * <p>This method is typically used in the "toString()" methods of concrete
+     * {@link Iterable} implementations.</p>
+     */
+    public static String toStringOfIterable(Iterable<?> iterable) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(iterable.getClass().getName());
+        //noinspection MagicCharacter
+        sb.append('[');
+        appendTextOf(sb, iterable, ", ", "", String::valueOf, StringUtil.NULL_STRING);
+        //noinspection MagicCharacter
+        return sb.append(']').toString();
+    }
+
+    @Nullable
+    public static <T> T firstOrNull(Iterable<T> iterable, Predicate<T> predicate) {
+        for (T i : iterable) {
+            if (predicate.test(i)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    private static class VarArgsIterable<T> implements Iterable<T> {
+
+        private final T[] array;
+
+        @SafeVarargs
+        public VarArgsIterable(T... items) {
+            this.array = items;
+        }
+
+        @Override
+        @NonNull
+        public Iterator<T> iterator() {
+            return ArrayUtil.iterator(array);
+        }
     }
 }

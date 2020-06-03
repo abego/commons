@@ -23,9 +23,9 @@
  */
 
 /**
- * Stuff related to types of the "java.text" package (like MessageFormat, ...)
+ * Stuff related to types of the "java.text" package (like MessageFormat, ...).
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.text;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

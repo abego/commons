@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
-import static org.abego.commons.lang.exception.UncheckedException.uncheckedException;
+import static org.abego.commons.lang.exception.UncheckedException.newUncheckedException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -38,7 +38,7 @@ class UncheckedExceptionTest {
     void uncheckedException_ok() {
         String message = "aMessage";
         ParseException ex = new ParseException(message, 1);
-        UncheckedException uncheckedException = uncheckedException(ex);
+        UncheckedException uncheckedException = UncheckedException.newUncheckedException(ex);
 
         assertEquals(ex, uncheckedException.getCause());
         assertEquals(message, uncheckedException.getMessage());
@@ -48,7 +48,7 @@ class UncheckedExceptionTest {
     void uncheckedException_withMessageAndException() {
         String message = "outerMessage";
         ParseException ex = new ParseException("innerMessage", 1);
-        UncheckedException uncheckedException = uncheckedException(message, ex);
+        UncheckedException uncheckedException = UncheckedException.newUncheckedException(message, ex);
 
         assertEquals(ex, uncheckedException.getCause());
         assertEquals(message, uncheckedException.getMessage());
@@ -57,7 +57,7 @@ class UncheckedExceptionTest {
     @Test
     void uncheckedException_withMessage() {
         String message = "messageText";
-        UncheckedException uncheckedException = uncheckedException(message);
+        UncheckedException uncheckedException = newUncheckedException(message);
 
         assertNull(uncheckedException.getCause());
         assertEquals(message, uncheckedException.getMessage());

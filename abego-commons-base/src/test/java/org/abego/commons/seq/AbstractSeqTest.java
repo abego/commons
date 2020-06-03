@@ -24,14 +24,24 @@
 
 package org.abego.commons.seq;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static org.abego.commons.lang.StringUtil.array;
+import static org.abego.commons.seq.SeqHelper.emptySeq;
+import static org.abego.commons.seq.SeqUtil.newSeq;
+import static org.abego.commons.util.ListUtil.list;
+import static org.abego.commons.util.ListUtil.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -42,8 +52,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class AbstractSeqTest {
 
+    static final @NonNull String[] SINGLE_ITEM_ARRAY = array("a");
+    static final @NonNull String[] HELLO_ARRAY = array("h", "e", "l", "l", "o");
+
     private Seq<String> noItemSeq() {
-        return Seq.emptySeq();
+        return emptySeq();
     }
 
     /**
@@ -58,7 +71,7 @@ abstract class AbstractSeqTest {
 
     @Test
     void seq_Array_ok() {
-        Seq<String> s = Seq.newSeq("a");
+        Seq<String> s = newSeq("a");
 
         assertNotNull(s);
     }
@@ -67,16 +80,54 @@ abstract class AbstractSeqTest {
     void seq_List_ok() {
         List<String> list = new ArrayList<>();
         list.add("a");
-        Seq<String> s = Seq.newSeq(list);
+        Seq<String> s = newSeq(list);
 
         assertNotNull(s);
     }
+
+    @Test
+    void indexOf_OK() {
+        Seq<String> seq = helloSeq();
+
+        assertEquals(0, seq.indexOf("h"));
+        assertEquals(1, seq.indexOf("e"));
+        assertEquals(2, seq.indexOf("l"));
+        assertEquals(4, seq.indexOf("o"));
+        assertEquals(-1, seq.indexOf("X"));
+        assertEquals(-1, seq.indexOf(null));
+    }
+
+    @Test
+    void stream_ok() {
+        Seq<String> seq = helloSeq();
+
+        Stream<String> stream = seq.stream();
+
+        assertEquals(list(HELLO_ARRAY), stream.collect(Collectors.toList()));
+    }
+
+    @Test
+    void sorted_OK() {
+        Seq<String> seq = helloSeq();
+
+        Seq<String> sortedSeq = seq.sorted(Comparator.naturalOrder());
+
+        assertEquals(list("e", "h", "l", "l", "o"), toList(sortedSeq));
+    }
+
 
     @Test
     void isEmpty_ok() {
         assertTrue(noItemSeq().isEmpty());
         assertFalse(singleItemSeq().isEmpty());
         assertFalse(helloSeq().isEmpty());
+    }
+
+    @Test
+    void hasItems_ok() {
+        assertFalse(noItemSeq().hasItems());
+        assertTrue(singleItemSeq().hasItems());
+        assertTrue(helloSeq().hasItems());
     }
 
     @Test
@@ -139,8 +190,8 @@ abstract class AbstractSeqTest {
         assertNull(noItemSeq().anyItemOrNull());
         assertEquals("a", singleItemSeq().anyItemOrNull());
 
-        String r = helloSeq().anyItemOrNull();
-        assertTrue(r.equals("h") || r.equals("e") || r.equals("l") || r.equals("o"));
+        @Nullable String r = helloSeq().anyItemOrNull();
+        assertTrue(r != null && (r.equals("h") || r.equals("e") || r.equals("l") || r.equals("o")));
     }
 
     private void checkForEachOrderedForSeq(Seq<String> seq, int seqSize) {
@@ -182,6 +233,24 @@ abstract class AbstractSeqTest {
         checkForEachForSeq(helloSeq(), 4 /* "hello" contains 4 different chars */);
     }
 
+    // Map the strings to the character codes of their first character
+    private void checkMapForSeq(Seq<String> seq, Integer... expectedCharCodes) {
+        Seq<Integer> result = seq.map(s -> (int) s.charAt(0));
+
+        assertEquals(expectedCharCodes.length, result.size());
+
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(expectedCharCodes[i], result.item(i));
+        }
+    }
+
+    @Test
+    void map_ok() {
+        checkMapForSeq(noItemSeq());
+        checkMapForSeq(singleItemSeq(), 97);
+        checkMapForSeq(helloSeq(), 104, 101, 108, 108, 111);
+    }
+
     @Test
     void equals_ok() {
         assertEquals(noItemSeq(), noItemSeq());
@@ -215,6 +284,43 @@ abstract class AbstractSeqTest {
         assertEquals(1, noItemSeq().hashCode());
         assertEquals(128, singleItemSeq().hashCode());
         assertEquals(127791473, helloSeq().hashCode());
+    }
+
+    @Test
+    void toString_OK() {
+        assertTrue(noItemSeq().toString().endsWith("[]"));
+        assertTrue(singleItemSeq().toString().endsWith("[a]"));
+        assertTrue(helloSeq().toString().endsWith("[h, e, l, l, o]"));
+    }
+
+    @Test
+    void contains_OK() {
+        assertFalse(noItemSeq().contains("X"));
+        assertTrue(singleItemSeq().contains("a"));
+        assertFalse(singleItemSeq().contains("X"));
+        assertTrue(helloSeq().contains("l"));
+        assertFalse(helloSeq().contains("X"));
+    }
+
+    @Test
+    void joined_OK() {
+        assertEquals("", noItemSeq().joined());
+        assertEquals("a", singleItemSeq().joined());
+        assertEquals("hello", helloSeq().joined());
+    }
+
+    @Test
+    void joined_1Arg_OK() {
+        assertEquals("", noItemSeq().joined("-"));
+        assertEquals("a", singleItemSeq().joined("-"));
+        assertEquals("h-e-l-l-o", helloSeq().joined("-"));
+    }
+
+    @Test
+    void joined_2Args_OK() {
+        assertEquals("", noItemSeq().joined("-", s -> "(" + s + ")"));
+        assertEquals("(a)", singleItemSeq().joined("-", s -> "(" + s + ")"));
+        assertEquals("(h)-(e)-(l)-(l)-(o)", helloSeq().joined("-", s -> "(" + s + ")"));
     }
 
 }

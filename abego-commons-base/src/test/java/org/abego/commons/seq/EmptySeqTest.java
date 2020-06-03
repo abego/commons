@@ -28,6 +28,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
+import static org.abego.commons.seq.SeqHelper.emptySeq;
+import static org.abego.commons.seq.SeqUtil.newSeq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -39,10 +41,10 @@ class EmptySeqTest {
     @Test
     void equalsOk() {
 
-        Seq<String> e = Seq.emptySeq();
+        Seq<String> e = emptySeq();
 
-        Seq<String> e2 = Seq.emptySeq();
-        Seq<String> s = Seq.newSeq("a", "b", "c");
+        Seq<String> e2 = emptySeq();
+        Seq<String> s = newSeq("a", "b", "c");
 
         assertEquals(e, e2);
         assertNotEquals(e, s);
@@ -50,35 +52,35 @@ class EmptySeqTest {
 
     @Test
     void sizeOk() {
-        Seq<String> e = Seq.emptySeq();
+        Seq<String> e = emptySeq();
 
         assertEquals(0, e.size());
     }
 
     @Test
     void isEmptyOk() {
-        Seq<String> e = Seq.emptySeq();
+        Seq<String> e = emptySeq();
 
         assertTrue(e.isEmpty());
     }
 
     @Test
     void itemOk() {
-        Seq<String> e = Seq.emptySeq();
+        Seq<String> e = emptySeq();
 
         assertThrows(NoSuchElementException.class, () -> e.item(0));
     }
 
     @Test
     void iteratorOk() {
-        Seq<String> e = Seq.emptySeq();
+        Seq<String> e = emptySeq();
 
         assertFalse(e.iterator().hasNext());
     }
 
     @Test
     void streamOk() {
-        Seq<String> e = Seq.emptySeq();
+        Seq<String> e = emptySeq();
 
         assertEquals(0, e.stream().count());
     }

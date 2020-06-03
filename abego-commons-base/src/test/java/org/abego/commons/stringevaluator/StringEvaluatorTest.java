@@ -185,10 +185,30 @@ class StringEvaluatorTest {
     }
 
     @Test
-    void delimiters_Escape_fails() {
+    void delimiters_Escape_left_fails() {
         Exception e = Assertions
                 .assertThrows(StringEvaluator.StringEvaluatorException.class,
                         () -> stringEvaluator('\\', '$'));
+
+        assertEquals("'\\' must not be used as a term delimiter",
+                e.getMessage());
+    }
+
+    @Test
+    void delimiters_Escape_right_fails() {
+        Exception e = Assertions
+                .assertThrows(StringEvaluator.StringEvaluatorException.class,
+                        () -> stringEvaluator('$', '\\'));
+
+        assertEquals("'\\' must not be used as a term delimiter",
+                e.getMessage());
+    }
+
+    @Test
+    void delimiters_Escape_both_fails() {
+        Exception e = Assertions
+                .assertThrows(StringEvaluator.StringEvaluatorException.class,
+                        () -> stringEvaluator('\\', '\\'));
 
         assertEquals("'\\' must not be used as a term delimiter",
                 e.getMessage());

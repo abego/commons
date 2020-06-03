@@ -32,7 +32,7 @@ import java.nio.charset.Charset;
 
 import static org.abego.commons.io.PrintWriterUtil.printWriter;
 
-public class OutputStreamUtil {
+public final class OutputStreamUtil {
 
     OutputStreamUtil() {
         throw new MustNotInstantiateException();
@@ -50,4 +50,5 @@ public class OutputStreamUtil {
             writer.write(text);
         }
     }
+
 }

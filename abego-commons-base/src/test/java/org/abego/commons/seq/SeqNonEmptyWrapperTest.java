@@ -26,11 +26,10 @@ package org.abego.commons.seq;
 
 import org.junit.jupiter.api.Test;
 
-import static org.abego.commons.lang.ArrayUtil.array;
-import static org.abego.commons.seq.Seq.emptySeq;
-import static org.abego.commons.seq.SeqForArray.seqForArray;
+import static org.abego.commons.seq.SeqForArray.newSeqForArray;
+import static org.abego.commons.seq.SeqHelper.emptySeq;
 import static org.abego.commons.seq.SeqNonEmptyWrapper.SEQ_MUST_NOT_BE_EMPTY_MESSAGE;
-import static org.abego.commons.seq.SeqNonEmptyWrapper.wrapped;
+import static org.abego.commons.seq.SeqNonEmptyWrapper.newSeqNonEmptyWrapped;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -38,21 +37,19 @@ class SeqNonEmptyWrapperTest extends AbstractSeqTest {
 
     @Override
     Seq<String> singleItemSeq() {
-        return wrapped(seqForArray(array("a")));
+        return newSeqNonEmptyWrapped(newSeqForArray(SINGLE_ITEM_ARRAY));
     }
 
     @Override
     Seq<String> helloSeq() {
-        return wrapped(seqForArray(array("h", "e", "l", "l", "o")));
+        return newSeqNonEmptyWrapped(newSeqForArray(HELLO_ARRAY));
     }
-
 
     @Test
     void emptySeqFails() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                () -> wrapped(emptySeq()));
+                () -> newSeqNonEmptyWrapped(emptySeq()));
         assertEquals(SEQ_MUST_NOT_BE_EMPTY_MESSAGE, e.getMessage());
     }
-
 
 }

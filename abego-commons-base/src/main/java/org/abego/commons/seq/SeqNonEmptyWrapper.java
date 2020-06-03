@@ -27,10 +27,10 @@ package org.abego.commons.seq;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import static org.abego.commons.lang.IterableUtil.hashCodeForIterable;
-import static org.abego.commons.seq.SeqHelper.seqsAreEquals;
-
-final class SeqNonEmptyWrapper<T> implements SeqNonEmpty<T> {
+@SuppressWarnings("squid:S2160")
+// --> 'Subclasses that add fields should override "equals"'
+// (No need to override "equals" as AbstractSeq implements "equals" in an abstract way using the iterator)
+final class SeqNonEmptyWrapper<T> extends AbstractSeq<T> implements SeqNonEmpty<T> {
     static final String SEQ_MUST_NOT_BE_EMPTY_MESSAGE = "seq must not be empty"; //NON-NLS
     private final Seq<T> seq;
 
@@ -41,12 +41,12 @@ final class SeqNonEmptyWrapper<T> implements SeqNonEmpty<T> {
         this.seq = seq;
     }
 
-    static <T> SeqNonEmptyWrapper<T> wrapped(Seq<T> seq) {
+    static <T> SeqNonEmptyWrapper<T> newSeqNonEmptyWrapped(Seq<T> seq) {
         return new SeqNonEmptyWrapper<>(seq);
     }
 
     @Override
-    public long size() {
+    public int size() {
         return seq.size();
     }
 
@@ -63,17 +63,6 @@ final class SeqNonEmptyWrapper<T> implements SeqNonEmpty<T> {
     @Override
     public Iterator<T> iterator() {
         return seq.iterator();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Seq)) return false;
-        return seqsAreEquals(this, (Seq<?>) o);
-    }
-
-    @Override
-    public int hashCode() {
-        return hashCodeForIterable(this);
     }
 
 }

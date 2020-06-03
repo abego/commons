@@ -29,13 +29,69 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.abego.commons.lang.IterableUtil.textOf;
 import static org.abego.commons.util.ListUtil.list;
+import static org.abego.commons.util.ListUtil.map;
 import static org.abego.commons.util.ListUtil.nthItemAsStringOrNull;
+import static org.abego.commons.util.ListUtil.sortedList;
+import static org.abego.commons.util.ListUtil.toList;
+import static org.abego.commons.util.ListUtil.toListWithMapping;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ListUtilTest {
+
+    @Test
+    void sortedList_OK() {
+        List<String> items = toList("c", "aaa", "BB");
+
+        List<String> sorted = sortedList(items);
+
+        assertEquals("BB,aaa,c", textOf(sorted, ","));
+    }
+
+    @Test
+    void sortedList_withComparatorOK() {
+        List<String> items = toList("c", "aaa", "BB");
+
+        List<String> sorted = sortedList(items, String::compareToIgnoreCase);
+
+        assertEquals("aaa,BB,c", textOf(sorted, ","));
+    }
+
+    @Test
+    void sortedList_withSortKeyOK() {
+        List<String> items = toList("c", "aaa", "BB");
+
+        List<String> sorted = sortedList(items, String::length);
+
+        assertEquals("c,BB,aaa", textOf(sorted, ","));
+    }
+
+    @Test
+    void toListWithMapping_OK() {
+        List<String> items = toList("c", "aaa", "BB");
+
+        List<Integer> lengths = toListWithMapping(items, String::length);
+
+        assertEquals(3, lengths.size());
+        assertEquals(1, (int) lengths.get(0));
+        assertEquals(3, (int) lengths.get(1));
+        assertEquals(2, (int) lengths.get(2));
+    }
+
+    @Test
+    void map_OK() {
+        List<String> items = toList("c", "aaa", "BB");
+
+        List<Integer> lengths = map(items, String::length);
+
+        assertEquals(3, lengths.size());
+        assertEquals(1, (int) lengths.get(0));
+        assertEquals(3, (int) lengths.get(1));
+        assertEquals(2, (int) lengths.get(2));
+    }
 
     @Test
     void constructor() {

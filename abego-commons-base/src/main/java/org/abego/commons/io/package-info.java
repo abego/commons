@@ -23,9 +23,9 @@
  */
 
 /**
- * Stuff related to types of the "java.io" package (like File, Writer, ...)
+ * Stuff related to types of the "java.io" package (like File, Reader, Writer).
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.io;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

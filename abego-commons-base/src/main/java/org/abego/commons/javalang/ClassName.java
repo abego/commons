@@ -30,6 +30,7 @@ import static org.abego.commons.io.FileUtil.file;
 /**
  * A fully qualified name for a class.
  */
+@SuppressWarnings("WeakerAccess")
 public final class ClassName extends FullyQualifiedName {
 
     private ClassName(String fullyQualifiedClassName) {

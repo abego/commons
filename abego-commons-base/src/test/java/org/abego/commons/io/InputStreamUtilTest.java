@@ -28,6 +28,7 @@ import org.abego.commons.TestData;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -37,7 +38,10 @@ import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_TEXT;
 import static org.abego.commons.TestData.SAMPLE_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
+import static org.abego.commons.io.FileUtil.tempFileForRun;
 import static org.abego.commons.io.InputStreamUtil.textOf;
+import static org.abego.commons.io.InputStreamUtil.write;
+import static org.abego.commons.lang.ClassUtil.resourceAsStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -50,24 +54,22 @@ class InputStreamUtilTest {
 
     @Test
     void textOf_ok() {
-        InputStream inputStream = TestData.class
-                .getResourceAsStream(SAMPLE_TXT_RESOURCE_NAME);
+
+        InputStream inputStream = resourceAsStream(TestData.class, SAMPLE_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_TXT_TEXT, textOf(inputStream));
     }
 
     @Test
     void textOf_withEmptyStream() {
-        InputStream inputStream = TestData.class
-                .getResourceAsStream(EMPTY_TXT_RESOURCE_NAME);
+        InputStream inputStream = resourceAsStream(TestData.class, EMPTY_TXT_RESOURCE_NAME);
 
         assertEquals(EMPTY_TXT_TEXT, textOf(inputStream));
     }
 
     @Test
     void textOf_withCharset() {
-        InputStream inputStream = TestData.class
-                .getResourceAsStream(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
+        InputStream inputStream = resourceAsStream(TestData.class, SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT,
                 textOf(inputStream, StandardCharsets.ISO_8859_1));
@@ -75,10 +77,21 @@ class InputStreamUtilTest {
 
     @Test
     void textOf_withCharsetName() {
-        InputStream inputStream = TestData.class
-                .getResourceAsStream(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
+        InputStream inputStream = resourceAsStream(TestData.class, SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT,
                 textOf(inputStream, StandardCharsets.ISO_8859_1.name()));
     }
+
+    @Test
+    void write_ok() {
+        InputStream inputStream = resourceAsStream(TestData.class, SAMPLE_TXT_RESOURCE_NAME);
+        File file = tempFileForRun();
+
+        write(inputStream, file);
+
+        assertEquals(SAMPLE_TXT_TEXT, FileUtil.textOf(file));
+    }
+
+
 }

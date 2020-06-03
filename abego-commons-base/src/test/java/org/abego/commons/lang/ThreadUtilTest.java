@@ -24,14 +24,18 @@
 
 package org.abego.commons.lang;
 
+import org.abego.commons.blackboard.Blackboard;
+import org.abego.commons.blackboard.BlackboardDefault;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.commons.lang.ObjectUtil.ignore;
+import static org.abego.commons.lang.ThreadUtil.runAsync;
 import static org.abego.commons.lang.ThreadUtil.sleep;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class ThreadUtilTest {
     /**
@@ -39,7 +43,7 @@ class ThreadUtilTest {
      *
      * <p>(Determined experimentally)</p>
      */
-    private static final long MAX_NO_SLEEP_MILLIS = 5L;
+    private static final long MAX_NO_SLEEP_MILLIS = 15L;
 
     @Test
     void constructorOk() {
@@ -79,6 +83,7 @@ class ThreadUtilTest {
         Thread sleepingThread = Thread.currentThread();
         new Thread(() -> {
             // wait until the other thread sleeps
+            //noinspection LoopConditionNotUpdatedInsideLoop
             while (sleepingThread.getState() != Thread.State.TIMED_WAITING) {
                 // do nothing
                 ignore(null);
@@ -95,5 +100,24 @@ class ThreadUtilTest {
         // sleep returned before the given duration (because it was interrupted)
         assertTrue(Thread.interrupted());
         assertTrue(dt < millis, () -> "sleep duration in ms: " + dt);
+    }
+
+    @Test
+    void runAsyncOK() {
+
+        Blackboard<String> bb = BlackboardDefault.newBlackboardDefault();
+
+        Thread thread = runAsync(() -> bb.add("running"));
+
+        // Wait for the output of the thread and the thread terminates
+        long startTime = System.currentTimeMillis();
+        int timeoutMillis = 1000;
+        while (!bb.contains("running") && thread.getState() != Thread.State.TERMINATED) {
+            if (System.currentTimeMillis() - startTime > timeoutMillis) {
+                fail("Timeout: thread was not running");
+            }
+            ThreadUtil.sleep(10);
+        }
+
     }
 }

@@ -23,9 +23,10 @@
  */
 
 /**
- * Stuff related to types of the "java.util.function" package (like Supplier, ...)
+ * Stuff related to types of the "java.util.function" package
+ * (like Supplier, ...).
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.util.function;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

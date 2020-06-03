@@ -21,16 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package org.abego.commons.util;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Properties;
-
-import static org.abego.commons.io.ReaderUtil.reader;
+import static org.abego.commons.lang.StringUtil.escaped;
+import static org.abego.commons.lang.StringUtil.firstChar;
 
 public class PropertiesUtil {
 
@@ -38,10 +35,18 @@ public class PropertiesUtil {
         throw new MustNotInstantiateException();
     }
 
-    public static Properties readProperties(File file, Charset charset)
-            throws IOException {
-        Properties properties = new Properties();
-        properties.load(reader(file, charset));
-        return properties;
+    public static String toPropertyKey(String string) {
+        return string.replaceAll("[:= \t\r\n\f]", "\\\\$0");
+    }
+
+    public static String toPropertyValue(String string) {
+        String s = escaped(string).replaceAll("'", "''");
+
+        // When the string starts with a whitespace escape that whitespace
+        if (!s.isEmpty() && Character.isWhitespace(firstChar(s))) {
+            //noinspection StringConcatenation
+            s = "\\" + s;
+        }
+        return s;
     }
 }

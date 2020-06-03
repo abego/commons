@@ -25,7 +25,7 @@ package org.abego.commons.resourcebundle;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
-public class ResourceBundleUtil {
+public final class ResourceBundleUtil {
 
     public static final String PROPERTIES_FILE_EXTENSION = "properties"; // NON-NLS
 

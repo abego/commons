@@ -1,5 +1,217 @@
 # CHANGELOG
 
+## 0.10.0-SNAPSHOT
+
+### New
+
+#### Types
+
+- AbstractSeq
+- AlignedItemPair
+- BooleanSupplierUtil
+- BooleanUtil
+- BufferedReaderUtil
+- ByteConsumer
+- ByteConsumerForOutputStream
+- ByteSupplier
+- ByteUtil
+- CommandLineParser
+- CommandLineParserDefault
+- DiffImpl
+- Difference
+- DifferenceBuilder
+- DifferenceDefault
+- EmptySeq
+- FileCannotBeDeletedException
+- FileDiffUtil
+- FormattedText
+- FormattedTextProcessor
+- FormattedTextUtil
+- IDUtil
+- IntPair
+- IntPairDefault
+- IntRange
+- IntRangeBuilder
+- IntRangeDefault
+- IntUtil
+- IteratorUsingAccessor
+- JSONPointer
+- LocaleUtil
+- LongUtil
+- MapUtil
+- MappedSeq
+- PathUtil
+- PrintStreamUtil
+- PropertiesIOUtil
+- ResourceBundleSpecifierFactory
+- ResourceBundleSpecifierFactoryDefault
+- ResourceUtil
+- RuntimeUtil
+- SeqForIterable
+- SeqNonEmptyUtil
+- SeqNonEmptyWithAppended
+- SeqNonEmptyWithAppendedDefault
+- SeqUtil
+- SequenceDiff
+- SequenceDiffDefault
+- ServiceLoaderUtil
+- StreamUtil
+- StringPool
+- StringPoolBuilder
+- StringPoolBuilderDefault
+- StringPoolDefault
+- TextDiff
+- ToStringBuilder
+- TreeNode
+- TreeNodeDefault
+- TreeNodeLazy
+- TreeNodeUtil
+- URLUtil
+- VLQUtil
+- Var
+- VarUtil
+- Writable
+
+#### Methods
+
+- ArrayUtil#checkArrayIndex
+- ArrayUtil#contains(T[],T)
+- ArrayUtil#indexOf(T[],T)
+- ArrayUtil#itemOrDefault(T[] array, int index, T defaultValue)
+- ClassUtil#classNameOrNull(Object)
+- ClassUtil#newInstanceOfClassNamed, Seq#sorted(Comparator)
+- ClassUtil#packagePath
+- CollectionUtil#addAll
+- FileUtil#appendText
+- FileUtil#deleteFile
+- FileUtil#ensureFileExists
+- FileUtil#runIOCode
+- FileUtil#textOfFileIfExisting
+- FileUtil#toURL(File), FileUtil#toFile(URL), PathUtil#toURL(Path)
+- FileUtil#writeText
+- InputStreamUtil#newInputStream
+- IntRangeDefault#toString/hashCode/equals
+- IterableUtil#appendTextOf
+- IterableUtil#firstOrNull
+- IterableUtil#isEmpty(Iterable<?> iterable)
+- IterableUtil#join(CharSequence, Iterable) // alias of IterableUtil#textOf(Iterable, CharSequence)
+- IterableUtil#size
+- IterableUtil#toIterable(T...)
+- IterableUtil#toStringOfIterable
+- JUnit5Util#assertIntRangeEquals JUnit5Util#castOrFail
+- JUnit5Util#assertThrowsWithMessage
+- ListUtil#toList(Object...), ListUtil#toList(Iterable)
+- ListUtil#toMappedList|map
+- ListUtil#toSortedList
+- ListUtil#toSortedList(Iterable)
+- ObjectUtil#valueOrElse
+- ObjectUtil#valueOrElse
+- PathUtil#ensureDirectoryExists
+- PrintStreamToBuffer#newPrintStreamToBuffer
+- ResourceUtil#hasResource
+- Seq#newSeq(Iterable<T> iterable)
+- Seq#seqsAreEqual
+- Seq#sortedBy|sorted
+- Seq#stream default implementation
+- SeqUtil#filter
+- SeqUtil#map
+- SeqUtil#newSeqOfNullable
+- SeqUtil#reverse
+- SeqUtil#sortedBy|sorted
+- ServiceLoaderUtil#loadService
+- StreamUtil#toStream(Object...)
+- StringUtil#DEFAULT_LOCALE
+- StringUtil#arrayNullable
+- StringUtil#camelCased/dashCased/snakeCased/snakeUpperCased
+- StringUtil#htmlEscaped, ThrowableUtil#allMessages...
+- StringUtil#limitString(String)
+- StringUtil#limitString(String, int)
+- StringUtil#quoted2
+- StringUtil#repeat
+- StringUtil#splitWhitespaceSeparatedString(String)
+- StringUtil#substringSafe
+- StringUtil#toArray
+- StringUtil#withLineSeparatorsForNewlines
+- ThreadUtil#runInNewThread
+- UncheckedException#newUncheckedException
+
+### Changes (Possibly incompatible)
+
+- Move ClassUtil.textOfResource -> io.ResourceUtil
+- Move FileUtil/PrinterWriterUtil.write -> WriterUtil.write
+- Move PropertiesUtil -> io.PropertiesIOUtil
+- Move ResourceBundleSpecifier.resourceBundleSpecifier -> ResourceBundleUtil.newResourceBundleSpecifier
+- Move Seq.emptySeq -> SeqUtil
+- Move Seq.newSeq -> SeqUtil
+- Move SeqNonEmpty.seqNonEmpty... -> SeqNonEmptyUtil
+- Move SeqNonEmpty.with -> SeqNonEmptyUtil.newSeqNonEmpty
+- Move and Hide Seq.seqsAreEqual -> SeqUtil
+- NoThrows: FileDiffUtil#directoryDifferences
+- NoThrows: FileUtil#copyResourceToFile
+- NoThrows: FileUtil#directory
+- NoThrows: FileUtil#ensureDirectoryExists
+- NoThrows: FileUtil#normalFile
+- NoThrows: FileUtil#setReadOnly
+- NoThrows: FileUtil#tempDirectoryForRun
+- NoThrows: FileUtil#tempFileForRun
+- NoThrows: FileUtil#tempFileForRunFromResource
+- NoThrows: FileUtil#textOf
+- NoThrows: FileUtil#textOfFile
+- NoThrows: InputStreamUtil#write
+- NoThrows: RuntimeUtil#execAndReturnOutAndErr
+- NoThrows: ScannerUtil#textOf
+- NoThrows: WriterUtil#write
+- Other: use Eclipse NotNull annotation (not JSR-305) to avoid Java 9 issues
+- Remove "Serialization" support
+- Remove ArrayUtil#array(T...); add StringUtil#array(String...)
+- Remove Blackboard#newBlackboard (and loadService-Configuration)
+- Remove ComparableUtil
+- Remove ObjectUtil#requireNonNull
+- Remove PrintStreamToBuffer#printStreamToBuffer
+- Remove ResourceBundleUtil#newResourceBundleSpecifier (and loadService-Configuration)
+- Remove StringPool#NULL_ID (use 0 instead)
+- Remove UncheckedException#uncheckedException (use UncheckedException#newUncheckedException instead)
+- Remove default implementation for Seq.map/Seq.filter, implementations may use SeqUtil.map/SeqUtil.filter
+- Rename CommandLine -> CommandLineParser
+- Rename CommandLineDefault -> CommandLineParserDefault
+- Rename CommandLineParserDefault#newCommandLineDefault -> ...#newCommandLineParserDefault
+- Rename ExtendingSeqNonEmpty -> SeqNonEmptyWithAppended
+- Rename ExtendingSeqNonEmpty#extendedBy -> SeqNonEmptyWithAppended#appended
+- Rename ExtendingSeqNonEmptyDefault -> SeqNonEmptyWithAppendedDefault
+- Rename ResourceBundleSpecifier#bundleBaseName|language|country|platform|fileExtension -> ...#get{PropertyName}
+- Rename ResourceBundleSpecifierDefault#bundleBaseName|language|country|platform|fileExtension -> ...#get{PropertyName}
+- Rename ResourceBundleSpecifierDefault#resourceBundleSpecifier -> ...newResourceBundleSpecifier
+- Rename ResourceBundleSpecifierDefaultFactory -> ResourceBundleSpecifierFactoryDefault
+- Rename UUIDUtil -> UDUtil
+- ReturnType: long Seq.size() to int Seq.size()
+- final: Util classes
+
+### Bug Fixes
+
+- "The type package-info is already defined" (reported by Eclipse)
+- Cyclic dependency between Blackboard and BlackboardDefault
+- dependency cycle related to "Seq"
+- FileUtil#ensureFileExists does not check result of createNewFile
+- IntUtil#ints(int) throws wrong exception when argument is <= 0
+- PrintStreamUtil#appendLines does not close BufferedReader
+- SeqNonEmptyWithAppended#appended fails when used twice on same Seq
+- StringPoolDefault Iterators don't throw NoSuchElementException
+- StringUtil#splitWhitespaceSeparatedString ignores trailing whitespaces
+- Unclear error message in ClassUtil#newInstanceOfClassNamed when instance is not of  expected type
+- VLQUtil fails for encodings of numbers > Integer#MAX_VALUE
+- WriterUtil#writer fails when file does not exist.
+- class FullyQualifiedName is final but extended by ClassName 
+
+### Deprecated
+
+- FileUtil#write(...)
+- ResourceBundleSpecifier#resourceBundleSpecifier
+- UncheckedException#uncheckedException
+
+### Improvements
+
+- Various improvements, for details see Git log ("Improve:...")
+
 ## 0.9.5
 
 ### New
@@ -11,7 +223,7 @@
 - Ignore Sonarlint issuestore
 - More details in README
 
-### Changes
+### Changes (Possibly incompatible)
 
 - Use IDEA jdk
 
@@ -69,7 +281,6 @@
 ### Changes (Possibly incompatible)
 
 - MustNotInstantiateException.mustNotInstantiateException() deprecated.
-
 - CharArrayRange now final
 - ClassName now final
 - MustNotInstantiateException now final

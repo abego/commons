@@ -32,7 +32,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
-public class PrintWriterUtil {
+public final class PrintWriterUtil {
 
     PrintWriterUtil() {
         throw new MustNotInstantiateException();
@@ -71,4 +71,6 @@ public class PrintWriterUtil {
         return new PrintWriter(
                 new OutputStreamWriter(outputStream, charset), true);
     }
+
+
 }

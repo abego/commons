@@ -25,22 +25,21 @@
 package org.abego.commons.lang;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayUtil {
+import static org.abego.commons.lang.IntUtil.checkBoundsEndOpen;
+
+public final class ArrayUtil {
 
     ArrayUtil() {
         throw new MustNotInstantiateException();
     }
 
     // --- Factories ---
-
-    @SafeVarargs
-    public static <T> T[] array(T... items) {
-        return items;
-    }
 
     public static <T> Iterator<T> iterator(T[] array) {
         return new Iterator<T>() {
@@ -59,5 +58,54 @@ public class ArrayUtil {
                 return array[i++];
             }
         };
+    }
+
+    // --- Queries ---
+
+    /**
+     * @return &lt; 0 if not found, otherwise the index of the first occurrence of item
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static <T> int indexOf(T[] array, @Nullable T item) {
+        for (int i = 0; i < array.length; i++) {
+            T t = array[i];
+            if (t == null) {
+                if (item == null) {
+                    return i;
+                }
+            } else {
+                if (t.equals(item)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static <T> boolean contains(T[] array, T item) {
+        return indexOf(array, item) >= 0;
+    }
+
+    /**
+     * Return the {@code index}-ed item of the {@code array} when the array is not {@code null} and
+     * the index is in {@code 0..{@code array.length-1}}, otherwise the {@code defaultValue}.
+     */
+    public static <T> T itemOrDefault(T @Nullable [] array, int index, T defaultValue) {
+        return array != null && index >= 0 && index < array.length ? array[index] : defaultValue;
+    }
+
+    /**
+     * Check if {@code i} is a valid index for an array of size {@code arraySize} and throw an
+     * {@link IndexOutOfBoundsException} when it isn't.
+     */
+    public static void checkArrayIndex(int i, int arraySize) {
+        checkBoundsEndOpen(i, 0, arraySize);
+    }
+
+    public static <T> T lastItem(@NonNull T[] array) {
+        if (array.length == 0) {
+            throw new IllegalArgumentException("Empty array has no last item"); //NON-NLS
+        }
+        return array[array.length - 1];
     }
 }

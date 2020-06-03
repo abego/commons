@@ -28,7 +28,7 @@
  * additional indexed access to the items and the notion of a "single item"
  * sequence.
  */
-@ParametersAreNonnullByDefault
+@NonNullByDefault
 package org.abego.commons.seq;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import org.eclipse.jdt.annotation.NonNullByDefault;

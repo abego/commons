@@ -26,12 +26,12 @@ package org.abego.commons.io;
 
 
 import org.abego.commons.lang.CharArrayRange;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import static org.abego.commons.lang.CharArrayRange.charArrayRange;
 import static org.abego.commons.lang.CharacterUtil.CARRIAGE_RETURN_CHAR;
@@ -77,7 +77,7 @@ public abstract class LineSplittingWriter extends Writer {
 
     @Override
     public void write(
-            char[] characterArray, int startOffset, int length)
+            char @Nullable [] characterArray, int startOffset, int length)
             throws IOException {
         LinesInText linesInText =
                 new LinesInText(characterArray, startOffset, length);
@@ -99,8 +99,7 @@ public abstract class LineSplittingWriter extends Writer {
     private void handleUnprocessedCarriageReturn(boolean isNewLineFollowing)
             throws IOException {
         if (isNewLineFollowing) {
-            handleLineSeparator(mustProcessCarriageReturn
-                    ? CARRIAGE_RETURN_LINEFEED_STRING : NEWLINE_STRING);
+            handleLineSeparator(mustProcessCarriageReturn ? CARRIAGE_RETURN_LINEFEED_STRING : NEWLINE_STRING);
         } else {
             if (mustProcessCarriageReturn) {
                 handleLineSeparator(CARRIAGE_RETURN_STRING);
@@ -159,10 +158,10 @@ public abstract class LineSplittingWriter extends Writer {
         private final int length;
 
         private LinesInText(
-                char[] characterArray, int startOffset, int length) {
-            this.characterArray = characterArray;
-            this.startOffset = startOffset;
-            this.length = length;
+                char @Nullable [] characterArray, int startOffset, int length) {
+            this.characterArray = characterArray != null ? characterArray : new char[0];
+            this.startOffset = characterArray != null ? startOffset : 0;
+            this.length = characterArray != null ? length : 0;
         }
 
         boolean isFirstCharNewline() {
@@ -176,7 +175,7 @@ public abstract class LineSplittingWriter extends Writer {
 
 
         @Override
-        @Nonnull
+        @NonNull
         public Iterator<Line> iterator() {
             return new LinesIterator();
         }
@@ -191,15 +190,16 @@ public abstract class LineSplittingWriter extends Writer {
                 return i < endIndex;
             }
 
+            @SuppressWarnings("squid:S2272")
+            // --> "Iterator.next()" methods should throw "NoSuchElementException"
+            //
+            // All callers of `next()` (of this *private* class) are checking
+            // for `hasNext()`. So checking for "hasNext()" again, e.g.
+            // as suggested by SonarQube, would generate dead code, hence
+            // trigger the code coverage tool.
+            //
             @Override
             public Line next() {
-                if (!hasNext()) {
-                    // The following line in never executed as all callers of
-                    // `next()` (of this private class) are checking for
-                    // `hasNext()`. However we need this check to silence
-                    // a warning.
-                    throw new NoSuchElementException();
-                }
 
                 CharArrayRange lineContent = scanLineContent();
                 String lineSeparator = scanLineSeparator();

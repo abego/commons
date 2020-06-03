@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.PrintStream;
 
-import static org.abego.commons.io.PrintStreamToBuffer.printStreamToBuffer;
 import static org.abego.commons.lang.SystemUtil.systemErrRedirect;
 import static org.abego.commons.lang.SystemUtil.systemOutRedirect;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,7 +46,7 @@ class SystemUtilTest {
 
     @Test
     void systemOutRedirect_ok() {
-        PrintStreamToBuffer myPrintStream = printStreamToBuffer();
+        PrintStreamToBuffer myPrintStream = PrintStreamToBuffer.newPrintStreamToBuffer();
         PrintStream oldStream = System.out;
 
         RunOnClose r = systemOutRedirect(myPrintStream);
@@ -64,7 +63,7 @@ class SystemUtilTest {
 
     @Test
     void systemErrRedirect_ok() {
-        PrintStreamToBuffer myPrintStream = printStreamToBuffer();
+        PrintStreamToBuffer myPrintStream = PrintStreamToBuffer.newPrintStreamToBuffer();
         PrintStream oldStream = System.err;
 
         RunOnClose r = systemErrRedirect(myPrintStream);

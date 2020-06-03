@@ -24,6 +24,8 @@
 
 package org.abego.commons.io;
 
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -40,6 +42,7 @@ public final class ToFileInHeaderLineWriter extends LineSplittingWriter {
 
     private final StringBuilder firstLineContent = new StringBuilder();
     private final Charset charset;
+    @Nullable
     private Writer fileWriter;
 
     private ToFileInHeaderLineWriter(Charset charset) {
@@ -62,7 +65,10 @@ public final class ToFileInHeaderLineWriter extends LineSplittingWriter {
         if (lineIndex() == 0) {
             firstLineContent.append(characterArray, startOffset, length);
         } else {
-            fileWriter.write(characterArray, startOffset, length);
+            @Nullable Writer w = fileWriter;
+            if (w != null) {
+                w.write(characterArray, startOffset, length);
+            }
         }
     }
 
@@ -74,14 +80,18 @@ public final class ToFileInHeaderLineWriter extends LineSplittingWriter {
             ensureDirectoryExists(outputFile.getParentFile());
             fileWriter = WriterUtil.writer(outputFile, charset);
         } else {
-            fileWriter.write(lineSeparator);
+            @Nullable Writer w = fileWriter;
+            if (w != null) {
+                w.write(lineSeparator);
+            }
         }
     }
 
     @Override
     public void flush() throws IOException {
-        if (fileWriter != null) {
-            fileWriter.flush();
+        @Nullable Writer w = fileWriter;
+        if (w != null) {
+            w.flush();
         }
     }
 
@@ -89,8 +99,9 @@ public final class ToFileInHeaderLineWriter extends LineSplittingWriter {
     public void close() throws IOException {
         super.close();
 
-        if (fileWriter != null) {
-            fileWriter.close();
+        @Nullable Writer w = fileWriter;
+        if (w != null) {
+            w.close();
         } else {
             throw new IOException("No file found in first line of output.");  // NON-NLS
         }

@@ -36,7 +36,7 @@
 
     <groupId>org.abego.commons</groupId>
     <artifactId>abego-commons</artifactId>
-    <version>0.10.0-SNAPSHOT</version>
+    <version>0.10.0</version>
     <packaging>pom</packaging>
 
     <name>abego Commons (Parent)</name>

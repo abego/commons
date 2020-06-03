@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.10.0-SNAPSHOT
+## 0.10.0
 
 ### New
 

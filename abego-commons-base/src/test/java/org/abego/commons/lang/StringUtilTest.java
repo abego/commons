@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -150,7 +150,7 @@ class StringUtilTest {
         assertEquals("\"abc\"", quoted("abc"));
 
         // text to escape
-        String t = "a\b\f\n\r\t\\\'\"\u0080\u0099 Z";
+        String t = "a\b\f\n\r\t\\'\"\u0080\u0099 Z";
         assertEquals("'a\\b\\f\\n\\r\\t\\\\\\'\"\\u0080\\u0099 Z'", quoted(t, "Nil", true));
         assertEquals("\"a\\b\\f\\n\\r\\t\\\\'\\\"\\u0080\\u0099 Z\"", quoted(t, "Nil", false));
         assertEquals("\"a\\b\\f\\n\\r\\t\\\\'\\\"\\u0080\\u0099 Z\"", quoted(t, "Nil"));
@@ -168,7 +168,7 @@ class StringUtilTest {
         assertEquals("'abc'", singleQuoted("abc"));
 
         // text to escape
-        String t = "a\b\f\n\r\t\\\'\"\u0099Z";
+        String t = "a\b\f\n\r\t\\'\"\u0099Z";
         assertEquals("'a\\b\\f\\n\\r\\t\\\\\\'\"\\u0099Z'", singleQuoted(t, "Nil"));
         assertEquals("'a\\b\\f\\n\\r\\t\\\\\\'\"\\u0099Z'", singleQuoted(t));
     }
@@ -183,7 +183,7 @@ class StringUtilTest {
         assertEquals("abc", escaped("abc"));
 
         // text to escape
-        String t = "a\b\f\n\r\t\\\'\"\u0099Z";
+        String t = "a\b\f\n\r\t\\'\"\u0099Z";
         assertEquals("a\\b\\f\\n\\r\\t\\\\'\\\"\\u0099Z", escaped(t));
     }
 
@@ -196,7 +196,7 @@ class StringUtilTest {
         assertEquals("\\r", escaped('\r'));
         assertEquals("\\t", escaped('\t'));
         assertEquals("\\\\", escaped('\\'));
-        assertEquals("\'", escaped('\''));
+        assertEquals("'", escaped('\''));
         assertEquals("\\\"", escaped('"'));
         assertEquals("\\u0099", escaped('\u0099'));
         assertEquals("Z", escaped('Z'));

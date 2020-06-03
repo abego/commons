@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -199,7 +199,7 @@ public final class StringEvaluator {
 
         private InvalidDelimiterException() {
             super(String.format("'%s' must not be used as a term delimiter", //NON-NLS
-                    Character.toString(ESCAPE_CHARACTER)));
+                    ESCAPE_CHARACTER));
         }
     }
 

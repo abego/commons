@@ -1,7 +1,7 @@
 <component name="CopyrightManager">
   <settings default="MIT ub">
     <module2copyright>
-      <element module="All" copyright="MIT ub" />
+      <element module="Project Files" copyright="MIT ub" />
     </module2copyright>
   </settings>
 </component>

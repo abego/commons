@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="EclipseExternalAnnotationFiles (eea)" pattern="file[abego-commons]:ide/eclipse/eea//*" />
+</component>

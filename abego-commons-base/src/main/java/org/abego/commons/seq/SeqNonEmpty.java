@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,6 @@ import static org.abego.commons.seq.SeqNonEmptyWrapper.wrapped;
  * <li>calling {@link #isEmpty()} will always return <code>false</code>,</li>
  * <li>calling {@link #first()} or {@link #anyItem()} will never fail.</li>
  * </ul>
- * 
  */
 public interface SeqNonEmpty<T> extends Seq<T> {
 

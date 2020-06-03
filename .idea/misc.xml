@@ -1,11 +1,416 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="EntryPointsManager">
+    <entry_points version="2.0">
+      <entry_point TYPE="method" FQNAME="org.abego.commons.stringpool.StringPoolDefault$3$1 int getID()" />
+      <entry_point TYPE="method" FQNAME="org.abego.commons.stringpool.StringPoolDefault$3$1 java.lang.String getString()" />
+      <entry_point TYPE="method" FQNAME="org.abego.commons.stringpool.StringPoolDefault$3 org.abego.commons.stringpool.StringPool.StringAndID next()" />
+      <entry_point TYPE="field" FQNAME="org.abego.commons.resourcebundle.ResourceBundleUtil PROPERTIES_FILE_EXTENSION" />
+      <entry_point TYPE="field" FQNAME="org.abego.commons.lang.exception.MustNotInstantiateException serialVersionUID" />
+      <entry_point TYPE="field" FQNAME="org.abego.commons.stringevaluator.StringEvaluator.StringEvaluatorException serialVersionUID" />
+      <entry_point TYPE="field" FQNAME="org.abego.commons.stringevaluator.StringEvaluator.InvalidDelimiterException serialVersionUID" />
+      <entry_point TYPE="field" FQNAME="org.abego.commons.timeout.TimeoutUncheckedException serialVersionUID" />
+      <entry_point TYPE="field" FQNAME="org.abego.commons.lang.exception.UncheckedException serialVersionUID" />
+    </entry_points>
+    <pattern value="org.abego.commons.seq.AbstractSeq" />
+    <pattern value="org.abego.commons.util.function.ByteConsumer" method="accept" />
+    <pattern value="org.abego.commons.io.ByteConsumerForOutputStream" method="accept" />
+    <pattern value="org.abego.commons.stringpool.StringPoolBuilder" method="add" />
+    <pattern value="org.abego.commons.stringpool.StringPoolBuilderDefault" method="add" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="add" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" method="add" />
+    <pattern value="org.abego.commons.util.CollectionUtil" method="addAll" />
+    <pattern value="org.abego.commons.stringevaluator.StringEvaluator" method="addTermEvaluator" />
+    <pattern value="org.abego.commons.stringpool.StringPool" method="allStringAndIDs" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault" method="allStringAndIDs" />
+    <pattern value="org.abego.commons.stringpool.StringPool" method="allStrings" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault" method="allStrings" />
+    <pattern value="org.abego.commons.seq.Seq" method="anyItemOrNull" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWithAppended" method="appended" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWithAppendedDefault" method="appended" />
+    <pattern value="org.abego.commons.io.FileUtil" method="appendText" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="array" />
+    <pattern value="org.abego.commons.lang.ArrayUtil" />
+    <pattern value="org.abego.commons.lang.ArrayUtil" method="ArrayUtil" />
+    <pattern value="org.abego.commons.test.JUnit5Util" method="assertTextContains" />
+    <pattern value="org.abego.commons.test.JUnit5Util" method="assertTextOfFileEquals" />
+    <pattern value="org.abego.commons.test.JUnit5Util" method="assertThrowsWithMessage" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" />
+    <pattern value="org.abego.commons.stringpool.StringPoolBuilder" method="build" />
+    <pattern value="org.abego.commons.stringpool.StringPoolBuilderDefault" method="build" />
+    <pattern value="org.abego.commons.io.ByteArrayOutputStreamUtil" />
+    <pattern value="org.abego.commons.io.ByteArrayOutputStreamUtil" method="ByteArrayOutputStreamUtil" />
+    <pattern value="org.abego.commons.util.function.ByteConsumer" />
+    <pattern value="org.abego.commons.io.ByteConsumerForOutputStream" />
+    <pattern value="org.abego.commons.lang.ByteUtil" />
+    <pattern value="org.abego.commons.util.function.CachedValue" />
+    <pattern value="org.abego.commons.util.function.CachedValue" method="cachedValue" />
+    <pattern value="org.abego.commons.lang.CharacterUtil" />
+    <pattern value="org.abego.commons.lang.CharacterUtil" method="CharacterUtil" />
+    <pattern value="org.abego.commons.lang.ObjectUtil" method="checkType" />
+    <pattern value="org.abego.commons.javalang.ClassName" />
+    <pattern value="org.abego.commons.lang.ClassUtil" />
+    <pattern value="org.abego.commons.lang.ClassUtil" method="ClassUtil" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="clear" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" method="clear" />
+    <pattern value="org.abego.commons.util.CollectionUtil" />
+    <pattern value="org.abego.commons.util.CollectionUtil" method="CollectionUtil" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" />
+    <pattern value="org.abego.commons.cli.CommandLineParserDefault" />
+    <pattern value="org.abego.commons.io.FileUtil" method="contains" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="contains" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" method="contains" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="containsItemWith" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" method="containsItemWith" />
+    <pattern value="org.abego.commons.vlq.VLQUtil" method="decodeUnsignedIntFromVLQ" />
+    <pattern value="org.abego.commons.io.FileUtil" method="directory" />
+    <pattern value="org.abego.commons.diff.FileDiffUtil" method="directoryDifferences" />
+    <pattern value="org.abego.commons.seq.EmptySeq" />
+    <pattern value="org.abego.commons.seq.SeqUtil" method="emptySeq" />
+    <pattern value="org.abego.commons.vlq.VLQUtil" method="encodeUnsignedIntAsVLQ" />
+    <pattern value="org.abego.commons.nio.file.PathUtil" method="ensureDirectoryExists" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="escaped" />
+    <pattern value="org.abego.commons.io.FileUtil" method="file" />
+    <pattern value="org.abego.commons.diff.FileDiffUtil" />
+    <pattern value="org.abego.commons.io.FileUtil" method="fileForRun" />
+    <pattern value="org.abego.commons.io.FileUtil" />
+    <pattern value="org.abego.commons.io.FileUtil" method="FileUtil" />
+    <pattern value="org.abego.commons.seq.AbstractSeq" method="filter" />
+    <pattern value="org.abego.commons.seq.Seq" method="filter" />
+    <pattern value="org.abego.commons.seq.Seq" method="first" />
+    <pattern value="org.abego.commons.seq.SeqForIterable" method="first" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="firstChar" />
+    <pattern value="org.abego.commons.lang.IterableUtil" method="firstOrNull" />
+    <pattern value="org.abego.commons.javalang.FullyQualifiedName" />
+    <pattern value="org.abego.commons.javalang.FullyQualifiedName" method="fullyQualifiedName" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifier" method="getBundleBaseName" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault" method="getBundleBaseName" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifier" method="getCountry" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault" method="getCountry" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifier" method="getFileExtension" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault" method="getFileExtension" />
+    <pattern value="org.abego.commons.stringpool.StringPool.StringAndID" method="getID" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifier" method="getLanguage" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault" method="getLanguage" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifier" method="getPlatform" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault" method="getPlatform" />
+    <pattern value="org.abego.commons.stringpool.StringPool.StringAndID" method="getString" />
+    <pattern value="org.abego.commons.stringpool.StringPool" method="getString" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault" method="getString" />
+    <pattern value="org.abego.commons.seq.Seq" method="hasItems" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" method="hasNextItem" />
+    <pattern value="org.abego.commons.io.ResourceUtil" method="hasResource" />
+    <pattern value="org.abego.commons.util.IDUtil" />
+    <pattern value="org.abego.commons.lang.ObjectUtil" method="ignore" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierFactoryDefault" />
+    <pattern value="org.abego.commons.io.InputStreamUtil" />
+    <pattern value="org.abego.commons.io.InputStreamUtil" method="InputStreamUtil" />
+    <pattern value="org.abego.commons.stringevaluator.StringEvaluator.InvalidDelimiterException" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" method="isArgumentNext" />
+    <pattern value="org.abego.commons.io.FileUtil" method="isDirectory" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="isEmpty" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" method="isEmpty" />
+    <pattern value="org.abego.commons.seq.Seq" method="isEmpty" />
+    <pattern value="org.abego.commons.seq.SeqNonEmpty" method="isEmpty" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" method="isOptionNext" />
+    <pattern value="org.abego.commons.seq.EmptySeq" method="item" />
+    <pattern value="org.abego.commons.seq.Seq" method="item" />
+    <pattern value="org.abego.commons.seq.SeqForArray" method="item" />
+    <pattern value="org.abego.commons.seq.SeqForIterable" method="item" />
+    <pattern value="org.abego.commons.seq.SeqForList" method="item" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWithAppendedDefault" method="item" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWrapper" method="item" />
+    <pattern value="org.abego.commons.lang.ArrayUtil" method="itemOrDefault" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="items" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" method="items" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="itemWith" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" method="itemWith" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="itemWithOrNull" />
+    <pattern value="org.abego.commons.lang.IterableUtil" />
+    <pattern value="org.abego.commons.lang.IterableUtil" method="IterableUtil" />
+    <pattern value="org.abego.commons.javalang.ClassName" method="javaFileInSourceRoot" />
+    <pattern value="org.abego.commons.javalang.JavaLangUtil" />
+    <pattern value="org.abego.commons.javalang.JavaLangUtil" method="JavaLangUtil" />
+    <pattern value="org.abego.commons.lang.IterableUtil" method="join" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="join" />
+    <pattern value="org.abego.commons.util.stream.StreamUtil" method="join" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="joinWithEmptyStringForNull" />
+    <pattern value="org.abego.commons.jsonpointer.JSONPointer" />
+    <pattern value="org.abego.commons.test.JUnit5Util" />
+    <pattern value="org.abego.commons.test.JUnit5Util" method="JUnit5Util" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="lastChar" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="limitString" />
+    <pattern value="org.abego.commons.io.LineAwareWriterDecorator" />
+    <pattern value="org.abego.commons.io.LineSplittingWriter" method="lineIndex" />
+    <pattern value="org.abego.commons.io.LineSeparatorsReplacingWriterDecorator" />
+    <pattern value="org.abego.commons.io.LineSeparatorsReplacingWriterDecorator" method="lineSeparatorsReplacingWriterDecorator" />
+    <pattern value="org.abego.commons.io.LineSplittingWriter" />
+    <pattern value="org.abego.commons.util.ListUtil" method="list" />
+    <pattern value="org.abego.commons.util.ListUtil" />
+    <pattern value="org.abego.commons.util.ListUtil" method="ListUtil" />
+    <pattern value="org.abego.commons.util.ServiceLoaderUtil" method="loadService" />
+    <pattern value="org.abego.commons.seq.AbstractSeq" method="map" />
+    <pattern value="org.abego.commons.seq.Seq" method="map" />
+    <pattern value="org.abego.commons.util.ListUtil" method="map" />
+    <pattern value="org.abego.commons.text.MessageFormatUtil" method="maxArgumentIndexInMessageFormatPattern" />
+    <pattern value="org.abego.commons.text.MessageFormatUtil" />
+    <pattern value="org.abego.commons.text.MessageFormatUtil" method="MessageFormatUtil" />
+    <pattern value="org.abego.commons.lang.ThrowableUtil" method="messageOrClassName" />
+    <pattern value="org.abego.commons.lang.exception.MustNotInstantiateException" />
+    <pattern value="org.abego.commons.blackboard.BlackboardDefault" method="newBlackboardDefault" />
+    <pattern value="org.abego.commons.io.ByteConsumerForOutputStream" method="newByteConsumerForOutputStream" />
+    <pattern value="org.abego.commons.cli.CommandLineParserDefault" method="newCommandLineParserDefault" />
+    <pattern value="org.abego.commons.io.InputStreamUtil" method="newInputStream" />
+    <pattern value="org.abego.commons.jsonpointer.JSONPointer" method="newJSONPointer" />
+    <pattern value="org.abego.commons.io.PrintStreamUtil" method="newPrintStream" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierFactory" method="newResourceBundleSpecifier" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierFactoryDefault" method="newResourceBundleSpecifier" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault" method="newResourceBundleSpecifierDefault" />
+    <pattern value="org.abego.commons.seq.SeqUtil" method="newSeq" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyUtil" method="newSeqNonEmpty" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWithAppendedDefault" method="newSeqNonEmptyWithAppendedDefault" />
+    <pattern value="org.abego.commons.stringpool.StringPoolBuilderDefault" method="newStringPoolBuilderDefault" />
+    <pattern value="org.abego.commons.util.IDUtil" method="newUniqueID" />
+    <pattern value="org.abego.commons.var.VarUtil" method="newVar" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" method="nextArgument" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" method="nextArgumentOrDefault" />
+    <pattern value="org.abego.commons.cli.CommandLineParserDefault" method="nextArgumentOrDefault" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" method="nextArgumentOrFail" />
+    <pattern value="org.abego.commons.cli.CommandLineParserDefault" method="nextArgumentOrFail" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" method="nextOptionOrNull" />
+    <pattern value="org.abego.commons.cli.CommandLineParserDefault" method="nextOptionOrNull" />
+    <pattern value="org.abego.commons.cli.CommandLineParser" method="nextOptionWithArgumentOrNull" />
+    <pattern value="org.abego.commons.cli.CommandLineParserDefault" method="nextOptionWithArgumentOrNull" />
+    <pattern value="org.abego.commons.io.FileUtil" method="normalFile" />
+    <pattern value="org.abego.commons.util.ListUtil" method="nthItemAsStringOrNull" />
+    <pattern value="org.abego.commons.lang.ObjectUtil" />
+    <pattern value="org.abego.commons.lang.ObjectUtil" method="ObjectUtil" />
+    <pattern value="org.abego.commons.io.OutputStreamUtil" />
+    <pattern value="org.abego.commons.io.OutputStreamUtil" method="OutputStreamUtil" />
+    <pattern value="org.abego.commons.javalang.ClassName" method="packagePath" />
+    <pattern value="org.abego.commons.lang.ClassUtil" method="packagePath" />
+    <pattern value="org.abego.commons.nio.file.PathUtil" />
+    <pattern value="org.abego.commons.polling.PollingUtil" method="poll" />
+    <pattern value="org.abego.commons.polling.PollingUtil" />
+    <pattern value="org.abego.commons.polling.PollingUtil" method="PollingUtil" />
+    <pattern value="org.abego.commons.polling.PollingUtil" method="pollNoFail" />
+    <pattern value="org.abego.commons.io.PrintStreamUtil" />
+    <pattern value="org.abego.commons.io.PrintWriterUtil" method="printWriter" />
+    <pattern value="org.abego.commons.io.PrintWriterUtil" />
+    <pattern value="org.abego.commons.io.PrintWriterUtil" method="PrintWriterUtil" />
+    <pattern value="org.abego.commons.io.LineAwareWriterDecorator" method="processLineContent" />
+    <pattern value="org.abego.commons.io.LineSplittingWriter" method="processLineContent" />
+    <pattern value="org.abego.commons.io.ToFileInHeaderLineWriter" method="processLineContent" />
+    <pattern value="org.abego.commons.io.LineAwareWriterDecorator" method="processLineSeparator" />
+    <pattern value="org.abego.commons.io.LineSplittingWriter" method="processLineSeparator" />
+    <pattern value="org.abego.commons.io.ToFileInHeaderLineWriter" method="processLineSeparator" />
+    <pattern value="org.abego.commons.io.PropertiesIOUtil" />
+    <pattern value="org.abego.commons.io.PropertiesIOUtil" method="PropertiesIOUtil" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="quoted" />
+    <pattern value="org.abego.commons.io.ReaderUtil" />
+    <pattern value="org.abego.commons.io.ReaderUtil" method="ReaderUtil" />
+    <pattern value="org.abego.commons.io.PropertiesIOUtil" method="readProperties" />
+    <pattern value="org.abego.commons.jsonpointer.JSONPointer" method="referencedValue" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="repeat" />
+    <pattern value="org.abego.commons.lang.ClassUtil" method="resource" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifier" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierDefault" method="ResourceBundleSpecifierDefault" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleSpecifierFactory" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleUtil" />
+    <pattern value="org.abego.commons.resourcebundle.ResourceBundleUtil" method="ResourceBundleUtil" />
+    <pattern value="org.abego.commons.io.ResourceUtil" />
+    <pattern value="org.abego.commons.lang.ByteUtil" method="reverse" />
+    <pattern value="org.abego.commons.lang.RunOnCloseUtil" />
+    <pattern value="org.abego.commons.lang.RunOnCloseUtil" method="RunOnCloseUtil" />
+    <pattern value="org.abego.commons.util.ScannerUtil" />
+    <pattern value="org.abego.commons.util.ScannerUtil" method="ScannerUtil" />
+    <pattern value="org.abego.commons.seq.Seq" />
+    <pattern value="org.abego.commons.seq.SeqForArray" />
+    <pattern value="org.abego.commons.seq.SeqForIterable" />
+    <pattern value="org.abego.commons.seq.SeqForList" />
+    <pattern value="org.abego.commons.seq.SeqHelper" />
+    <pattern value="org.abego.commons.seq.SeqHelper" method="SeqHelper" />
+    <pattern value="org.abego.commons.seq.SeqNonEmpty" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyUtil" method="seqNonEmptyOrElse" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyUtil" method="seqNonEmptyOrElseGet" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyUtil" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWithAppended" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWithAppendedDefault" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWrapper" />
+    <pattern value="org.abego.commons.seq.SeqUtil" />
+    <pattern value="org.abego.commons.util.ServiceLoaderUtil" />
+    <pattern value="org.abego.commons.var.Var" method="set" />
+    <pattern value="org.abego.commons.var.VarUtil.Variable" method="set" />
+    <pattern value="org.abego.commons.io.FileUtil" method="setReadOnly" />
+    <pattern value="org.abego.commons.stringevaluator.StringEvaluator" method="setTermValue" />
+    <pattern value="org.abego.commons.seq.Seq" method="singleItem" />
+    <pattern value="org.abego.commons.seq.Seq" method="singleItemOrNull" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="singleQuoted" />
+    <pattern value="org.abego.commons.util.CollectionUtil" method="singleQuotedStringListWithoutEscapes" />
+    <pattern value="org.abego.commons.seq.EmptySeq" method="size" />
+    <pattern value="org.abego.commons.seq.Seq" method="size" />
+    <pattern value="org.abego.commons.seq.SeqForArray" method="size" />
+    <pattern value="org.abego.commons.seq.SeqForIterable" method="size" />
+    <pattern value="org.abego.commons.seq.SeqForList" method="size" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWithAppendedDefault" method="size" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWrapper" method="size" />
+    <pattern value="org.abego.commons.seq.AbstractSeq" method="sorted" />
+    <pattern value="org.abego.commons.seq.Seq" method="sorted" />
+    <pattern value="org.abego.commons.seq.AbstractSeq" method="sortedBy" />
+    <pattern value="org.abego.commons.seq.Seq" method="sortedBy" />
+    <pattern value="org.abego.commons.util.ListUtil" method="sortedList" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="splitWhitespaceSeparatedString" />
+    <pattern value="org.abego.commons.seq.EmptySeq" method="stream" />
+    <pattern value="org.abego.commons.seq.Seq" method="stream" />
+    <pattern value="org.abego.commons.seq.SeqForArray" method="stream" />
+    <pattern value="org.abego.commons.seq.SeqForList" method="stream" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWithAppendedDefault" method="stream" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyWrapper" method="stream" />
+    <pattern value="org.abego.commons.util.stream.StreamUtil" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="string" />
+    <pattern value="org.abego.commons.stringpool.StringPool.StringAndID" />
+    <pattern value="org.abego.commons.stringevaluator.StringEvaluator" />
+    <pattern value="org.abego.commons.stringevaluator.StringEvaluator" method="stringEvaluator" />
+    <pattern value="org.abego.commons.stringevaluator.StringEvaluator.StringEvaluatorException" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="stringOrDefault" />
+    <pattern value="org.abego.commons.stringpool.StringPool" />
+    <pattern value="org.abego.commons.stringpool.StringPoolBuilder" />
+    <pattern value="org.abego.commons.stringpool.StringPoolBuilderDefault" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault" />
+    <pattern value="org.abego.commons.lang.StringUtil" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="StringUtil" />
+    <pattern value="org.abego.commons.lang.SystemUtil" method="systemErrRedirect" />
+    <pattern value="org.abego.commons.lang.SystemUtil" method="systemOutRedirect" />
+    <pattern value="org.abego.commons.lang.SystemUtil" />
+    <pattern value="org.abego.commons.lang.SystemUtil" method="SystemUtil" />
+    <pattern value="org.abego.commons.io.FileUtil" method="tempDirectoryForRun" />
+    <pattern value="org.abego.commons.io.FileUtil" method="tempFileForRun" />
+    <pattern value="org.abego.commons.io.FileUtil" method="tempFileForRunFromResource" />
+    <pattern value="org.abego.commons.blackboard.Blackboard" method="text" />
+    <pattern value="org.abego.commons.io.FileUtil" method="textOf" />
+    <pattern value="org.abego.commons.io.InputStreamUtil" method="textOf" />
+    <pattern value="org.abego.commons.lang.IterableUtil" method="textOf" />
+    <pattern value="org.abego.commons.io.FileUtil" method="textOfFile" />
+    <pattern value="org.abego.commons.io.ResourceUtil" method="textOfResource" />
+    <pattern value="org.abego.commons.lang.ThreadUtil" />
+    <pattern value="org.abego.commons.lang.ThreadUtil" method="ThreadUtil" />
+    <pattern value="org.abego.commons.lang.ThrowableUtil" />
+    <pattern value="org.abego.commons.lang.ThrowableUtil" method="ThrowableUtil" />
+    <pattern value="org.abego.commons.timeout.TimeoutSupplier" method="timeout" />
+    <pattern value="org.abego.commons.timeout.TimeoutSupplier" />
+    <pattern value="org.abego.commons.timeout.TimeoutUncheckedException" />
+    <pattern value="org.abego.commons.timeout.TimeoutUncheckedException" method="TimeoutUncheckedException" />
+    <pattern value="org.abego.commons.lang.StringUtil" method="toArray" />
+    <pattern value="org.abego.commons.io.FileUtil" method="toFile" />
+    <pattern value="org.abego.commons.io.ToFileInHeaderLineWriter" />
+    <pattern value="org.abego.commons.io.ToFileInHeaderLineWriter" method="toFileInHeaderLineWriter" />
+    <pattern value="org.abego.commons.javalang.JavaLangUtil" method="toJavaIdentifier" />
+    <pattern value="org.abego.commons.util.stream.StreamUtil" method="toList" />
+    <pattern value="org.abego.commons.util.stream.StreamUtil" method="toStream" />
+    <pattern value="org.abego.commons.io.FileUtil" method="toURL" />
+    <pattern value="org.abego.commons.nio.file.PathUtil" method="toURL" />
+    <pattern value="org.abego.commons.net.URLUtil" method="toURL" />
+    <pattern value="org.abego.commons.lang.exception.UncheckedException" />
+    <pattern value="org.abego.commons.net.URLUtil" />
+    <pattern value="org.abego.commons.stringevaluator.StringEvaluator" method="valueOf" />
+    <pattern value="org.abego.commons.var.Var" />
+    <pattern value="org.abego.commons.var.VarUtil.Variable" />
+    <pattern value="org.abego.commons.var.VarUtil" />
+    <pattern value="org.abego.commons.vlq.VLQUtil" />
+    <pattern value="org.abego.commons.io.Writable" />
+    <pattern value="org.abego.commons.io.WriterUtil" method="write" />
+    <pattern value="org.abego.commons.io.OutputStreamUtil" method="write" />
+    <pattern value="org.abego.commons.io.WriterUtil" method="writer" />
+    <pattern value="org.abego.commons.io.WriterUtil" />
+    <pattern value="org.abego.commons.io.WriterUtil" method="WriterUtil" />
+    <pattern value="org.abego.commons.io.Writable" method="writeTo" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault$3" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault$3$1" />
+    <pattern value="org.abego.commons.lang.ByteUtil" method="ByteUtil" />
+    <pattern value="org.abego.commons.seq.AbstractSeq" method="equals" />
+    <pattern value="org.abego.commons.diff.FileDiffUtil" method="FileDiffUtil" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault$3$1" method="getID" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault$3$1" method="getString" />
+    <pattern value="org.abego.commons.seq.AbstractSeq" method="hashCode" />
+    <pattern value="org.abego.commons.util.IDUtil" method="IDUtil" />
+    <pattern value="org.abego.commons.io.LineSplittingWriter" method="LineSplittingWriter" />
+    <pattern value="org.abego.commons.stringpool.StringPoolDefault$3" method="next" />
+    <pattern value="org.abego.commons.nio.file.PathUtil" method="PathUtil" />
+    <pattern value="org.abego.commons.io.PrintStreamUtil" method="PrintStreamUtil" />
+    <pattern value="org.abego.commons.io.LineSeparatorsReplacingWriterDecorator" method="processLineSeparator" />
+    <pattern value="org.abego.commons.io.ResourceUtil" method="ResourceUtil" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyUtil" method="SeqNonEmptyUtil" />
+    <pattern value="org.abego.commons.seq.SeqUtil" method="SeqUtil" />
+    <pattern value="org.abego.commons.util.ServiceLoaderUtil" method="ServiceLoaderUtil" />
+    <pattern value="org.abego.commons.util.stream.StreamUtil" method="StreamUtil" />
+    <pattern value="org.abego.commons.seq.AbstractSeq" method="toString" />
+    <pattern value="org.abego.commons.net.URLUtil" method="URLUtil" />
+    <pattern value="org.abego.commons.var.VarUtil" method="VarUtil" />
+    <pattern value="org.abego.commons.vlq.VLQUtil" method="VLQUtil" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyUtilTest.SampleNonEmptySeqNotImplementingSeqNonEmpty" method="item" />
+    <pattern value="org.abego.commons.seq.SeqNonEmptyUtilTest.SampleNonEmptySeqNotImplementingSeqNonEmpty" method="size" />
+    <pattern value="org.abego.commons.io.LineAwareWriterDecoratorTest.WriterWithLineNumbers" method="processLineContent" />
+    <pattern value="org.abego.commons.io.LineAwareWriterDecoratorTest.WriterWithLineNumbers" method="processLineSeparator" />
+    <pattern value="org.abego.commons.seq.MappedSeq" method="size" />
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/Desktop/javadoc-temp" />
+    <option name="OPTION_SCOPE" value="public" />
+    <option name="OPTION_DOCUMENT_TAG_USE" value="true" />
+    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="true" />
+    <option name="OPTION_DOCUMENT_TAG_VERSION" value="true" />
+    <option name="OTHER_OPTIONS" value="-encoding UTF-8" />
+  </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
+    </option>
+  </component>
+  <component name="NullableNotNullManager">
+    <option name="myDefaultNullable" value="org.eclipse.jdt.annotation.Nullable" />
+    <option name="myDefaultNotNull" value="org.eclipse.jdt.annotation.NonNull" />
+    <option name="myNullables">
+      <value>
+        <list size="12">
+          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
+          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
+          <item index="2" class="java.lang.String" itemvalue="javax.annotation.CheckForNull" />
+          <item index="3" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.Nullable" />
+          <item index="4" class="java.lang.String" itemvalue="android.support.annotation.Nullable" />
+          <item index="5" class="java.lang.String" itemvalue="androidx.annotation.Nullable" />
+          <item index="6" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNullable" />
+          <item index="7" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.Nullable" />
+          <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableDecl" />
+          <item index="9" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableType" />
+          <item index="10" class="java.lang.String" itemvalue="com.android.annotations.Nullable" />
+          <item index="11" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.Nullable" />
+        </list>
+      </value>
+    </option>
+    <option name="myNotNulls">
+      <value>
+        <list size="11">
+          <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
+          <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
+          <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
+          <item index="3" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
+          <item index="4" class="java.lang.String" itemvalue="androidx.annotation.NonNull" />
+          <item index="5" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNonNull" />
+          <item index="6" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.NonNull" />
+          <item index="7" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullDecl" />
+          <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullType" />
+          <item index="9" class="java.lang.String" itemvalue="com.android.annotations.NonNull" />
+          <item index="10" class="java.lang.String" itemvalue="org.eclipse.jdt.annotation.NonNull" />
+        </list>
+      </value>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="IDEA jdk" project-jdk-type="JavaSDK">

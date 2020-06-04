@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="abego-commons-base" />
         <module name="abego-commons-test" />
+        <module name="abego-commons-base" />
       </profile>
     </annotationProcessing>
   </component>

@@ -31,14 +31,14 @@ package org.abego.commons.seq;
 public interface SeqNonEmptyWithAppended<T> extends SeqNonEmpty<T> {
 
     /**
-     * Return a new {@link SeqNonEmptyWithAppended} with the same items as
+     * Return a new {SeqNonEmptyWithAppended with the same items as
      * <code>this</code> Seq plus the given <code>items</code> added (at the end).
      */
     @SuppressWarnings("unchecked")
     SeqNonEmptyWithAppended<T> appended(T... items);
 
     /**
-     * Return a new {@link SeqNonEmptyWithAppended} with the same items as
+     * Return a new {SeqNonEmptyWithAppended with the same items as
      * <code>this</code> Seq plus the given <code>items</code> added (at the end).
      */
     SeqNonEmptyWithAppended<T> appended(Iterable<T> items);

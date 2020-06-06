@@ -139,7 +139,7 @@ public interface Seq<T> extends Iterable<T> {
     }
 
     /**
-     * Returns a new {@link Seq} consisting of the items of this sequence that match
+     * Returns a new Seq consisting of the items of this sequence that match
      * the <code>predicate</code>.
      *
      * <p>See {@link SeqUtil#filter(Seq, Predicate)} for a default implementation.</p>
@@ -149,7 +149,7 @@ public interface Seq<T> extends Iterable<T> {
     Seq<T> filter(Predicate<T> condition);
 
     /**
-     * Returns a new {@link Seq} consisting of the results of applying the given
+     * Returns a new Seq consisting of the results of applying the given
      * <code>mapper</code> function to the elements of this Seq.
      *
      * <p>See {@link SeqUtil#map(Seq, Function)} for a default implementation.</p>
@@ -159,13 +159,13 @@ public interface Seq<T> extends Iterable<T> {
     <R> Seq<R> map(Function<? super T, ? extends R> mapper);
 
     /**
-     * Returns a new {@link Seq} consisting of the elements of this Seq
+     * Returns a new Seq consisting of the elements of this Seq
      * sorted by the given <code>sortKey</code>.
      */
     <S extends Comparable<S>> Seq<T> sortedBy(Function<T, S> sortKey);
 
     /**
-     * Return a new {@link Seq} consisting of the elements of this Seq
+     * Return a new Seq consisting of the elements of this Seq
      * sorted in ascending order, according to the {@linkplain Comparable
      * natural ordering} of its elements.
      *
@@ -178,7 +178,7 @@ public interface Seq<T> extends Iterable<T> {
     Seq<T> sorted();
 
     /**
-     * Return a new {@link Seq} consisting of the elements of this Seq
+     * Return a new Seq consisting of the elements of this Seq
      * sorted in ascending order, according to the given <code>comparator</code>.
      *
      * <p>All elements in this list must be <i>mutually comparable</i> using the
@@ -256,7 +256,7 @@ public interface Seq<T> extends Iterable<T> {
 
     /**
      * Return <code>true</code> if the specified <code>object</code> is a
-     * {@link Seq} and equal to this Seq, return <code>false</code> otherwise.
+     * Seq and equal to this Seq, return <code>false</code> otherwise.
      *
      * <p>Two Seqs are equal if they contain the same elements in the same
      * order. Two elements <code>e1</code> and <code>e2</code> are the same
@@ -268,7 +268,7 @@ public interface Seq<T> extends Iterable<T> {
     boolean equals(@Nullable Object object);
 
     /**
-     * Return the hash code value for this {@link Seq}.
+     * Return the hash code value for this Seq.
      *
      * <p>The hash code of a Seq is defined to be the result of the
      * following calculation:

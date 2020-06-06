@@ -33,7 +33,7 @@ public final class RunOnClose implements AutoCloseable {
     }
 
     /**
-     * Return a {@link RunOnClose} that {@link #close()} method will run the
+     * Return a RunOnClose that {@link #close()} method will run the
      * the value to {@code onCloseValue}.
      */
     public static RunOnClose runOnClose(Runnable runnable) {

@@ -32,8 +32,8 @@ interface SequenceDiff<T> {
      * <p>
      * The differences are returned as a sequence of "{@link AlignedItemPair}s.
      * For every pair of the result sequence the following holds:
-     * <p>
-     * <table border="1">
+     *
+     * <table border="1" summary="Kinds of Differences">
      * <tr>
      * <td>first</td>
      * <td>second</td>

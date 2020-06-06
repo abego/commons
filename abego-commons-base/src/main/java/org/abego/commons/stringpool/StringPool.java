@@ -57,17 +57,17 @@ public interface StringPool {
     String getStringOrNull(int id);
 
     /**
-     * Return an {@link Iterable} with all strings in the {@link StringPool}.
+     * Return an {@link Iterable} with all strings in the StringPool.
      */
     Iterable<String> allStrings();
 
     /**
-     * Return an {@link Iterable} with all strings in the {@link StringPool}, together with the string's ID in this StringPool.
+     * Return an {@link Iterable} with all strings in the StringPool, together with the string's ID in this StringPool.
      */
     Iterable<StringAndID> allStringAndIDs();
 
     /**
-     * Holds a {@link String} and its ID in this {@link StringPool}.
+     * Holds a {@link String} and its ID in this StringPool.
      */
     interface StringAndID {
         String getString();

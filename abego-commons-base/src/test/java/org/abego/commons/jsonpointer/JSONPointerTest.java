@@ -70,7 +70,6 @@ class JSONPointerTest {
      *       "~1": 9   // not in RFC example, but in chapter 4 of RFC
      *    }
      * </pre>
-     * </p>
      */
     private static Object getSample() {
         Map<String, Object> result = new HashMap<>();

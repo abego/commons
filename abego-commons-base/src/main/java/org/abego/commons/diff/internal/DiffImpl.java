@@ -140,7 +140,7 @@ public final class DiffImpl {
     }
 
     static <T> String asUnifiedDiffChangeHunk(Seq<AlignedItemPair<T>> alignedItems) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         addLine(sb, "", "@@ -1 +1 @@");
         for (AlignedItemPair<T> alignedItemPair : alignedItems) {
             @Nullable String line1 = escapedOrNull(stringOrNull(alignedItemPair.first()));
@@ -164,7 +164,7 @@ public final class DiffImpl {
     }
 
     private static void addLine(
-            StringBuffer sb,
+            StringBuilder sb,
             String prefix,
             String line) {
         sb.append(prefix);

@@ -385,8 +385,7 @@ public final class FileUtil {
             // (If we would check the flag we would generate dead code and
             // thus trigger the code coverage tool as we never enter the
             // "false" branch.)
-            //noinspection ResultOfMethodCallIgnored
-            runIOCode((IOCommand) file::createNewFile);
+            runIOCode(file::createNewFile);
         }
     }
 

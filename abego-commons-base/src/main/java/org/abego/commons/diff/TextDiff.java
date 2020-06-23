@@ -25,12 +25,17 @@
 package org.abego.commons.diff;
 
 import org.abego.commons.diff.internal.DiffImpl;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.seq.Seq;
 import org.abego.commons.seq.SeqUtil;
 
 public final class TextDiff {
 
     private static final Seq<Difference> NO_DIFFERENCES = SeqUtil.emptySeq();
+
+    TextDiff() {
+        throw new MustNotInstantiateException();
+    }
 
     public static Seq<Difference> compareLineWise(String textA, String textB) {
         return DiffImpl.compareLineWise(textA, textB);

@@ -24,13 +24,21 @@
 
 package org.abego.commons.diff;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.seq.Seq;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.commons.range.IntRangeDefault.newIntRange;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TextDiffTest {
+
+    @Test
+    void constructor() {
+        assertThrows(MustNotInstantiateException.class, TextDiff::new);
+    }
+
 
     private static void assertDifferenceEquals(int expectedStartA, int expectedEndA, int expectedStartB, int expectedEndB, Difference diff) {
         assertEquals(newIntRange(expectedStartA, expectedEndA), diff

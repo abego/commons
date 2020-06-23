@@ -52,6 +52,7 @@ final public class BooleanSupplierUtil {
                 //noinspection BusyWait
                 Thread.sleep(checkIntervalMillis);
             } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
                 break;
             }
         }

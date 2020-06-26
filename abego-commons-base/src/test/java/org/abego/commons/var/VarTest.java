@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -72,6 +73,47 @@ abstract class VarTest {
         v.set("foo");
         assertEquals("foo", v.getOrElse(() -> "qux"));
     }
+
+    @Test
+    void getOrNull() {
+        Var<String> v = newStringVar();
+
+        assertNull(v.getOrNull());
+
+        v.set("foo");
+        assertEquals("foo", v.getOrNull());
+    }
+
+    @Test
+    void mapOrElse_defaultValue() {
+        Var<String> v = newStringVar();
+
+        assertEquals("bar", v.mapOrElse(i -> i + i, "bar"));
+
+        v.set("foo");
+        assertEquals("foofoo", v.mapOrElse(i -> i + i, "bar"));
+    }
+
+    @Test
+    void mapOrElse_defaultValueSupplier() {
+        Var<String> v = newStringVar();
+
+        assertEquals("bar", v.mapOrElse((String i) -> i + i, () -> "bar"));
+
+        v.set("foo");
+        assertEquals("foofoo", v.mapOrElse(i -> i + i, () -> "bar"));
+    }
+
+    @Test
+    void mapOrNull() {
+        Var<String> v = newStringVar();
+
+        assertNull(v.mapOrNull((String i) -> i + i));
+
+        v.set("foo");
+        assertEquals("foofoo", v.mapOrNull((String i) -> i + i));
+    }
+
 
     @Test
     void hasValue_OK() {

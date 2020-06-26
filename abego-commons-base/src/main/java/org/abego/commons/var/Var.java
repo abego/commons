@@ -25,7 +25,9 @@
 package org.abego.commons.var;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface Var<T> extends Supplier<@NonNull T> {
@@ -48,4 +50,26 @@ public interface Var<T> extends Supplier<@NonNull T> {
     default @NonNull T getOrElse(Supplier<@NonNull T> defaultValueSupplier) {
         return hasValue() ? get() : defaultValueSupplier.get();
     }
+
+    default @Nullable T getOrNull() {
+        return hasValue() ? get() : null;
+    }
+
+    default <R> @NonNull R mapOrElse(
+            Function<? super @NonNull T, ? extends @NonNull R> mapper,
+            Supplier<@NonNull R> defaultValueSupplier) {
+        return hasValue() ? mapper.apply(get()) : defaultValueSupplier.get();
+    }
+
+    default <R> @NonNull R mapOrElse(
+            Function<? super @NonNull T, ? extends @NonNull R> mapper,
+            R defaultValue) {
+        return hasValue() ? mapper.apply(get()) : defaultValue;
+    }
+
+    default <R> @Nullable R mapOrNull(
+            Function<? super @NonNull T, ? extends @NonNull R> mapper) {
+        return hasValue() ? mapper.apply(get()) : null;
+    }
+
 }

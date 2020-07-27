@@ -38,6 +38,7 @@ import static org.abego.commons.lang.StringUtil.camelCased;
 import static org.abego.commons.lang.StringUtil.dashCased;
 import static org.abego.commons.lang.StringUtil.escaped;
 import static org.abego.commons.lang.StringUtil.firstChar;
+import static org.abego.commons.lang.StringUtil.firstLine;
 import static org.abego.commons.lang.StringUtil.hasText;
 import static org.abego.commons.lang.StringUtil.isNullOrEmpty;
 import static org.abego.commons.lang.StringUtil.join;
@@ -335,6 +336,12 @@ class StringUtilTest {
         assertEquals("foo,bar,baz,qux,quux", join(",", items));
     }
 
+    @Test
+    void firstLine_OK() {
+        assertEquals("foo", firstLine("foo\nbar\nbaz"));
+        assertEquals("", firstLine(""));
+        assertEquals("foo", firstLine("foo"));
+    }
 
     @Test
     void toArray_OK() {

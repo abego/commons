@@ -622,6 +622,10 @@ public final class StringUtil {
         return newSeq(END_OF_LINE_PATTERN.split(text, -1));
     }
 
+    public static String firstLine(String text) {
+        return lines(text).first();
+    }
+
     public static String replaceRange(
             String text, int startIndex, int endIndex, String newRangeText) {
         return join("",

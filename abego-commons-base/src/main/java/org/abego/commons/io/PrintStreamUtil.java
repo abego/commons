@@ -64,5 +64,16 @@ public final class PrintStreamUtil {
         return newPrintStream(outputStream, StandardCharsets.UTF_8);
     }
 
-
+    /**
+     * Returns a new PrintStream that behaves like a
+     * <a href="https://en.wikipedia.org/wiki/Null_device">Null device</a>, i.e.
+     * discards all data written to it.
+     */
+    public static PrintStream newPrintStreamToNullDevice() {
+        return newPrintStream(new OutputStream() {
+            public void write(int b) {
+                // do nothing
+            }
+        });
+    }
 }

@@ -33,6 +33,7 @@ import java.io.PrintStream;
 import static org.abego.commons.io.InputStreamUtil.newInputStream;
 import static org.abego.commons.io.PrintStreamUtil.newPrintStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PrintStreamUtilTest {
@@ -53,4 +54,12 @@ class PrintStreamUtilTest {
         assertEquals("a\nbc\ndef\na\nbc\ndef\n", out.toString());
     }
 
+    @Test
+    void newPrintStreamToNullDevice_OK() {
+        PrintStream stream = PrintStreamUtil.newPrintStreamToNullDevice();
+
+        stream.println("foo");
+
+        assertFalse(stream.checkError());
+    }
 }

@@ -24,9 +24,14 @@
 
 package org.abego.commons.var;
 
+import org.abego.commons.io.FileUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public final class VarUtil {
 
@@ -40,6 +45,14 @@ public final class VarUtil {
 
     public static <T> Var<T> newVarNotEditable(@NonNull T value) {
         return new VariableNotEditable<>(value);
+    }
+
+    public static Var<String> newTextFileVar(File file, Charset charset) {
+        return new TextFileVar(file, charset);
+    }
+
+    public static Var<String> newTextFileVar(File file) {
+        return newTextFileVar(file, StandardCharsets.UTF_8);
     }
 
     private static class Variable<T> implements Var<T> {
@@ -86,6 +99,27 @@ public final class VarUtil {
         @Override
         public boolean isEditable() {
             return false;
+        }
+    }
+
+    private static class TextFileVar implements Var<String> {
+
+        private final File file;
+        private final Charset charset;
+
+        public TextFileVar(File file, Charset charset) {
+            this.file = file;
+            this.charset = charset;
+        }
+
+        @Override
+        public String get() {
+            return FileUtil.textOf(file, charset);
+        }
+
+        @Override
+        public void set(String value) {
+            FileUtil.writeText(file, value, charset);
         }
     }
 }

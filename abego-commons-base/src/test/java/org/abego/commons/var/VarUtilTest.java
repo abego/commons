@@ -24,11 +24,16 @@
 
 package org.abego.commons.var;
 
+import org.abego.commons.io.FileUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.File;
 
 import static org.abego.commons.var.VarUtil.newVar;
 import static org.abego.commons.var.VarUtil.newVarNotEditable;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class VarUtilTest extends VarTest {
@@ -36,6 +41,23 @@ class VarUtilTest extends VarTest {
     @Test
     void constructor() {
         assertThrows(MustNotInstantiateException.class, VarUtil::new);
+    }
+
+
+    @Test
+    void newTextFileVar(@TempDir File tempDir) {
+        File file = new File(tempDir, "t.txt");
+
+        FileUtil.writeText(file, "foo");
+
+        Var<String> v = VarUtil.newTextFileVar(file);
+
+        assertEquals("foo", v.get());
+
+        v.set("bar");
+
+        assertEquals("bar", v.get());
+        assertEquals("bar", FileUtil.textOf(file));
     }
 
     @Override

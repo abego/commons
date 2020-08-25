@@ -37,9 +37,17 @@ public interface Var<T> extends Supplier<@NonNull T> {
      */
     @NonNull T get();
 
+    /**
+     * Sets the value of the Var to the {@code value}, or throw an
+     * {@link UnsupportedOperationException} when the Var is not editable.
+     */
     void set(@NonNull T value);
 
     default boolean hasValue() {
+        return true;
+    }
+
+    default boolean isEditable() {
         return true;
     }
 

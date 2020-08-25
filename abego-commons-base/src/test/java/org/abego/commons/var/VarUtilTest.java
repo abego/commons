@@ -28,6 +28,7 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.commons.var.VarUtil.newVar;
+import static org.abego.commons.var.VarUtil.newVarNotEditable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class VarUtilTest extends VarTest {
@@ -37,9 +38,13 @@ class VarUtilTest extends VarTest {
         assertThrows(MustNotInstantiateException.class, VarUtil::new);
     }
 
-
     @Override
     Var<String> newStringVar() {
         return newVar();
+    }
+
+    @Override
+    Var<String> newStringVarNotEditable(String value) {
+        return newVarNotEditable(value);
     }
 }

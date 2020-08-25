@@ -35,14 +35,21 @@ public final class VarUtil {
     }
 
     public static <T> Var<T> newVar() {
-        return Variable.newVariable();
+        return new Variable<>();
+    }
+
+    public static <T> Var<T> newVarNotEditable(@NonNull T value) {
+        return new VariableNotEditable<>(value);
     }
 
     private static class Variable<T> implements Var<T> {
         private @Nullable T value;
 
-        private static <T> Variable<T> newVariable() {
-            return new Variable<>();
+        Variable() {
+        }
+
+        Variable(@NonNull T value) {
+            this.value = value;
         }
 
         @Override
@@ -50,7 +57,7 @@ public final class VarUtil {
             @Nullable
             T v = value;
             if (v == null) {
-                throw new IllegalStateException("Variable has no value"); //NON-NLS
+                throw new IllegalStateException("Var has no value"); //NON-NLS
             }
             return v;
         }
@@ -63,6 +70,22 @@ public final class VarUtil {
         @Override
         public boolean hasValue() {
             return value != null;
+        }
+    }
+
+    private static class VariableNotEditable<T> extends Variable<T> {
+        VariableNotEditable(@NonNull T value) {
+            super(value);
+        }
+
+        @Override
+        public void set(@NonNull T value) {
+            throw new UnsupportedOperationException("Var not editable"); //NON-NLS
+        }
+
+        @Override
+        public boolean isEditable() {
+            return false;
         }
     }
 }

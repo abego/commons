@@ -36,6 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 abstract class VarTest {
     abstract Var<String> newStringVar();
 
+    abstract Var<String> newStringVarNotEditable(String value);
+
     @Test
     void get_noValueOK() {
         Var<String> v = newStringVar();
@@ -142,4 +144,27 @@ abstract class VarTest {
         assertTrue(ivar.hasValue());
 
     }
+
+    @Test
+    void isEditable_true() {
+        Var<String> v = newStringVar();
+
+        assertTrue(v.isEditable());
+        v.set("foo");
+        assertEquals("foo", v.get());
+    }
+
+    @Test
+    void isEditable_false() {
+        String value = "foo";
+        Var<String> v = newStringVarNotEditable(value);
+
+        assertFalse(v.isEditable());
+        assertEquals("foo", v.get());
+        assertThrows(UnsupportedOperationException.class, () -> v.set("bar"));
+        // also fails when typing to set Var to its current value.
+        assertThrows(UnsupportedOperationException.class, () -> v.set("foo"));
+    }
+
+
 }

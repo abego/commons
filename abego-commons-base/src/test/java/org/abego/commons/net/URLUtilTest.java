@@ -24,11 +24,20 @@
 
 package org.abego.commons.net;
 
+import org.abego.commons.TestData;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
+import static org.abego.commons.TestData.EMPTY_TXT_RESOURCE_NAME;
+import static org.abego.commons.TestData.EMPTY_TXT_TEXT;
+import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME;
+import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_TEXT;
+import static org.abego.commons.TestData.SAMPLE_TXT_RESOURCE_NAME;
+import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
+import static org.abego.commons.net.URLUtil.textOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -53,4 +62,36 @@ class URLUtilTest {
 
         assertEquals("Invalid URL specification: Unknown:/foo/bar", e.getMessage());
     }
+
+    @Test
+    void textOf_ok() {
+        URL url = TestData.class.getResource(SAMPLE_TXT_RESOURCE_NAME);
+
+        assertEquals(SAMPLE_TXT_TEXT, textOf(url));
+    }
+
+    @Test
+    void textOf_withEmptyStream() {
+        URL url = TestData.class.getResource(EMPTY_TXT_RESOURCE_NAME);
+
+        assertEquals(EMPTY_TXT_TEXT, textOf(url));
+    }
+
+    @Test
+    void textOf_withCharset() {
+        URL url = TestData.class.getResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
+
+        assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT,
+                textOf(url, StandardCharsets.ISO_8859_1));
+    }
+
+    @Test
+    void textOf_withCharsetName() {
+        URL url = TestData.class.getResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
+
+        assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT,
+                textOf(url, StandardCharsets.ISO_8859_1.name()));
+    }
+
+
 }

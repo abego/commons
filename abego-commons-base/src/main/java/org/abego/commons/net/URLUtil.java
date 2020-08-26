@@ -24,10 +24,16 @@
 
 package org.abego.commons.net;
 
+import org.abego.commons.io.InputStreamUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public final class URLUtil {
     URLUtil() {
@@ -40,6 +46,22 @@ public final class URLUtil {
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(String.format("Invalid URL specification: %s", spec), e); //NON-NLS
         }
+    }
+
+    public static String textOf(URL url) {
+        return textOf(url, StandardCharsets.UTF_8);
+    }
+
+    public static String textOf(URL url, String charsetName) {
+        try (InputStream inputStream = url.openStream()) {
+            return InputStreamUtil.textOf(inputStream, charsetName);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public static String textOf(URL url, Charset charset) {
+        return textOf(url, charset.name());
     }
 
 }

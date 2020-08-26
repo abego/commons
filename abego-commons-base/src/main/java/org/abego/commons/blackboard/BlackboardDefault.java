@@ -50,21 +50,24 @@ public final class BlackboardDefault<T> implements Blackboard<T> {
 
     @Override
     public boolean isEmpty() {
+        // @formatter:off
         synchronized (itemList) {
-            return itemList.isEmpty();
-        } // '}' in same line as last statement to avoid wrong code coverage info
+            return itemList.isEmpty(); } // '}' in same line as last statement to avoid wrong code coverage info
+        // @formatter:on
     }
 
     @Override
     public Seq<T> items() {
+        // @formatter:off
         synchronized (itemList) {
-            return newSeq(new ArrayList<>(itemList));
-        } // '}' in same line as last statement to avoid wrong code coverage info
+            return newSeq(new ArrayList<>(itemList)); } // '}' in same line as last statement to avoid wrong code coverage info
+        // @formatter:on
     }
 
     @Override
     @Nullable
     public T itemWithOrNull(Predicate<T> condition) {
+        // @formatter:off
         synchronized (itemList) {
             for (int i = itemList.size() - 1; i >= 0; i--) {
                 T o = itemList.get(i);
@@ -72,8 +75,8 @@ public final class BlackboardDefault<T> implements Blackboard<T> {
                     return o;
                 }
             }
-            return null;
-        } // '}' in same line as last statement to avoid wrong code coverage info
+            return null; } // '}' in same line as last statement to avoid wrong code coverage info
+        // @formatter:on
     }
 
     @Override
@@ -97,9 +100,10 @@ public final class BlackboardDefault<T> implements Blackboard<T> {
 
     @Override
     public String text() {
+        // @formatter:off
         synchronized (itemList) {
-            return IterableUtil.textOf(itemList, "\n");
-        } // '}' in same line as last statement to avoid wrong code coverage info
+            return IterableUtil.textOf(itemList, "\n"); } // '}' in same line as last statement to avoid wrong code coverage info
+        // @formatter:on
     }
 
     @Override

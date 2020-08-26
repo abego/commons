@@ -28,6 +28,7 @@ import org.abego.commons.TestData;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -68,6 +69,17 @@ class URLUtilTest {
         URL url = TestData.class.getResource(SAMPLE_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_TXT_TEXT, textOf(url));
+    }
+
+    @Test
+    void textOf_invalidURL() {
+        URL url = URLUtil.toURL("file:/missing/file");
+
+        UncheckedIOException e = assertThrows(
+                UncheckedIOException.class, () -> textOf(url));
+        assertEquals(
+                "java.io.FileNotFoundException: /missing/file (No such file or directory)",
+                e.getMessage());
     }
 
     @Test

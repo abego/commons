@@ -30,7 +30,9 @@ import org.junit.jupiter.api.Test;
 import static org.abego.commons.lang.ObjectUtil.checkType;
 import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.abego.commons.lang.ObjectUtil.valueOrElse;
+import static org.abego.commons.lang.ObjectUtil.valueOrFail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ObjectUtilTest {
@@ -66,6 +68,28 @@ class ObjectUtilTest {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                 () -> checkType(null, String.class));
         assertEquals("Object is not of type java.lang.String (but null)", e.getMessage());
+    }
+
+    @Test
+    void valueOrFail_withMessage() {
+
+        String value = "foo";
+        assertEquals(value, valueOrFail(value, "value is null"));
+
+        NullPointerException e = assertThrows(NullPointerException.class,
+                () -> valueOrFail(null, "value is null"));
+        assertEquals("value is null", e.getMessage());
+    }
+
+    @Test
+    void valueOrFail_noMessage() {
+
+        String value = "foo";
+        assertEquals(value, valueOrFail(value));
+
+        NullPointerException e = assertThrows(NullPointerException.class,
+                () -> valueOrFail(null));
+        assertNull(e.getMessage());
     }
 
     @Test

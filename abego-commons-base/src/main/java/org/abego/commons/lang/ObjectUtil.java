@@ -55,7 +55,7 @@ public final class ObjectUtil {
     }
 
     /**
-     * Throw an {@link IllegalArgumentException} if the <code>object</code>
+     * Throws an {@link IllegalArgumentException} if the <code>object</code>
      * is not of the <code>expectedType</code>.
      */
     public static <T> T checkType(@Nullable Object object, Class<? extends T> expectedType) {
@@ -70,12 +70,34 @@ public final class ObjectUtil {
     }
 
     /**
-     * Return the {@code value} when it is not {@code null}, otherwise return the {@code otherValue}.
+     * Returns the {@code value} when it is not {@code null}, otherwise return the {@code otherValue}.
      *
      * <p>In some programming languages this operation is performed by an "Elvis" operator ("?:").</p>
      */
     public static <T> @NonNull T valueOrElse(@Nullable T value, @NonNull T otherValue) {
         return value != null ? value : otherValue;
+    }
+
+    /**
+     * Returns the {@code value} when it is not {@code null}, otherwise throw a
+     * {@link NullPointerException} with the given message.
+     */
+    public static <T> @NonNull T valueOrFail(@Nullable T value, @NonNull String message) {
+        if (value == null) {
+            throw new NullPointerException(message);
+        }
+        return value;
+    }
+
+    /**
+     * Returns the {@code value} when it is not {@code null}, otherwise throw a
+     * {@link NullPointerException}.
+     */
+    public static <T> @NonNull T valueOrFail(@Nullable T value) {
+        if (value == null) {
+            throw new NullPointerException();
+        }
+        return value;
     }
 
 

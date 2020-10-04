@@ -389,6 +389,12 @@ public final class FileUtil {
         }
     }
 
+    @Nullable
+    public static File existingFileOrNull(String path) {
+        File f = new File(path);
+        return f.isFile() ? f : null;
+    }
+
     /**
      * Copy (the content of) the resource <code>resourceName</code> of
      * <code>theClass</code> to <code>file</code>.

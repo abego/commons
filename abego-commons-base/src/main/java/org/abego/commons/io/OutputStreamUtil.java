@@ -51,4 +51,20 @@ public final class OutputStreamUtil {
         }
     }
 
+    /**
+     * Returns an {@link OutputStream} that fails with an
+     * {@link IllegalStateException} when writing to it.
+     *
+     * @param messageOnWrite the message of the exception
+     */
+    public static OutputStream getOutputStreamFailingOnWrite(String messageOnWrite) {
+        return new OutputStream() {
+            @Override
+            public void write(int b) {
+                throw new IllegalStateException(messageOnWrite);
+            }
+        };
+    }
+
+
 }

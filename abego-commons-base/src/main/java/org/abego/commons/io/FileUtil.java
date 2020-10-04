@@ -419,16 +419,22 @@ public final class FileUtil {
         appendText(file, text, UTF_8);
     }
 
-    public static void writeText(File file, String text, Charset charset) {
+    public static File writeText(File file, String text, Charset charset) {
         writeToFile(file, text, charset, false);
+        return file;
     }
 
-    public static void writeText(File file, String text) {
-        writeText(file, text, UTF_8);
+    public static File writeText(File file, String text) {
+        return writeText(file, text, UTF_8);
     }
 
-    public static void writeText(File directory, String fileName, String text) {
-        FileUtil.writeText(file(directory, fileName), text);
+    public static File writeText(File directory, String fileName, String text) {
+        return writeText(file(directory, fileName), text);
+    }
+
+    public static File writeText(
+            File directory, String fileName, String text, Charset charset) {
+        return writeText(file(directory, fileName), text, charset);
     }
 
     private static void writeToFile(File file, String text, Charset charset, boolean append) {
@@ -530,6 +536,70 @@ public final class FileUtil {
                     "File '%s' does not exist.", file.getAbsolutePath())); //NON-NLS
         }
         return file;
+    }
+
+    public static File requireDirectory(File directory, String parameterName) {
+        if (!directory.isDirectory()) {
+            throw new IllegalArgumentException(
+                    String.format("Directory expected for %s, got %s",
+                            parameterName,
+                            directory.getAbsolutePath()));
+        }
+        return directory;
+    }
+
+    public static String stripExtension(String s) {
+        int endIndex = s.lastIndexOf('.');
+        return endIndex >= 0 ? s.substring(0, endIndex) : s;
+    }
+
+    public static String absolutePath(File parent, String filename) {
+        return new File(parent, filename).getAbsolutePath();
+    }
+
+    public static String absolutePath(String pathname) {
+        return new File(pathname).getAbsolutePath();
+    }
+
+    public static String absolutePath(File file) {
+        return file.getAbsolutePath();
+    }
+
+    /**
+     * Returns the path of the {@code file} relative to the given {@code
+     * baseDirectory}
+     *
+     * @param file          the file to consider
+     * @param baseDirectory the directory serving as the base
+     * @return the path of the {@code file} relative to the given {@code
+     * baseDirectory}
+     */
+    public static String pathRelativeTo(File file, File baseDirectory) {
+        return baseDirectory.toPath().relativize(file.toPath()).toString();
+    }
+
+    public static void copyResourcesToDirectory(
+            File source,
+            String absoluteResourceDirectoryPath,
+            String... fileNames) {
+        for (String name : fileNames) {
+            FileUtil.copyResourceToFile(
+                    Object.class,
+                    absoluteResourceDirectoryPath + name,
+                    new File(source, name));
+        }
+    }
+
+    public static void copyResourcesToDirectoryFlat(
+            File directory,
+            String absoluteResourceDirectoryPath,
+            String... fileNames) {
+        for (String name : fileNames) {
+            FileUtil.copyResourceToFile(
+                    Object.class,
+                    absoluteResourceDirectoryPath + name,
+                    new File(directory, new File(name).getName()));
+        }
     }
 
     /**

@@ -38,9 +38,13 @@ import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_TEXT;
 import static org.abego.commons.TestData.SAMPLE_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
+import static org.abego.commons.net.URLUtil.isURI;
+import static org.abego.commons.net.URLUtil.isURL;
 import static org.abego.commons.net.URLUtil.textOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class URLUtilTest {
 
@@ -105,5 +109,30 @@ class URLUtilTest {
                 textOf(url, StandardCharsets.ISO_8859_1.name()));
     }
 
+    @Test
+    void isURL_OK() {
+        assertTrue(isURL("file://a.b"));
+        assertTrue(isURL("file://  a.b"));
+
+        assertFalse(isURL("a.b"));
+        assertFalse(isURL("/a.b"));
+        assertFalse(isURL(""));
+
+    }
+
+    @Test
+    void isURI_OK() {
+        // valid URL and URI
+        assertTrue(isURI("file://a.b"));
+
+        // valid URL, but invalid URI
+        assertFalse(isURI("file://  a.b"));
+
+        // Invalid URI, but invalid URI
+        assertTrue(isURI("a.b"));
+        assertTrue(isURI("/a.b"));
+        assertTrue(isURI(""));
+
+    }
 
 }

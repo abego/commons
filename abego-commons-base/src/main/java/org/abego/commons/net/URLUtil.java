@@ -30,8 +30,12 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -64,4 +68,29 @@ public final class URLUtil {
         return textOf(url, charset.name());
     }
 
+    public static String urlDecode(String string) {
+        try {
+            return URLDecoder.decode(string, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isURL(String text) {
+        try {
+            new URL(text);
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
+    }
+
+    public static boolean isURI(String text) {
+        try {
+            new URI(text);
+            return true;
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
 }

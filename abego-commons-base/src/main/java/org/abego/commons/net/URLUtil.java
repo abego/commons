@@ -27,6 +27,7 @@ package org.abego.commons.net;
 import org.abego.commons.io.InputStreamUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -38,17 +39,36 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+
+import static org.abego.commons.lang.exception.UncheckedException.newUncheckedException;
 
 public final class URLUtil {
     URLUtil() {
         throw new MustNotInstantiateException();
     }
 
+    /**
+     * Returns an {@code URL} object from the {@code String} representation
+     * given in {@code spec}.
+     *
+     * @param spec an Uniform Resource Identifier specification, as define in
+     *             RFC2396
+     * @return the URL as specified by spec
+     */
     public static URL toURL(String spec) {
         try {
             return new URL(spec);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(String.format("Invalid URL specification: %s", spec), e); //NON-NLS
+        }
+    }
+
+    public static File toFile(URL url) {
+        try {
+            return Paths.get(url.toURI()).toFile();
+        } catch (URISyntaxException e) {
+            throw newUncheckedException(e);
         }
     }
 

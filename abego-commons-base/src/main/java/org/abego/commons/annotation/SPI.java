@@ -45,7 +45,7 @@ import java.lang.annotation.Target;
  * <em>Notice: the term "API" is often used with two meanings:</em>
  * <ul>
  *     <li><em>The interface part of a module, i.e. all elements to be used,
- *     called, extended or implemented by client code.</em>/li>
+ *     called, extended or implemented by client code.</em></li>
  *     <li><em>The interface part of a module that is not its SPI.</em></li>
  * </ul>
  */

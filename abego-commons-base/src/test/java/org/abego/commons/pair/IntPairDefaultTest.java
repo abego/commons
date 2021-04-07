@@ -48,6 +48,7 @@ class IntPairDefaultTest {
         assertEquals(p, p2);
         assertNotEquals(p, p3);
         assertNotEquals(p, p4);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(p, "(1,2)");
 
         // hashCode

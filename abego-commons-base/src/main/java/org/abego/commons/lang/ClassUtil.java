@@ -52,7 +52,7 @@ public final class ClassUtil {
      */
     public static URL resource(Class<?> theClass, String resourceName) {
 
-        URL url = theClass.getResource(resourceName);
+        @Nullable URL url = theClass.getResource(resourceName);
         if (url == null) {
             throw new MissingResourceException(
                     RESOURCE_NOT_FOUND_MESSAGE, theClass.getName(), resourceName);
@@ -68,7 +68,7 @@ public final class ClassUtil {
      */
     public static InputStream resourceAsStream(Class<?> theClass, String resourceName) {
 
-        InputStream stream = theClass.getResourceAsStream(resourceName);
+        @Nullable InputStream stream = theClass.getResourceAsStream(resourceName);
         if (stream == null) {
             throw new MissingResourceException(
                     RESOURCE_NOT_FOUND_MESSAGE, theClass.getName(), resourceName);

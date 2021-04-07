@@ -402,7 +402,7 @@ public final class FileUtil {
     @SuppressWarnings("WeakerAccess")
     public static void copyResourceToFile(Class<?> theClass, String resourceName, File file) {
         ensureDirectoryExists(file.getParentFile());
-        InputStream inputStream = theClass.getResourceAsStream(resourceName);
+        @Nullable InputStream inputStream = theClass.getResourceAsStream(resourceName);
         if (inputStream == null) {
             throw new UncheckedIOException(new IOException(MessageFormat.format(
                     "Resource `{0}` missing (for class {1})",  // NON-NLS
@@ -428,6 +428,7 @@ public final class FileUtil {
         return writeText(file, text, UTF_8);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static File writeText(File directory, String fileName, String text) {
         return writeText(file(directory, fileName), text);
     }
@@ -541,7 +542,7 @@ public final class FileUtil {
     public static File requireDirectory(File directory, String parameterName) {
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(
-                    String.format("Directory expected for %s, got %s",
+                    String.format("Directory expected for %s, got %s", //NON-NLS
                             parameterName,
                             directory.getAbsolutePath()));
         }
@@ -549,6 +550,7 @@ public final class FileUtil {
     }
 
     public static String stripExtension(String s) {
+        //noinspection MagicCharacter
         int endIndex = s.lastIndexOf('.');
         return endIndex >= 0 ? s.substring(0, endIndex) : s;
     }
@@ -583,6 +585,7 @@ public final class FileUtil {
             String absoluteResourceDirectoryPath,
             String... fileNames) {
         for (String name : fileNames) {
+            //noinspection StringConcatenation
             FileUtil.copyResourceToFile(
                     Object.class,
                     absoluteResourceDirectoryPath + name,
@@ -590,6 +593,7 @@ public final class FileUtil {
         }
     }
 
+    @SuppressWarnings("StringConcatenation")
     public static void copyResourcesToDirectoryFlat(
             File directory,
             String absoluteResourceDirectoryPath,

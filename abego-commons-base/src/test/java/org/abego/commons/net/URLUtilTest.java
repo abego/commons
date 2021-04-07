@@ -26,6 +26,7 @@ package org.abego.commons.net;
 
 import org.abego.commons.TestData;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.io.UncheckedIOException;
@@ -70,7 +71,7 @@ class URLUtilTest {
 
     @Test
     void textOf_ok() {
-        URL url = TestData.class.getResource(SAMPLE_TXT_RESOURCE_NAME);
+        @Nullable URL url = TestData.class.getResource(SAMPLE_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_TXT_TEXT, textOf(url));
     }
@@ -88,14 +89,14 @@ class URLUtilTest {
 
     @Test
     void textOf_withEmptyStream() {
-        URL url = TestData.class.getResource(EMPTY_TXT_RESOURCE_NAME);
+        @Nullable URL url = TestData.class.getResource(EMPTY_TXT_RESOURCE_NAME);
 
         assertEquals(EMPTY_TXT_TEXT, textOf(url));
     }
 
     @Test
     void textOf_withCharset() {
-        URL url = TestData.class.getResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
+        @Nullable URL url = TestData.class.getResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT,
                 textOf(url, StandardCharsets.ISO_8859_1));
@@ -103,7 +104,7 @@ class URLUtilTest {
 
     @Test
     void textOf_withCharsetName() {
-        URL url = TestData.class.getResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
+        @Nullable URL url = TestData.class.getResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT,
                 textOf(url, StandardCharsets.ISO_8859_1.name()));

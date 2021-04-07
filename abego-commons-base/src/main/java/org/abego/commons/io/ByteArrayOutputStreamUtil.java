@@ -45,7 +45,7 @@ public final class ByteArrayOutputStreamUtil {
     public static String textOf(ByteArrayOutputStream outputStream,
                                 String charsetName) {
         try {
-            return new String(outputStream.toByteArray(), charsetName);
+            return outputStream.toString(charsetName);
         } catch (UnsupportedEncodingException e) {
             throw newUncheckedException(e);
         }

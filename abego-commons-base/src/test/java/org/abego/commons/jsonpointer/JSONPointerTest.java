@@ -305,6 +305,7 @@ class JSONPointerTest {
         assertEquals(jp, jp);
         assertEquals(jp, jp2);
         Assertions.assertNotEquals(jp, jp3);
+        //noinspection AssertBetweenInconvertibleTypes
         Assertions.assertNotEquals(jp, foo0String);
     }
 

@@ -66,7 +66,7 @@ public final class ArrayUtil {
      * @return &lt; 0 if not found, otherwise the index of the first occurrence of item
      */
     @SuppressWarnings("WeakerAccess")
-    public static <T> int indexOf(T[] array, @Nullable T item) {
+    public static <T> int indexOf(@Nullable T[] array, @Nullable T item) {
         for (int i = 0; i < array.length; i++) {
             T t = array[i];
             if (t == null) {

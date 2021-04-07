@@ -42,7 +42,7 @@ public final class ServiceLoaderUtil {
         Iterator<T> iterator = loader.iterator();
         if (!iterator.hasNext())
             throw new IllegalArgumentException(
-                    String.format("No implementation found for %s", service.toString())); //NON-NLS
+                    String.format("No implementation found for %s", service)); //NON-NLS
 
         return iterator.next();
     }

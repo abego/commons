@@ -51,6 +51,7 @@ class TreeNodeLazyTest {
         assertEquals(tree, sameTree);
         assertEquals(tree.hashCode(), sameTree.hashCode());
         assertNotEquals(tree, otherTree);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(tree, "foo");
 
         Seq<TreeNode<String>> children = tree.getChildren();

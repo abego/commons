@@ -135,6 +135,7 @@ class FullyQualifiedNameTest {
         assertEquals(a, a);
         assertEquals(a, a2);
         assertNotEquals(a, b);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(a, "p.a");
     }
 

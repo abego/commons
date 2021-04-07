@@ -87,7 +87,7 @@ class FormattedTextProcessorTest {
 
         @Override
         public FormattedTextProcessor beginColor(Color color) {
-            return text("{color " + color.toString() + "}");
+            return text("{color " + color + "}");
         }
 
         @Override

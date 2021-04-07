@@ -47,6 +47,7 @@ abstract class ResourceBundleSpecifierTest {
 
         assertNotEquals(s1, s2);
 
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(s1, "sample.properties");
     }
 }

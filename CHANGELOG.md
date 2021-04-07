@@ -1,5 +1,52 @@
 # CHANGELOG
 
+## 0.11.0
+
+### New
+
+#### Types
+
+- LoggerUtil
+- SPI (Annotation)
+
+#### Methods
+
+- FileUtil#absolutePath
+- FileUtil#copyResourcesToDirectory
+- FileUtil#copyResourcesToDirectoryFlat
+- FileUtil#existingFileOrNull
+- FileUtil#pathRelativeTo
+- FileUtil#requireDirectory
+- FileUtil#stripExtension
+- FileUtil#writeText returns File
+- ObjectUtil#valueOrFail
+- OutputStreamUtil#getOutputStreamFailingOnWrite
+- PrintStreamUtil#newPrintStreamToNullDevice
+- StringUtil#firstLine
+- URLUtil#isURI
+- URLUtil#isURL
+- URLUtil#urlDecode,
+- URLUtil#textOf(URL)
+- URLUtil#toFile
+- Var#getOrNull
+- Var#isEditable
+- Var#mapOrElse
+- Var#mapOrNull
+- VarUtil.newTextFileVar
+
+### Bug Fixes
+
+- "InterruptedException" ignored in BooleanSupplierUtil#waitUtil
+
+### Improvements
+
+- PollingUtil: Interrupting a Thread that is running poll forces early timeout
+- Hide implicit public constructor of util class TextDiff
+- Use StringBuilder instead of StringBuffer in DiffImpl
+- Remove unnecessary cast to "IOCommand" in FileUtil#ensureFileExists.
+- increase code coverage
+- Improved JavaDoc
+
 ## 0.10.0
 
 ### New

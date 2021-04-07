@@ -35,7 +35,6 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import static java.lang.System.currentTimeMillis;
-import static org.abego.commons.lang.ThreadUtil.sleep;
 
 public final class PollingUtil {
 
@@ -133,7 +132,14 @@ public final class PollingUtil {
             // hasn't provided the expected value in the fast phase.
             long timeToSleep = currentTimeMillis() - startTime;
 
-            sleep(Math.min(timeToSleep, MAX_SLEEP_BETWEEN_POLLS_MILLIS));
+            try {
+                //noinspection BusyWait
+                Thread.sleep(Math.min(timeToSleep, MAX_SLEEP_BETWEEN_POLLS_MILLIS));
+            } catch (InterruptedException e) {
+                // When the Thread is interrupted behave as if timeouted.
+                Thread.currentThread().interrupt();
+                break;
+            }
 
         } while (currentTimeMillis() < endTime);
 

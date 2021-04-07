@@ -74,6 +74,32 @@ class PollingUtilTest {
 
     }
 
+    /**
+     * Interrupting the Thread running poll will behave as if there was
+     * a timeout.
+     */
+    @Test
+    void pollInterruptedOk() {
+
+        // use a long timeout so it won't kick in
+        Duration timeout = Duration.ofMillis(200);
+        long waitTimeMillis = 100;
+        long startTime = System.currentTimeMillis();
+        long endTime = startTime + waitTimeMillis;
+
+        Thread myThread = Thread.currentThread();
+
+        // calling interrupt triggers the TimeoutUncheckedException
+        assertThrows(TimeoutUncheckedException.class,
+                () -> poll(System::currentTimeMillis, i -> {
+                    myThread.interrupt(); // force the timeout early
+                    return i >= endTime;
+                }, timeout));
+
+        long t = System.currentTimeMillis();
+        assertTrue(t < endTime);
+    }
+
     @Test
     void pollNoFailTimeoutOk() {
         Duration timeout = Duration.ofMillis(20);

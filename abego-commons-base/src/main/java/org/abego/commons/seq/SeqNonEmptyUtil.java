@@ -37,21 +37,29 @@ public final class SeqNonEmptyUtil {
     }
 
     /**
-     * Return a {@link Seq} with the items of the given <code>list</code> or
-     * throw a {@link IllegalArgumentException} when the list is empty.
+     * Returns a {@link SeqNonEmpty} with the items of the given <code>list</code> or
+     * throws an {@link IllegalArgumentException} when the list is empty.
      *
      * <p>The list must not change after the Seq is created.</p>
+     *
+     * @param list a non-empty {@link List} to generate the {@link SeqNonEmpty} from
+     * @param <T>  the type of the items in the {@link List}/{@link SeqNonEmpty}
+     * @return a {@link SeqNonEmpty} with te item of {@code list}
      */
     public static <T> SeqNonEmpty<T> newSeqNonEmpty(List<T> list) {
         return SeqForList.newSeqForList(list);
     }
 
     /**
-     * Return a {@link Seq} with the given <code>items</code> or
-     * throw a {@link IllegalArgumentException} when no items are given.
+     * Returns a {{@link SeqNonEmpty} with the given <code>items</code> or
+     * throws an {@link IllegalArgumentException} when no items are given.
      *
      * <p> Instead of multiple individual items you may also pass a non-empty
      * array of type <code>T[]</code> with <code>items</code>.
+     *
+     * @param items the items to include in the {@link SeqNonEmpty}
+     * @param <T> the type of the {@code items}
+     * @return a {@link SeqNonEmpty} with the {@code items}
      */
     @SafeVarargs
     public static <T> SeqNonEmpty<T> newSeqNonEmpty(T... items) {
@@ -59,16 +67,26 @@ public final class SeqNonEmptyUtil {
     }
 
     /**
-     * Return the <code>seq</code> as a {@link SeqNonEmpty} or throw a
+     * Returns the <code>seq</code> as a {@link SeqNonEmpty} or throws an
      * {@link IllegalArgumentException} when seq is empty.
+     *
+     * @param seq a {@link Seq} with the items to include in the result
+     * @param <T> the type of the {@code items}
+     * @return a {@link SeqNonEmpty} with the items of {@code seq}
      */
     public static <T> SeqNonEmpty<T> seqNonEmpty(Seq<T> seq) {
         return seqNonEmptyOrElseThrow(seq, IllegalArgumentException::new);
     }
 
     /**
-     * Return the <code>seq</code> as a {@link SeqNonEmpty} or <code>other</code>
+     * Returns the <code>seq</code> as a {@link SeqNonEmpty} or <code>other</code>
      * when seq is empty.
+     *
+     * @param seq   a {@link Seq} with the items to include in the result
+     * @param other a {@link SeqNonEmpty} to return when {@code seq} is empty
+     * @param <T>   the type of the items in {@code seq}, {@code other} and result
+     * @return a {@link SeqNonEmpty} with the items of {@code seq},
+     * or {@code other} when {@code seq} is empty.
      */
     public static <T> SeqNonEmpty<T> seqNonEmptyOrElse(Seq<T> seq, SeqNonEmpty<T> other) {
         if (seq instanceof SeqNonEmpty) {
@@ -77,6 +95,18 @@ public final class SeqNonEmptyUtil {
         return seq.isEmpty() ? other : newSeqNonEmptyWrapped(seq);
     }
 
+    /**
+     * Returns the <code>seq</code> as a {@link SeqNonEmpty} or the
+     * {@link SeqNonEmpty} supplied by <code>other</code>
+     * when seq is empty.
+     *
+     * @param seq   a {@link Seq} with the items to include in the result
+     * @param other a {@link Supplier} of a {@link SeqNonEmpty} to return when
+     *              {@code seq} is empty
+     * @param <T>   the type of the items in {@code seq}
+     * @return a {@link SeqNonEmpty} with the items of {@code seq},
+     * or the {@link SeqNonEmpty} supplied by {@code other} when {@code seq} is empty.
+     */
     public static <T> SeqNonEmpty<T> seqNonEmptyOrElseGet(Seq<T> seq, Supplier<SeqNonEmpty<T>> other) {
         if (seq instanceof SeqNonEmpty) {
             return (SeqNonEmpty<T>) seq;
@@ -84,7 +114,21 @@ public final class SeqNonEmptyUtil {
         return seq.isEmpty() ? other.get() : newSeqNonEmptyWrapped(seq);
     }
 
-    public static <T, X extends Throwable> SeqNonEmpty<T> seqNonEmptyOrElseThrow(Seq<T> seq, Supplier<? extends X> exceptionSupplier) throws X {
+    /**
+     * Returns a {{@link SeqNonEmpty} with the items of <code>seq</code> or
+     * throws a {@link Throwable} supplied by {@code exceptionSupplier} when
+     * <code>seq</code> is empty.
+     *
+     * @param seq               a {@link Seq} with the items to include in the result
+     * @param exceptionSupplier supplies the {@code Throwable} to throw when
+     *                          {@code seq} is empty.
+     * @param <T>               the type of the {@code items}
+     * @param <X>               the type of the {@code Throwable} to throw when {@code seq}
+     *                          is empty.
+     * @return a {@link SeqNonEmpty} with the {@code seq}
+     */
+    public static <T, X extends Throwable> SeqNonEmpty<T> seqNonEmptyOrElseThrow(
+            Seq<T> seq, Supplier<? extends X> exceptionSupplier) throws X {
         if (seq instanceof SeqNonEmpty) {
             return (SeqNonEmpty<T>) seq;
         }

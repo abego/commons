@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,9 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -42,6 +44,8 @@ import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
 import static org.abego.commons.net.URLUtil.isURI;
 import static org.abego.commons.net.URLUtil.isURL;
 import static org.abego.commons.net.URLUtil.textOf;
+import static org.abego.commons.net.URLUtil.toFile;
+import static org.abego.commons.net.URLUtil.urlDecode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -136,4 +140,15 @@ class URLUtilTest {
 
     }
 
+    @Test
+    void urlDecode_OK() {
+        assertEquals("azAZ09..* _A", urlDecode("azAZ09..*+_%41"));
+    }
+
+    @Test
+    void toFile_OK() throws MalformedURLException {
+        File file = toFile(new URL("file:/foo/bar.baz"));
+
+        assertEquals("/foo/bar.baz", file.getPath());
+    }
 }

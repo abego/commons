@@ -2,7 +2,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+# Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -97,24 +97,24 @@ sed -i '' "s|https://github.com/abego/commons/releases/tag/.*|https://github.com
 # --- update pom.xml files to new version ---------------------------------
 echo Updating pom.xml files ...
 misc/setartifactversion "abego-commons" "$version" "pom.xml"
-misc/setartifactversion "abego-commons-base" "$version" "abego-commons-base/pom.xml"
-misc/setartifactversion "abego-commons-test" "$version" "abego-commons-test/pom.xml"
+misc/setartifactversion "abego-commons" "$version" "abego-commons-base/pom.xml"
+misc/setartifactversion "abego-commons" "$version" "abego-commons-test/pom.xml"
 
 # --- Do the Git stuff  ---------------------------------------------------
 echo "Pushing changes to Git server..."
 git add .
 git commit -m "Release ${version}"
 git tag "v${version}" # tag the commit as `vx.y.z` (e.g. "`v0.10.0`")
-git push origin "v${version}" #o push the changes to the Git server, incl. tag.
+# git push origin "v${version}" #o push the changes to the Git server, incl. tag.
 
 # --- Prepare for next development iteration ("bump version") -------------
 echo "Prepare for next development iteration..."
 misc/setartifactversion "abego-commons" "${nextVersion}-SNAPSHOT" "pom.xml"
-misc/setartifactversion "abego-commons-base" "${nextVersion}-SNAPSHOT" "abego-commons-base/pom.xml"
-misc/setartifactversion "abego-commons-test" "${nextVersion}-SNAPSHOT" "abego-commons-test/pom.xml"
+misc/setartifactversion "abego-commons" "${nextVersion}-SNAPSHOT" "abego-commons-base/pom.xml"
+misc/setartifactversion "abego-commons" "${nextVersion}-SNAPSHOT" "abego-commons-test/pom.xml"
 git add .
 git commit -m "Prepare for next development iteration"
-git push origin
+# git push origin
 
 # --- Deploying to Maven Central ------------------------------------------
 echo "Deploying release ${version} to Maven Central..."

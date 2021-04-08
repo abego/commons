@@ -105,7 +105,7 @@ echo "Pushing changes to Git server..."
 git add .
 git commit -m "Release ${version}"
 git tag "v${version}" # tag the commit as `vx.y.z` (e.g. "`v0.10.0`")
-# git push origin "v${version}" #o push the changes to the Git server, incl. tag.
+git push origin "v${version}" #o push the changes to the Git server, incl. tag.
 
 # --- Prepare for next development iteration ("bump version") -------------
 echo "Prepare for next development iteration..."
@@ -114,7 +114,7 @@ misc/setartifactversion "abego-commons" "${nextVersion}-SNAPSHOT" "abego-commons
 misc/setartifactversion "abego-commons" "${nextVersion}-SNAPSHOT" "abego-commons-test/pom.xml"
 git add .
 git commit -m "Prepare for next development iteration"
-# git push origin
+git push origin
 
 # --- Deploying to Maven Central ------------------------------------------
 echo "Deploying release ${version} to Maven Central..."

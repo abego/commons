@@ -120,6 +120,17 @@ public final class SeqUtil {
         return isEmpty(iterable) ? SeqHelper.emptySeq() : newSeqForIterable(iterable);
     }
 
+    /**
+     * Return a {@link Seq} for the given <code>iterable</code>.
+     *
+     * <p>The Iterable must not change after the Seq is created.</p>
+     * <p>In contrast to {@link #newSeq(Iterable)} this method will not create
+     * a new {@link Seq} when the iterable is a Seq.</p>
+     */
+    public static <T> Seq<T> toSeq(Iterable<T> iterable) {
+        return iterable instanceof Seq ? (Seq<T>) iterable : newSeq(iterable);
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> Seq<T> newSeq(Stream<T> stream) {
         return SeqUtil.newSeq((T @NonNull []) stream.toArray());

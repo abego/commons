@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Function;
 
@@ -37,7 +38,10 @@ import static org.abego.commons.seq.SeqUtil.emptySeq;
 import static org.abego.commons.seq.SeqUtil.newSeq;
 import static org.abego.commons.seq.SeqUtil.newSeqOfNullable;
 import static org.abego.commons.seq.SeqUtil.reverse;
+import static org.abego.commons.seq.SeqUtil.toSeq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -166,4 +170,31 @@ class SeqUtilTest {
 
         assertEquals("2 4 2 6\n9 7 3 1", result.joined("\n"));
     }
+
+    @Test
+    void toSeq_withSeqAsArgument() {
+        Iterable<String> seqAsIterable = newSeq("foo", "bar");
+
+        Seq<String> toSeqResult = toSeq(seqAsIterable);
+
+        assertEquals(2, toSeqResult.size());
+        assertEquals("foo", toSeqResult.item(0));
+        assertEquals("bar", toSeqResult.item(1));
+        // as the Iterable was already a Seq it is used, not wrapped.
+        assertSame(seqAsIterable, toSeqResult);
+    }
+
+    @Test
+    void toSeq_withNonSeqAsArgument() {
+        Iterable<String> list = Arrays.asList("foo", "bar");
+
+        Seq<String> toSeqResult = toSeq(list);
+        assertEquals(2, toSeqResult.size());
+        assertEquals("foo", toSeqResult.item(0));
+        assertEquals("bar", toSeqResult.item(1));
+        // a List is not a Seq, therefore toSeq returns a new Seq instance
+        assertNotSame(list, toSeqResult);
+    }
+
+
 }

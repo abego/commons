@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -322,5 +322,28 @@ abstract class AbstractSeqTest {
         assertEquals("(a)", singleItemSeq().joined("-", s -> "(" + s + ")"));
         assertEquals("(h)-(e)-(l)-(l)-(o)", helloSeq().joined("-", s -> "(" + s + ")"));
     }
+
+    @Test
+    void itemOrNull_ok() {
+        Seq<String> seq = helloSeq();
+
+        assertEquals("h", seq.itemOrNull(0));
+        assertEquals("e", seq.itemOrNull(1));
+        assertEquals("o", seq.itemOrNull(4));
+        assertNull(seq.itemOrNull(-1));
+        assertNull(seq.itemOrNull(5));
+    }
+
+    @Test
+    void item_ok() {
+        Seq<String> seq = helloSeq();
+
+        assertEquals("h", seq.item(0));
+        assertEquals("e", seq.item(1));
+        assertEquals("o", seq.item(4));
+        assertThrows(Exception.class, () -> seq.item(-1));
+        assertThrows(Exception.class, () -> seq.item(5));
+    }
+
 
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,11 +56,23 @@ public interface Seq<T> extends Iterable<T> {
     int size();
 
     /**
-     * Return the <code>index</code>-ed item in the sequence.
+     * Return the <code>index</code>-ed item in the sequence,
+     * or throws an {@link Exception} when the item does not exist.
      *
      * <p><code>index</code> is zero-based.</p>
      */
     T item(int index);
+
+    /**
+     * Return the <code>index</code>-ed item in the sequence, or
+     * {@code null} when the item does not exist.
+     *
+     * <p><code>index</code> is zero-based.</p>
+     */
+    @Nullable
+    default T itemOrNull(int index) {
+        return (index < 0 || index >= size()) ? null : item(index);
+    }
 
     /**
      * Return the index of the first occurrence of the specified item in this

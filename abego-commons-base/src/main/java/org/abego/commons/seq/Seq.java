@@ -33,6 +33,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * A sequence of items of type T.
@@ -104,11 +105,7 @@ public interface Seq<T> extends Iterable<T> {
      * Return the items of the sequence as a {@link Stream}.
      */
     default Stream<T> stream() {
-        Stream.Builder<T> builder = Stream.builder();
-        for (T o : this) {
-            builder.add(o);
-        }
-        return builder.build();
+        return StreamSupport.stream(spliterator(), false);
     }
 
     /**

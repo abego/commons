@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.abego.commons.lang.CharacterUtil.BACKSLASH_CHAR;
@@ -620,6 +621,15 @@ public final class StringUtil {
 
     public static Seq<String> lines(String text) {
         return newSeq(END_OF_LINE_PATTERN.split(text, -1));
+    }
+
+    public static int lineCount(String text) {
+        int i = 1;
+        Matcher m = END_OF_LINE_PATTERN.matcher(text);
+        while (m.find()) {
+            i++;
+        }
+        return i;
     }
 
     public static String firstLine(String text) {

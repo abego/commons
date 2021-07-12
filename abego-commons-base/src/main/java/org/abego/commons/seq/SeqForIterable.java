@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,21 +36,21 @@ import static org.abego.commons.util.ListUtil.toList;
 // (No need to override "equals" as AbstractSeq implements "equals" in an abstract way using the iterator)
 final class SeqForIterable<T> extends AbstractSeq<T> implements SeqNonEmpty<T> {
 
-    private final Iterable<T> iterable;
+    private final Iterable<? extends T> iterable;
     @Nullable
     private List<T> list;
 
-    private SeqForIterable(Iterable<T> iterable) {
+    private SeqForIterable(Iterable<? extends T> iterable) {
         this.iterable = iterable;
     }
 
-    static <T> SeqForIterable<T> newSeqForIterable(Iterable<T> iterable) {
-        return new SeqForIterable<>(iterable);
+    static <T, S extends T> SeqForIterable<T> newSeqForIterable(Iterable<S> iterable) {
+        return new SeqForIterable<T>(iterable);
     }
 
     @Override
     public Iterator<T> iterator() {
-        return iterable.iterator();
+        return (Iterator<T>) iterable.iterator();
     }
 
     @Override

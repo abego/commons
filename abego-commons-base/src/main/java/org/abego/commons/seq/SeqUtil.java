@@ -112,7 +112,7 @@ public final class SeqUtil {
      *
      * <p>The Iterable must not change after the Seq is created.</p>
      */
-    public static <T> Seq<T> newSeq(Iterable<T> iterable) {
+    public static <T, S extends T> Seq<T> newSeq(Iterable<S> iterable) {
         if (iterable instanceof List) return newSeq((List<T>) iterable);
         if (iterable instanceof Stream) //noinspection unchecked
             return newSeq((Stream<T>) iterable);

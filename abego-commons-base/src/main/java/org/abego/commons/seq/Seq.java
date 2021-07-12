@@ -148,6 +148,58 @@ public interface Seq<T> extends Iterable<T> {
     }
 
     /**
+     * Return the first item of the sequence, or
+     * {@code null} when no such item exists.
+     */
+    @Nullable
+    default T firstOrNull() {
+        return isEmpty() ? null : item(0);
+    }
+
+    /**
+     * Return the index of first item of the sequence meeting the condition,
+     * or {@code -1} when no such item is found.
+     */
+    default int indexOfFirst(Predicate<T> condition) {
+        for (int i = 0; i < size(); i++) {
+            if (condition.test(item(i)))
+                return i;
+        }
+        return -1;
+    }
+
+    /**
+     * Return true when the sequence contains at least one item meeting
+     * the condition, false otherwise.
+     */
+    default boolean hasItemWith(Predicate<T> condition) {
+        return indexOfFirst(condition) >= 0;
+    }
+
+    /**
+     * Return the first item of the sequence meeting the condition.
+     *
+     * <p>Throw an {@link NoSuchElementException} when no such item is found.</p>
+     */
+    default T first(Predicate<T> condition) {
+        int i = indexOfFirst(condition);
+        if (i < 0) {
+            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
+        }
+        return item(i);
+    }
+
+    /**
+     * Return the first item of the sequence meeting the condition, or
+     * {@code null} when no such item exists.
+     */
+    @Nullable
+    default T firstOrNull(Predicate<T> condition) {
+        int i = indexOfFirst(condition);
+        return i >= 0 ? item(i) : null;
+    }
+
+    /**
      * Returns a new Seq consisting of the items of this sequence that match
      * the <code>predicate</code>.
      *

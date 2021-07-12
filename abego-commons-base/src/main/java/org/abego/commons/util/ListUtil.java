@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ public final class ListUtil {
         return result;
     }
 
-    public static <C> List<C> toList(Iterable<C> iterable) {
+    public static <C, I extends C> List<C> toList(Iterable<I> iterable) {
         ArrayList<C> result = new ArrayList<>();
         for (C i : iterable) {
             result.add(i);

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -101,4 +101,22 @@ public final class ObjectUtil {
     }
 
 
+    /**
+     * Compares the "toString" representations of o1 and o2,
+     * as defined by {@link StringUtil#compareToIgnoreCaseStable}.
+     *
+     * <p>{@code null} values are assumed to be larger than any String.
+     *
+     * <p>This method does not take locale into account, and may result in an
+     * unsatisfactory ordering for certain locales.</p>
+     */
+    public static int compareAsTexts(@Nullable Object o1, @Nullable Object o2) {
+        if (o1 == null) {
+            return o2 == null ? 0 : 1;
+        } else if (o2 == null) {
+            return -1;
+        }
+        return StringUtil.compareToIgnoreCaseStable(
+                o1.toString(), o2.toString());
+    }
 }

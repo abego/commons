@@ -24,6 +24,7 @@
 
 package org.abego.commons.seq;
 
+import org.abego.commons.lang.ObjectUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.util.ListUtil;
 import org.eclipse.jdt.annotation.NonNull;
@@ -184,6 +185,17 @@ public final class SeqUtil {
     public static <T> Seq<T> sorted(Iterable<T> iterable) {
         List<T> list = ListUtil.toList(iterable);
         list.sort(null);
+        return newSeq(list);
+    }
+
+    /**
+     * Return a new {@link Seq} consisting of the elements of <code>iterable</code>,
+     * sorted in ascending order, according to the order defined by
+     * {@link ObjectUtil#compareAsTexts(Object, Object)}.
+     */
+    public static <T> Seq<T> sortedByText(Iterable<T> iterable) {
+        List<T> list = ListUtil.toList(iterable);
+        list.sort(ObjectUtil::compareAsTexts);
         return newSeq(list);
     }
 

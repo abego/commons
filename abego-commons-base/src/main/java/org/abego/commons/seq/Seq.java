@@ -24,6 +24,7 @@
 
 package org.abego.commons.seq;
 
+import org.abego.commons.lang.ObjectUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Comparator;
@@ -248,6 +249,13 @@ public interface Seq<T> extends Iterable<T> {
      * in the list).
      */
     Seq<T> sorted(Comparator<? super T> comparator);
+
+    /**
+     * Return a new {@link Seq} consisting of the elements of <code>iterable</code>,
+     * sorted in ascending order, according to the order defined by
+     * {@link ObjectUtil#compareAsTexts(Object, Object)}.
+     */
+    Seq<T> sortedByText();
 
     /**
      * Return the one and only item of this sequence.

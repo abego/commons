@@ -31,7 +31,9 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -119,6 +121,13 @@ public final class SeqUtil {
             return newSeq((Stream<T>) iterable);
 
         return isEmpty(iterable) ? SeqHelper.emptySeq() : newSeqForIterable(iterable);
+    }
+
+    /**
+     * Return a {@link Seq} with the items of the given <code>enumeration</code>.
+     */
+    public static <T> Seq<T> newSeq(Enumeration<T> enumeration) {
+        return newSeq(Collections.list(enumeration));
     }
 
     /**

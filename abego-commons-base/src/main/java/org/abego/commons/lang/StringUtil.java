@@ -650,6 +650,19 @@ public final class StringUtil {
                 text, range.getStart(), range.getEnd(), newRangeText);
     }
 
+    /**
+     * Same as {@link String#compareToIgnoreCase(String)}, but if the strings
+     * are equal when ignoring the case they are compared again case sensitively
+     * to ensure a stable order between the two strings.
+     *
+     * <p>This method does not take locale into account, and may result in an
+     * unsatisfactory ordering for certain locales.</p>
+     */
+    public static int compareToIgnoreCaseStable(String s1, String s2) {
+        int i = s1.compareToIgnoreCase(s2);
+        return i == 0 ? s1.compareTo(s2) : i;
+    }
+
     private interface StringBuilderAppender {
         void append(StringBuilder builder, char c);
     }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ import org.eclipse.jdt.annotation.Nullable;
  * compact form only. E.g. a String of ASCII characters and length
  * <code>n</code> &lt;= 127 only requires <code>n + 1</code> bytes. Especially
  * for short strings this is significantly less that used for a native Java
- * {@link String} object. Also equal strings are only stored once in the poll.
+ * {@link String} object. Also equal strings are only stored once in the pool.
  * So a StringPool fits well into an application that has memory constraints
  * and uses a lot of short (and/or duplicated) strings.</p>
  *

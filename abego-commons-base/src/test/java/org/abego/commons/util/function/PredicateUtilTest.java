@@ -24,12 +24,19 @@
 
 package org.abego.commons.util.function;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PredicateUtilTest {
+    @Test
+    void constructor() {
+        assertThrows(MustNotInstantiateException.class, PredicateUtil::new);
+    }
+
 
     @Test
     void alwaysTrue() {

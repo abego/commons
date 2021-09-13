@@ -145,6 +145,63 @@ abstract class AbstractSeqTest {
     }
 
     @Test
+    void firstOrNull_ok() {
+        assertNull(noItemSeq().firstOrNull());
+        assertEquals("a", singleItemSeq().firstOrNull());
+        assertEquals("h", helloSeq().firstOrNull());
+    }
+
+    @Test
+    void indexOfFirst_ok() {
+        assertEquals(-1, noItemSeq().indexOfFirst(x -> true));
+        assertEquals(-1, singleItemSeq().indexOfFirst(x -> x.equals("?")));
+        assertEquals(0, singleItemSeq().indexOfFirst(x -> x.equals("a")));
+        assertEquals(0, helloSeq().indexOfFirst(x -> x.equals("h")));
+        assertEquals(1, helloSeq().indexOfFirst(x -> x.equals("e")));
+        assertEquals(2, helloSeq().indexOfFirst(x -> x.equals("l")));
+        assertEquals(4, helloSeq().indexOfFirst(x -> x.equals("o")));
+        assertEquals(-1, helloSeq().indexOfFirst(x -> x.equals("?")));
+    }
+
+    @Test
+    void hasItemWith_ok() {
+        assertFalse(noItemSeq().hasItemWith(x -> true));
+        assertFalse(singleItemSeq().hasItemWith(x -> x.equals("?")));
+        assertTrue(singleItemSeq().hasItemWith(x -> x.equals("a")));
+        assertTrue(helloSeq().hasItemWith(x -> x.equals("h")));
+        assertTrue(helloSeq().hasItemWith(x -> x.equals("e")));
+        assertTrue(helloSeq().hasItemWith(x -> x.equals("l")));
+        assertTrue(helloSeq().hasItemWith(x -> x.equals("o")));
+        assertFalse(helloSeq().hasItemWith(x -> x.equals("?")));
+    }
+
+    @Test
+    void first_Predicate_ok() {
+        assertThrows(NoSuchElementException.class, () -> noItemSeq().first(x -> true));
+        assertThrows(NoSuchElementException.class, () -> singleItemSeq().first(x -> x.equals("?")));
+        assertEquals("a", singleItemSeq().first(x -> x.equals("a")));
+        assertEquals("h", helloSeq().first(x -> x.equals("h")));
+        assertThrows(NoSuchElementException.class, () -> helloSeq().first(x -> x.equals("?")));
+    }
+
+    @Test
+    void firstOrNull_Predicate_ok() {
+        assertNull(noItemSeq().firstOrNull(x -> true));
+        assertNull(singleItemSeq().firstOrNull(x -> x.equals("?")));
+        assertEquals("a", singleItemSeq().firstOrNull(x -> x.equals("a")));
+        assertEquals("h", helloSeq().firstOrNull(x -> x.equals("h")));
+        assertNull(helloSeq().firstOrNull(x -> x.equals("?")));
+    }
+
+
+    @Test
+    void last_ok() {
+        assertThrows(NoSuchElementException.class, () -> noItemSeq().last());
+        assertEquals("a", singleItemSeq().last());
+        assertEquals("o", helloSeq().last());
+    }
+
+    @Test
     void filter_ok() {
         Seq<String> r1 = noItemSeq().filter(s -> s.equals("l"));
         assertTrue(r1.isEmpty());

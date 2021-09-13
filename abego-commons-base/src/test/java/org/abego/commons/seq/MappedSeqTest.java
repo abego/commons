@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,11 @@ class MappedSeqTest {
         assertEquals("{4}", result.item(0));
         assertEquals("{7}", result.item(1));
         assertEquals("{2}", result.item(2));
+
+        Object[] sortedByStream = result.stream().sorted().toArray();
+        assertEquals("{2}", sortedByStream[0]);
+        assertEquals("{4}", sortedByStream[1]);
+        assertEquals("{7}", sortedByStream[2]);
 
         // empty
         result = MappedSeq.newMappedSeqOrEmpty(emptySeq(), mapper);

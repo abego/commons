@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,11 @@ package org.abego.commons.io;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import java.io.OutputStream;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.abego.commons.TestData.SAMPLE_TEXT;
+import static org.abego.commons.io.OutputStreamUtil.getOutputStreamFailingOnWrite;
 import static org.abego.commons.io.PrintStreamToBuffer.newPrintStreamToBuffer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -48,5 +51,13 @@ class OutputStreamUtilTest {
         OutputStreamUtil.write(SAMPLE_TEXT, stream, UTF_8);
 
         assertEquals(SAMPLE_TEXT, stream.text());
+    }
+
+    @Test
+    void getOutputStreamFailingOnWrite_ok() {
+        OutputStream ostream = getOutputStreamFailingOnWrite("will fail on write");
+
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> ostream.write(123));
+        assertEquals("will fail on write", e.getMessage());
     }
 }

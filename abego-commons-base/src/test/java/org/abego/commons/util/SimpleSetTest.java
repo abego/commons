@@ -51,6 +51,7 @@ class SimpleSetTest {
 
         assertTrue(set.add("foo"));
 
+        assertEquals(2, set.asSeq().size());
         assertEquals("barfoo", set.asSeq().sorted().joined());
     }
 }

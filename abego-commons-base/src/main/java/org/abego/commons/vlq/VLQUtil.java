@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,29 +39,35 @@ public final class VLQUtil {
 
     static final String VALUE_MUST_NOT_BE_NEGATIVE_MESSAGE = "value must not be negative"; //NON-NLS
     static final String VLQ_ENCODED_NUMBER_TO_LARGE_FOR_UINT_MESSAGE = "VLQ encoded number too large to fit into an unsigned int. Try to read it in a long."; //NON-NLS
+    static final String VLQ_ENCODED_NUMBER_TO_LARGE_FOR_ULONG_MESSAGE = "VLQ encoded number too large to fit into an unsigned long."; //NON-NLS
     private static final int MAX_7BIT_INT_VALUE = 127;
-    private static final int UNSIGNED_BYTE_MASK = 0x7f;
-    private static final int SIGN_BYTE_MASK = 0x80;
+    private static final int UNSIGNED_INT_BYTE_MASK = 0x7f;
+    private static final long UNSIGNED_LONG_BYTE_MASK = 0x7f;
+    private static final long SIGN_BYTE_MASK = 0x80;
 
     VLQUtil() {
         throw new MustNotInstantiateException();
     }
 
-    public static void encodeUnsignedIntAsVLQ(int value, ByteConsumer byteEmitter) {
+    public static void encodeUnsignedIntAsVLQ(int value, ByteConsumer byteConsumer) {
+        encodeUnsignedLongAsVLQ(value, byteConsumer);
+    }
+
+    public static void encodeUnsignedLongAsVLQ(long value, ByteConsumer byteConsumer) {
         if (value < 0) {
             throw new IllegalArgumentException(VALUE_MUST_NOT_BE_NEGATIVE_MESSAGE);
         }
 
-        int v = value;
+        long v = value;
 
         boolean endReached;
         do {
             endReached = v <= MAX_7BIT_INT_VALUE;
 
-            int byteToWrite = (v & UNSIGNED_BYTE_MASK) | (endReached ? SIGN_BYTE_MASK : 0);
+            long byteToWrite = (v & UNSIGNED_INT_BYTE_MASK) | (endReached ? SIGN_BYTE_MASK : 0);
             v >>= 7;
 
-            byteEmitter.accept((byte) byteToWrite);
+            byteConsumer.accept((byte) byteToWrite);
 
         } while (!endReached);
     }
@@ -72,7 +78,7 @@ public final class VLQUtil {
 
         do {
             byte byteRead = byteSupplier.get();
-            value = value | ((byteRead & UNSIGNED_BYTE_MASK) << shift);
+            value = value | ((byteRead & UNSIGNED_INT_BYTE_MASK) << shift);
             if (byteRead < 0) { // negative -> most significant bit set -> end reached
 
                 // Make sure only to use 31 bits for an unsigned (4 byte) int.
@@ -91,5 +97,28 @@ public final class VLQUtil {
         } while (shift <= 28);
 
         throw new IllegalStateException(VLQ_ENCODED_NUMBER_TO_LARGE_FOR_UINT_MESSAGE);
+    }
+
+    public static long decodeUnsignedLongFromVLQ(ByteSupplier byteSupplier) {
+        long value = 0;
+        int shift = 0;
+
+        do {
+            byte byteRead = byteSupplier.get();
+            value = value | ((byteRead & UNSIGNED_LONG_BYTE_MASK) << shift);
+            if (byteRead < 0) { // negative -> most significant bit set -> end reached
+
+                // Make sure only to use 63 bits for an unsigned (8 byte) long.
+                // This is easier than the int (4 byte) case as the 63 bits
+                // fit exactly into VLQ Byte 1-9, each having 7 significant bits
+                // (9*7 = 63).
+                return value;
+            }
+
+            shift += 7;
+
+        } while (shift < 63);
+
+        throw new IllegalStateException(VLQ_ENCODED_NUMBER_TO_LARGE_FOR_ULONG_MESSAGE);
     }
 }

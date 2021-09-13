@@ -143,7 +143,7 @@ public interface Seq<T> extends Iterable<T> {
      */
     default T first() {
         if (isEmpty()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
         }
         return item(0);
     }
@@ -251,7 +251,7 @@ public interface Seq<T> extends Iterable<T> {
     Seq<T> sorted(Comparator<? super T> comparator);
 
     /**
-     * Return a new {@link Seq} consisting of the elements of <code>iterable</code>,
+     * Return a new Seq consisting of the elements of <code>iterable</code>,
      * sorted in ascending order, according to the order defined by
      * {@link ObjectUtil#compareAsTexts(Object, Object)}.
      */
@@ -306,7 +306,7 @@ public interface Seq<T> extends Iterable<T> {
      */
     default T anyItem() {
         if (isEmpty()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
         }
         return first();
     }

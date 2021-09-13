@@ -201,6 +201,17 @@ public interface Seq<T> extends Iterable<T> {
     }
 
     /**
+     * Returns the last item of {@code seq}, or throws an Exception
+     * {@link java.util.NoSuchElementException} when {@code seq} is empty.
+     */
+    default T last() {
+        if (isEmpty()) {
+            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
+        }
+        return item(size() - 1);
+    }
+
+    /**
      * Returns a new Seq consisting of the items of this sequence that match
      * the <code>predicate</code>.
      *

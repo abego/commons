@@ -67,7 +67,7 @@ public final class SeqUtil {
      *
      * <p>The implementation does not use {@link Seq#equals(Object)} but
      * handles the {@link Seq}s as
-     * {@link Iterable}s. Therefore this method is typically used in the
+     * {@link Iterable}s. Therefore, this method is typically used in the
      * {@link Seq#equals(Object)} code of concrete Seq implementations, like here:
      * <pre>
      * public boolean equals(Object o) {
@@ -76,7 +76,7 @@ public final class SeqUtil {
      *     return SeqUtil.seqsAreEqual(this, (Seq&lt;?&gt;) o);
      * }
      * </pre>
-     * Typically a corresponding {@link Seq#hashCode()} implementation then uses
+     * Typically, a corresponding {@link Seq#hashCode()} implementation then uses
      * {@link org.abego.commons.lang.IterableUtil#hashCodeForIterable(Iterable)}
      * like here:
      *

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,12 +28,14 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import static org.abego.commons.lang.ObjectUtil.checkType;
+import static org.abego.commons.lang.ObjectUtil.compareAsTexts;
 import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.abego.commons.lang.ObjectUtil.valueOrElse;
 import static org.abego.commons.lang.ObjectUtil.valueOrFail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ObjectUtilTest {
 
@@ -97,5 +99,20 @@ class ObjectUtilTest {
 
         assertEquals("foo", valueOrElse("foo", "bar"));
         assertEquals("bar", valueOrElse(null, "bar"));
+    }
+
+    @Test
+    void compareAsText_OK() {
+        assertEquals(0, compareAsTexts(null, null));
+        assertTrue(compareAsTexts("foo", null) < 0);
+        assertTrue(compareAsTexts(null, "foo") > 0);
+
+        assertEquals(0, compareAsTexts("0", 0));
+        assertTrue(compareAsTexts("10", 2) < 0);
+
+        assertTrue(compareAsTexts("foo", "bar") > 0);
+        assertEquals(0, compareAsTexts("foo", "foo"));
+        assertTrue(compareAsTexts("Foo", "foo") < 0);
+        assertTrue(compareAsTexts("foo", "Foo") > 0);
     }
 }

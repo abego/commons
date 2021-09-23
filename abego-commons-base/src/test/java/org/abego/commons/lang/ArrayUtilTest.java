@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.abego.commons.lang;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
@@ -38,6 +39,8 @@ import static org.abego.commons.lang.ArrayUtil.checkArrayIndex;
 import static org.abego.commons.lang.ArrayUtil.indexOf;
 import static org.abego.commons.lang.ArrayUtil.itemOrDefault;
 import static org.abego.commons.lang.ArrayUtil.iterator;
+import static org.abego.commons.lang.ArrayUtil.lastItem;
+import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.abego.commons.lang.StringUtil.array;
 import static org.abego.commons.lang.StringUtil.arrayOfNullables;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,7 +89,7 @@ class ArrayUtilTest {
 
     @Test
     void indexOf_OK() {
-        String[] array = arrayOfNullables("foo", "bar", null, "baz");
+        @Nullable String[] array = arrayOfNullables("foo", "bar", null, "baz");
 
         assertEquals(0, indexOf(array, "foo"));
         assertEquals(1, indexOf(array, "bar"));
@@ -98,7 +101,7 @@ class ArrayUtilTest {
     @SuppressWarnings("SimplifiableJUnitAssertion")
     @Test
     void itemOrDefault_OK() {
-        String[] array = arrayOfNullables("foo", "bar", null, "baz");
+        @Nullable String[] array = arrayOfNullables("foo", "bar", null, "baz");
 
 
         assertEquals("foo", itemOrDefault(array, 0, "quux"));
@@ -120,5 +123,16 @@ class ArrayUtilTest {
         checkArrayIndex(2, 3);
         assertThrows(IndexOutOfBoundsException.class, () -> checkArrayIndex(3, 3));
         assertThrows(IndexOutOfBoundsException.class, () -> checkArrayIndex(4, 3));
+    }
+
+    @Test
+    void lastItem_OK() {
+        String[] array0 = new String[]{};
+
+        assertEquals("foo", lastItem(new String[]{"foo"}));
+        assertEquals("bar", lastItem(new String[]{"foo", "bar"}));
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> ignore(lastItem(new String[0])));
+        assertEquals("Empty array has no last item", e.getMessage());
     }
 }

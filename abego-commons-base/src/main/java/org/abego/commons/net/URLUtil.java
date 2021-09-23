@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 
 import static org.abego.commons.lang.exception.UncheckedException.newUncheckedException;
 
@@ -66,7 +65,7 @@ public final class URLUtil {
 
     public static File toFile(URL url) {
         try {
-            return Paths.get(url.toURI()).toFile();
+            return URIUtil.toFile(url.toURI());
         } catch (URISyntaxException e) {
             throw newUncheckedException(e);
         }

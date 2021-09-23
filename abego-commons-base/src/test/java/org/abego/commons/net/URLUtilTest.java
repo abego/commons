@@ -53,6 +53,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class URLUtilTest {
 
+    private static URL getTestDataResource(String resourceName) {
+        @Nullable URL url = TestData.class.getResource(resourceName);
+        if (url == null) {
+            throw new IllegalStateException("Missing TestData resource");
+        }
+        return url;
+    }
+
     @Test
     void constructor() {
         assertThrows(MustNotInstantiateException.class, URLUtil::new);
@@ -75,7 +83,7 @@ class URLUtilTest {
 
     @Test
     void textOf_ok() {
-        @Nullable URL url = TestData.class.getResource(SAMPLE_TXT_RESOURCE_NAME);
+        URL url = getTestDataResource(SAMPLE_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_TXT_TEXT, textOf(url));
     }
@@ -93,14 +101,14 @@ class URLUtilTest {
 
     @Test
     void textOf_withEmptyStream() {
-        @Nullable URL url = TestData.class.getResource(EMPTY_TXT_RESOURCE_NAME);
+        URL url = getTestDataResource(EMPTY_TXT_RESOURCE_NAME);
 
         assertEquals(EMPTY_TXT_TEXT, textOf(url));
     }
 
     @Test
     void textOf_withCharset() {
-        @Nullable URL url = TestData.class.getResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
+        URL url = getTestDataResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
 
         assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT,
                 textOf(url, StandardCharsets.ISO_8859_1));
@@ -108,8 +116,7 @@ class URLUtilTest {
 
     @Test
     void textOf_withCharsetName() {
-        @Nullable URL url = TestData.class.getResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
-
+        URL url = getTestDataResource(SAMPLE_ISO_8859_1_TXT_RESOURCE_NAME);
         assertEquals(SAMPLE_ISO_8859_1_TXT_TEXT,
                 textOf(url, StandardCharsets.ISO_8859_1.name()));
     }
@@ -151,4 +158,15 @@ class URLUtilTest {
 
         assertEquals("/foo/bar.baz", file.getPath());
     }
+
+    @Test
+    void toFile_URISyntaxException_OK() throws MalformedURLException {
+        URL url = new URL("file:/foo/bar|s");
+
+        Exception e = assertThrows(Exception.class, () -> toFile(url));
+
+        assertEquals("Illegal character in path at index 13: file:/foo/bar|s",
+                e.getMessage());
+    }
+
 }

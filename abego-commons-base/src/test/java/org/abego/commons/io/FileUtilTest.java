@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,6 +44,7 @@ import static org.abego.commons.TestData.SAMPLE_TEXT;
 import static org.abego.commons.TestData.SAMPLE_TEXT_2;
 import static org.abego.commons.TestData.SAMPLE_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
+import static org.abego.commons.io.FileUtil.absolutePath;
 import static org.abego.commons.io.FileUtil.appendText;
 import static org.abego.commons.io.FileUtil.contains;
 import static org.abego.commons.io.FileUtil.copyResourceToFile;
@@ -51,12 +52,16 @@ import static org.abego.commons.io.FileUtil.deleteFile;
 import static org.abego.commons.io.FileUtil.directory;
 import static org.abego.commons.io.FileUtil.ensureDirectoryExists;
 import static org.abego.commons.io.FileUtil.ensureFileExists;
+import static org.abego.commons.io.FileUtil.existingFileOrNull;
 import static org.abego.commons.io.FileUtil.file;
 import static org.abego.commons.io.FileUtil.fileForRun;
 import static org.abego.commons.io.FileUtil.isDirectory;
 import static org.abego.commons.io.FileUtil.normalFile;
+import static org.abego.commons.io.FileUtil.pathRelativeTo;
+import static org.abego.commons.io.FileUtil.requireDirectory;
 import static org.abego.commons.io.FileUtil.runIOCode;
 import static org.abego.commons.io.FileUtil.setReadOnly;
+import static org.abego.commons.io.FileUtil.stripExtension;
 import static org.abego.commons.io.FileUtil.tempDirectoryForRun;
 import static org.abego.commons.io.FileUtil.tempFileForRun;
 import static org.abego.commons.io.FileUtil.tempFileForRunFromResource;
@@ -71,6 +76,7 @@ import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -583,6 +589,15 @@ class FileUtilTest {
     }
 
     @Test
+    void writeText_charsetOK(@TempDir File tempDir) {
+        String filename = "file.txt";
+
+        writeText(tempDir, filename, "foo bär", StandardCharsets.UTF_8);
+
+        assertEquals("foo bär", textOf(new File(tempDir, filename)));
+    }
+
+    @Test
     void deleteFile_missingFile(@TempDir File tempDir) {
 
         File missingFile = new File(tempDir, "missingFile");
@@ -663,5 +678,76 @@ class FileUtilTest {
         writeText(file, "foo bar");
         File result = FileUtil.requireFileExists(file);
         assertEquals(file, result);
+    }
+
+    @Test
+    void existingFileOrNull_OK(@TempDir File tempDir) {
+        // create the file we want to check for
+        File file = new File(tempDir, "file.txt");
+        writeText(file, "foo bar");
+
+        @Nullable File f = existingFileOrNull(file.getAbsolutePath());
+
+        assertNotNull(f);
+        assertEquals(file.getAbsolutePath(), f.getAbsolutePath());
+    }
+
+    @Test
+    void existingFileOrNull_missingFile_OK(@TempDir File tempDir) {
+        File file = new File(tempDir, "file.txt");
+
+        @Nullable File f = existingFileOrNull(file.getAbsolutePath());
+
+        assertNull(f);
+    }
+
+    @Test
+    void requireDirectoryOK(@TempDir File tempDir) {
+        File dir = new File(tempDir, "someDir");
+        ensureDirectoryExists(dir);
+
+        File d = requireDirectory(dir, "myDir");
+
+        assertEquals(dir.getAbsolutePath(), d.getAbsolutePath());
+    }
+
+    @Test
+    void requireDirectory_missingDirOK(@TempDir File tempDir) {
+        File dir = new File(tempDir, "someDir");
+
+        Exception e = assertThrows(IllegalArgumentException.class, () ->
+                requireDirectory(dir, "myDir"));
+
+        assertEquals(String.format("Directory expected for myDir, got %s", dir.getAbsolutePath()), e.getMessage());
+    }
+
+    @Test
+    void stripExtensionOK() {
+        assertEquals("foo", stripExtension("foo.txt"));
+        assertEquals("foo", stripExtension("foo"));
+        assertEquals("a/b.c/foo", stripExtension("a/b.c/foo.txt"));
+        assertEquals("foo", stripExtension("foo."));
+    }
+
+    @Test
+    void absolutePathOK(@TempDir File tempDir) {
+        File dir = new File(tempDir, "dir");
+        File file = new File(dir, "file.txt");
+
+        assertEquals(dir.getAbsolutePath(), absolutePath(dir));
+        assertEquals(file.getAbsolutePath(), absolutePath(file));
+        assertEquals(file.getAbsolutePath(), absolutePath(file.getAbsolutePath()));
+        assertEquals(file.getAbsolutePath(), absolutePath(dir, "file.txt"));
+    }
+
+    @Test
+    void pathRelativeToOK(@TempDir File tempDir) {
+        File dir = new File(tempDir, "dir");
+        File dir2 = new File(dir, "foo");
+        File file = new File(dir2, "bar");
+
+        assertEquals("foo", pathRelativeTo(dir2, dir));
+        assertEquals("bar", pathRelativeTo(file, dir2));
+        assertEquals("foo" + File.separator + "bar", pathRelativeTo(file, dir));
     }
 }

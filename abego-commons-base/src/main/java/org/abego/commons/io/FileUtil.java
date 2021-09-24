@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -556,11 +556,11 @@ public final class FileUtil {
     }
 
     public static String absolutePath(File parent, String filename) {
-        return new File(parent, filename).getAbsolutePath();
+        return absolutePath(new File(parent, filename));
     }
 
     public static String absolutePath(String pathname) {
-        return new File(pathname).getAbsolutePath();
+        return absolutePath(new File(pathname));
     }
 
     public static String absolutePath(File file) {

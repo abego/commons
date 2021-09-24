@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,13 @@ package org.abego.commons.io;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.UncheckedIOException;
+
 import static org.abego.commons.TestData.SAMPLE_TEXT;
 import static org.abego.commons.io.PrintStreamToBuffer.newPrintStreamToBuffer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PrintStreamToBufferTest {
 
@@ -46,5 +50,14 @@ class PrintStreamToBufferTest {
         stream.print(SAMPLE_TEXT);
 
         assertEquals(SAMPLE_TEXT + SAMPLE_TEXT, stream.text());
+    }
+
+    @Test
+    void forceException_forBetterCodeCoverage() {
+        UncheckedIOException e = assertThrows(UncheckedIOException.class, () ->
+                newPrintStreamToBuffer(
+                        new ByteArrayOutputStream(), "unknown encoding"));
+        assertEquals("java.io.UnsupportedEncodingException: unknown encoding",
+                e.getMessage());
     }
 }

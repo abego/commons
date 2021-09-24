@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import static org.abego.commons.io.ByteArrayOutputStreamUtil.textOf;
@@ -41,19 +40,24 @@ import static org.abego.commons.io.ByteArrayOutputStreamUtil.textOf;
 public final class PrintStreamToBuffer extends PrintStream {
     private final ByteArrayOutputStream outputStream;
 
-    private PrintStreamToBuffer(ByteArrayOutputStream outputStream)
-            throws UnsupportedEncodingException {
-        super(outputStream, true, StandardCharsets.UTF_8.name());
+    private PrintStreamToBuffer(
+            ByteArrayOutputStream outputStream, String encoding)
+            throws IOException {
+        super(outputStream, true, encoding);
         this.outputStream = outputStream;
     }
 
-    public static PrintStreamToBuffer newPrintStreamToBuffer() {
+    static PrintStreamToBuffer newPrintStreamToBuffer(
+            ByteArrayOutputStream outputStream, String encoding) {
         try {
-            return new PrintStreamToBuffer(new ByteArrayOutputStream());
+            return new PrintStreamToBuffer(outputStream, encoding);
         } catch (IOException e) {
-            // never reached. Will never throw an IOException.
             throw new UncheckedIOException(e);
         }
+    }
+
+    public static PrintStreamToBuffer newPrintStreamToBuffer() {
+        return newPrintStreamToBuffer(new ByteArrayOutputStream(), StandardCharsets.UTF_8.name());
     }
 
     public String text() {

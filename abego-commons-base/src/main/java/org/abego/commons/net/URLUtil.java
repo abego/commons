@@ -87,13 +87,31 @@ public final class URLUtil {
         return textOf(url, charset.name());
     }
 
-    public static String urlDecode(String string) {
+    /**
+     * Decodes a application/x-www-form-urlencoded string
+     * using a specific encoding scheme.
+     * <p>
+     * The supplied encoding is used to determine what characters
+     * are represented by any consecutive sequences of the form "%xy".
+     */
+    public static String urlDecode(String string, String encoding) {
         try {
-            return URLDecoder.decode(string, StandardCharsets.UTF_8.name());
+            return URLDecoder.decode(string, encoding);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
+
+    /**
+     * Decodes a application/x-www-form-urlencoded string using UTF-8.
+     * <p>
+     * UTF-8 is used to determine what characters
+     * are represented by any consecutive sequences of the form "%xy".
+     */
+    public static String urlDecode(String string) {
+        return urlDecode(string, StandardCharsets.UTF_8.name());
+    }
+
 
     public static boolean isURL(String text) {
         try {

@@ -153,6 +153,14 @@ class URLUtilTest {
     }
 
     @Test
+    void urlDecode_invalidEncodingOK() {
+        UncheckedIOException e = assertThrows(
+                UncheckedIOException.class,
+                () -> urlDecode("foo", ""));
+        assertEquals("java.io.UnsupportedEncodingException: URLDecoder: empty string enc parameter", e.getMessage());
+    }
+
+    @Test
     void toFile_OK() throws MalformedURLException {
         File file = toFile(new URL("file:/foo/bar.baz"));
 

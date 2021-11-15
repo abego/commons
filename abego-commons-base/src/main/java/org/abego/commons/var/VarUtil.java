@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,14 @@ public final class VarUtil {
 
     public static <T> Var<T> newVarNotEditable(@NonNull T value) {
         return new VariableNotEditable<>(value);
+    }
+
+    public static <T> VarNullable<T> newVarNullable() {
+        return new VariableNullable<>();
+    }
+
+    public static <T> VarNullable<T> newVarNullableNotEditable(@Nullable T value) {
+        return new VariableNullableNotEditable<>(value);
     }
 
     public static Var<String> newTextFileVar(File file, Charset charset) {
@@ -93,6 +101,43 @@ public final class VarUtil {
 
         @Override
         public void set(@NonNull T value) {
+            throw new UnsupportedOperationException("Var not editable"); //NON-NLS
+        }
+
+        @Override
+        public boolean isEditable() {
+            return false;
+        }
+    }
+
+    private static class VariableNullable<T> implements VarNullable<T> {
+        private @Nullable T value;
+
+        VariableNullable() {
+        }
+
+        VariableNullable(@Nullable T value) {
+            this.value = value;
+        }
+
+        @Override
+        public @Nullable T get() {
+            return value;
+        }
+
+        @Override
+        public void set(@Nullable T value) {
+            this.value = value;
+        }
+    }
+
+    private static class VariableNullableNotEditable<T> extends VariableNullable<T> {
+        VariableNullableNotEditable(@Nullable T value) {
+            super(value);
+        }
+
+        @Override
+        public void set(@Nullable T value) {
             throw new UnsupportedOperationException("Var not editable"); //NON-NLS
         }
 

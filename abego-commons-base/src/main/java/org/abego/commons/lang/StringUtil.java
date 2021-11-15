@@ -515,7 +515,7 @@ public final class StringUtil {
      * instead of {code "null"} for {code null} elements.
      * </p>
      */
-    public static String joinWithEmptyStringForNull(CharSequence delimiter, Object... elements) {
+    public static String joinWithEmptyStringForNull(CharSequence delimiter, @Nullable Object... elements) {
         return textOf(toIterable(elements), delimiter, "", Object::toString, "");
 
     }

@@ -63,6 +63,10 @@ public final class URLUtil {
         }
     }
 
+    /**
+     * Deprecated. Use {@link org.abego.commons.io.FileUtil#toFile(URL)} instead
+     */
+    @Deprecated
     public static File toFile(URL url) {
         try {
             return URIUtil.toFile(url.toURI());

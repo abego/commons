@@ -47,11 +47,14 @@ public final class StackTraceElementUtil {
         printStackTrace(out, stackTrace, e -> true);
     }
 
-    public static void printStackTraceOnlyOwnCode(PrintStream out, StackTraceElement[] stackTrace) {
+    /**
+     * EXPERIMENTAL: exclude "non-client" code from the stack trace to reduce
+     * the noise.
+     */
+    public static void printStackTraceOnlyClientCode(PrintStream out, StackTraceElement[] stackTrace) {
         printStackTrace(out, stackTrace, e ->
                 !e.getClassName().startsWith("java.") &&
                         !e.getClassName().startsWith("javax.") &&
-                        !e.getClassName().startsWith("org.abego.guitesting.swing.internal.util.") &&
                         !e.getClassName().startsWith("org.abego.commons.") &&
                         !e.getClassName().startsWith("org.abego.event.")
         );

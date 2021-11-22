@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,10 @@ import java.io.File;
 import static org.abego.commons.var.VarUtil.newVar;
 import static org.abego.commons.var.VarUtil.newVarNotEditable;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VarUtilTest extends VarTest {
 
@@ -58,6 +61,31 @@ class VarUtilTest extends VarTest {
 
         assertEquals("bar", v.get());
         assertEquals("bar", FileUtil.textOf(file));
+    }
+
+    @Test
+    void newVarNullable() {
+        VarNullable<String> v = VarUtil.newVarNullable();
+
+        assertNull(v.get());
+        assertTrue(v.isEditable());
+
+        v.set("foo");
+        assertEquals("foo", v.get());
+
+        v.set("foo");
+        assertEquals("foo", v.get());
+    }
+
+    @Test
+    void newVarNullableNotEditable() {
+        VarNullable<String> v = VarUtil.newVarNullableNotEditable("foo");
+
+        assertEquals("foo", v.get());
+        assertFalse(v.isEditable());
+
+        assertThrows(UnsupportedOperationException.class, () ->
+                v.set("bar"));
     }
 
     @Override

@@ -28,61 +28,37 @@ import org.abego.commons.io.PrintStreamToBuffer;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
-import java.io.PrintStream;
-
-import static org.abego.commons.lang.SystemUtil.systemErrRedirect;
-import static org.abego.commons.lang.SystemUtil.systemOutRedirect;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.abego.commons.io.PrintStreamToBuffer.newPrintStreamToBuffer;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class SystemUtilTest {
-
-    private static final String FOO = "foo";
+class StackTraceElementUtilTest {
 
     @Test
     void constructor() {
-        assertThrows(MustNotInstantiateException.class, SystemUtil::new);
+        assertThrows(MustNotInstantiateException.class,
+                StackTraceElementUtil::new);
     }
 
     @Test
-    void systemOutRedirect_ok() {
-        PrintStreamToBuffer myPrintStream = PrintStreamToBuffer.newPrintStreamToBuffer();
-        PrintStream oldStream = System.out;
+    void printStackTrace() {
+        PrintStreamToBuffer out = newPrintStreamToBuffer();
+        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
 
-        RunOnClose r = systemOutRedirect(myPrintStream);
+        StackTraceElementUtil.printStackTrace(out, stacktrace);
 
-        System.out.print(FOO);
-
-        assertEquals(FOO, myPrintStream.text());
-        assertEquals(myPrintStream, System.out);
-
-        r.close();
-
-        assertEquals(oldStream, System.out);
+        //TODO: add a better assert
+        assertNotEquals("", out.text());
     }
 
     @Test
-    void systemErrRedirect_ok() {
-        PrintStreamToBuffer myPrintStream = PrintStreamToBuffer.newPrintStreamToBuffer();
-        PrintStream oldStream = System.err;
+    void printStackTraceOnlyClientCode() {
+        PrintStreamToBuffer out = newPrintStreamToBuffer();
+        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
 
-        RunOnClose r = systemErrRedirect(myPrintStream);
+        StackTraceElementUtil.printStackTraceOnlyClientCode(out, stacktrace);
 
-        System.err.print(FOO);
-
-        assertEquals(FOO, myPrintStream.text());
-        assertEquals(myPrintStream, System.err);
-
-        r.close();
-
-        assertEquals(oldStream, System.err);
-    }
-
-    @Test
-    void isMacOS() {
-        boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
-
-        // improve this assert if you have an idea how...
-        assertEquals(isMac, SystemUtil.isMacOS());
+        //TODO: add a better assert
+        assertNotEquals("", out.text());
     }
 }

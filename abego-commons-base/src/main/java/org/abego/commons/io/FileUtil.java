@@ -40,6 +40,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import java.util.function.Supplier;
 
@@ -396,6 +397,43 @@ public final class FileUtil {
     }
 
     /**
+     * Checks the file paths in {@code filePaths} and returns the absolute path
+     * to the first existing directory found, or returns {@code null}, when
+     * none of the paths in {@code filePaths} specifies an existing directory.
+     */
+    @Nullable
+    public static String findExistingDirectory(String[] filePaths) {
+        for (String path : filePaths) {
+            File dir = new File(path);
+            if (dir.isDirectory()) {
+                return dir.getAbsolutePath();
+            }
+        }
+        return null;
+    }
+
+    public static File mkdirs(File parentDir, String directoryName) {
+        File dir = new File(parentDir, directoryName);
+        if (!dir.mkdirs()) {
+            throw new IllegalStateException(String.format(
+                    "Error creating directory: %s", directoryName)); //NON-NLS
+        }
+        return dir;
+    }
+
+    public static void copyFile(File source, File destination) {
+        try {
+            ensureDirectoryExists(destination.getParentFile());
+            Files.copy(
+                    source.toPath(),
+                    destination.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
      * Copy (the content of) the resource <code>resourceName</code> of
      * <code>theClass</code> to <code>file</code>.
      */
@@ -446,6 +484,14 @@ public final class FileUtil {
                 out.write(text);
             }
         });
+    }
+
+    /**
+     * Creates an empty file
+     */
+    public static void emptyFile(File file) {
+        ensureDirectoryExists(file.getParentFile());
+        org.abego.commons.io.FileUtil.writeText(file, "");
     }
 
     /**

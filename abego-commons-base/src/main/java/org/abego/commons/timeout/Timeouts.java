@@ -32,17 +32,37 @@ import java.time.Duration;
 public class Timeouts {
     private static final TimeoutSupport INSTANCE = newTimeoutSupport();
 
+    /**
+     * Returns the default TimeoutSupport instance.
+     */
     public static TimeoutSupport getTimeoutSupport() {
         return INSTANCE;
     }
 
+    /**
+     * Returns the newly created TimeoutSupport instance.
+     */
     public static TimeoutSupport newTimeoutSupport() {
         return TimeoutSupportImpl.newTimeoutSupport();
     }
 
     /**
-     * Sets the {@code timeout} property, as returned by {@link TimeoutSupplier#timeout()}, to
-     * the given {@code duration}.
+     * Return the duration to use as timeout when calling a
+     * "{@link Timeoutable}" method with no explicitly specified timeout.
+     * <p>
+     * Works on the default TimeoutSupport instance as returned by
+     * {@link #getTimeoutSupport()}.
+     */
+    public static Duration timeout() {
+        return getTimeoutSupport().timeout();
+    }
+
+    /**
+     * Sets the {@code timeout} property, as returned by
+     * {@link TimeoutSupplier#timeout()}, to the given {@code duration}.
+     * <p>
+     * Works on the default TimeoutSupport instance as returned by
+     * {@link #getTimeoutSupport()}.
      *
      * @param duration the timeout duration
      */
@@ -53,6 +73,9 @@ public class Timeouts {
     /**
      * Sets the {@code timeout} property, as returned by {@link TimeoutSupplier#timeout()}, to
      * the given {@code durationInMillis}.
+     * <p>
+     * Works on the default TimeoutSupport instance as returned by
+     * {@link #getTimeoutSupport()}.
      *
      * @param durationInMillis the duration of the timeout, in milliseconds
      */
@@ -65,6 +88,9 @@ public class Timeouts {
      * {@link TimeoutSupplier#timeout()} returns initially or after a "reset".
      *
      * <p>See {@link TimeoutSupplier#timeout()}</p>
+     * <p>
+     * Works on the default TimeoutSupport instance as returned by
+     * {@link #getTimeoutSupport()}.
      *
      * @return the duration of the initial timeout, i.e. the value
      * {@link TimeoutSupplier#timeout()} returns initially or after a "reset"
@@ -76,6 +102,9 @@ public class Timeouts {
     /**
      * Sets the {@code initialTimeout} property, as returned by
      * {@link #initialTimeout()}.
+     * <p>
+     * Works on the default TimeoutSupport instance as returned by
+     * {@link #getTimeoutSupport()}.
      *
      * @param duration the new duration
      */
@@ -86,6 +115,9 @@ public class Timeouts {
     /**
      * Runs the {@code runnable}, with the timeout temporarily set
      * to the {@code timeoutDuration}.
+     * <p>
+     * Works on the default TimeoutSupport instance as returned by
+     * {@link #getTimeoutSupport()}.
      *
      * @param timeoutDuration the duration of the timeout
      * @param runnable        the runnable to run

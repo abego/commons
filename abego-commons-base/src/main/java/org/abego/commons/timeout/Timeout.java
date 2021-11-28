@@ -24,13 +24,19 @@
 
 package org.abego.commons.timeout;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.time.Duration;
 
 /**
  * Factory for {@link TimeoutService} and access to default instance.
  */
-public class Timeout {
+public final class Timeout {
     private static final TimeoutService INSTANCE = newTimeoutService();
+
+    Timeout() {
+        throw new MustNotInstantiateException();
+    }
 
     /**
      * Returns the default TimeoutService instance.

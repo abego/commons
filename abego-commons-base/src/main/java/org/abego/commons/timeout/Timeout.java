@@ -27,60 +27,60 @@ package org.abego.commons.timeout;
 import java.time.Duration;
 
 /**
- * Factory for {@link TimeoutSupport} and access to default instance.
+ * Factory for {@link TimeoutService} and access to default instance.
  */
-public class Timeouts {
-    private static final TimeoutSupport INSTANCE = newTimeoutSupport();
+public class Timeout {
+    private static final TimeoutService INSTANCE = newTimeoutService();
 
     /**
-     * Returns the default TimeoutSupport instance.
+     * Returns the default TimeoutService instance.
      */
-    public static TimeoutSupport getTimeoutSupport() {
+    public static TimeoutService getTimeoutService() {
         return INSTANCE;
     }
 
     /**
-     * Returns the newly created TimeoutSupport instance.
+     * Returns the newly created TimeoutService instance.
      */
-    public static TimeoutSupport newTimeoutSupport() {
-        return TimeoutSupportImpl.newTimeoutSupport();
+    public static TimeoutService newTimeoutService() {
+        return TimeoutServiceImpl.newTimeoutService();
     }
 
     /**
      * Return the duration to use as timeout when calling a
      * "{@link Timeoutable}" method with no explicitly specified timeout.
      * <p>
-     * Works on the default TimeoutSupport instance as returned by
-     * {@link #getTimeoutSupport()}.
+     * Works on the default TimeoutService instance as returned by
+     * {@link #getTimeoutService()}.
      */
     public static Duration timeout() {
-        return getTimeoutSupport().timeout();
+        return getTimeoutService().timeout();
     }
 
     /**
      * Sets the {@code timeout} property, as returned by
      * {@link TimeoutSupplier#timeout()}, to the given {@code duration}.
      * <p>
-     * Works on the default TimeoutSupport instance as returned by
-     * {@link #getTimeoutSupport()}.
+     * Works on the default TimeoutService instance as returned by
+     * {@link #getTimeoutService()}.
      *
      * @param duration the timeout duration
      */
     public static void setTimeout(Duration duration) {
-        getTimeoutSupport().setTimeout(duration);
+        getTimeoutService().setTimeout(duration);
     }
 
     /**
      * Sets the {@code timeout} property, as returned by {@link TimeoutSupplier#timeout()}, to
      * the given {@code durationInMillis}.
      * <p>
-     * Works on the default TimeoutSupport instance as returned by
-     * {@link #getTimeoutSupport()}.
+     * Works on the default TimeoutService instance as returned by
+     * {@link #getTimeoutService()}.
      *
      * @param durationInMillis the duration of the timeout, in milliseconds
      */
     public static void setTimeoutMillis(long durationInMillis) {
-        getTimeoutSupport().setTimeoutMillis(durationInMillis);
+        getTimeoutService().setTimeoutMillis(durationInMillis);
     }
 
     /**
@@ -89,40 +89,47 @@ public class Timeouts {
      *
      * <p>See {@link TimeoutSupplier#timeout()}</p>
      * <p>
-     * Works on the default TimeoutSupport instance as returned by
-     * {@link #getTimeoutSupport()}.
+     * Works on the default TimeoutService instance as returned by
+     * {@link #getTimeoutService()}.
      *
      * @return the duration of the initial timeout, i.e. the value
      * {@link TimeoutSupplier#timeout()} returns initially or after a "reset"
      */
     public static Duration initialTimeout() {
-        return getTimeoutSupport().initialTimeout();
+        return getTimeoutService().initialTimeout();
     }
 
     /**
      * Sets the {@code initialTimeout} property, as returned by
      * {@link #initialTimeout()}.
      * <p>
-     * Works on the default TimeoutSupport instance as returned by
-     * {@link #getTimeoutSupport()}.
+     * Works on the default TimeoutService instance as returned by
+     * {@link #getTimeoutService()}.
      *
      * @param duration the new duration
      */
     public static void setInitialTimeout(Duration duration) {
-        getTimeoutSupport().setInitialTimeout(duration);
+        getTimeoutService().setInitialTimeout(duration);
     }
 
     /**
      * Runs the {@code runnable}, with the timeout temporarily set
      * to the {@code timeoutDuration}.
      * <p>
-     * Works on the default TimeoutSupport instance as returned by
-     * {@link #getTimeoutSupport()}.
+     * Works on the default TimeoutService instance as returned by
+     * {@link #getTimeoutService()}.
      *
      * @param timeoutDuration the duration of the timeout
      * @param runnable        the runnable to run
      */
     public static void runWithTimeout(Duration timeoutDuration, Runnable runnable) {
-        getTimeoutSupport().runWithTimeout(timeoutDuration, runnable);
+        getTimeoutService().runWithTimeout(timeoutDuration, runnable);
+    }
+
+    /**
+     * Resets the timeout to the initialTimeout.
+     */
+    public static void resetTimeout() {
+        getTimeoutService().resetTimeout();
     }
 }

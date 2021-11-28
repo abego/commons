@@ -29,7 +29,7 @@ import java.time.Duration;
 /**
  * Timeout related operations.
  */
-public interface TimeoutSupport extends TimeoutSupplier {
+public interface TimeoutService extends TimeoutSupplier {
 
     /**
      * Sets the {@code timeout} property, as returned by {@link #timeout()}, to
@@ -51,12 +51,12 @@ public interface TimeoutSupport extends TimeoutSupplier {
 
     /**
      * Returns the duration of the initial timeout, i.e. the value
-     * {@link #timeout()} returns initially or after a "reset".
+     * {@link #timeout()} returns initially or after a {@link #resetTimeout()}.
      *
      * <p>See {@link #timeout()}</p>
      *
      * @return the duration of the initial timeout, i.e. the value
-     * {@link #timeout()} returns initially or after a "reset"
+     * {@link #timeout()} returns initially or after a {@link #resetTimeout()}
      */
     Duration initialTimeout();
 
@@ -77,4 +77,10 @@ public interface TimeoutSupport extends TimeoutSupplier {
      */
     void runWithTimeout(Duration timeoutDuration, Runnable runnable);
 
+    /**
+     * Resets the timeout to the initialTimeout.
+     */
+    default void resetTimeout() {
+        setTimeout(initialTimeout());
+    }
 }

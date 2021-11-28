@@ -29,17 +29,17 @@ import java.time.Duration;
 
 import static java.time.Duration.ofSeconds;
 
-final class TimeoutSupportImpl implements TimeoutSupport {
+final class TimeoutServiceImpl implements TimeoutService {
 
     private static final Duration INITIAL_TIMEOUT_DEFAULT = ofSeconds(10);
     private Duration initialTimeout = INITIAL_TIMEOUT_DEFAULT;
     private Duration timeout = initialTimeout;
 
-    private TimeoutSupportImpl() {
+    private TimeoutServiceImpl() {
     }
 
-    static TimeoutSupport newTimeoutSupport() {
-        return new TimeoutSupportImpl();
+    static TimeoutService newTimeoutService() {
+        return new TimeoutServiceImpl();
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,15 +30,15 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static org.abego.commons.polling.PollingUtil.poll;
-import static org.abego.commons.polling.PollingUtil.pollNoFail;
+import static org.abego.commons.polling.Polling.poll;
+import static org.abego.commons.polling.Polling.pollNoFail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PollingUtilTest {
+class PollingTest {
     @Test
     void constructorOk() {
-        assertThrows(MustNotInstantiateException.class, PollingUtil::new);
+        assertThrows(MustNotInstantiateException.class, Polling::new);
     }
 
     @Test

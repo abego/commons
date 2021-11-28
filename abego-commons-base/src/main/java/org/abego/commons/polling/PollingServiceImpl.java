@@ -47,7 +47,7 @@ final class PollingServiceImpl implements PollingService {
     public <T> T poll(
             Supplier<T> functionToPoll, Predicate<T> isResult, Duration timeout) {
 
-        return PollingUtil.poll(functionToPoll, isResult, timeout);
+        return Polling.poll(functionToPoll, isResult, timeout);
     }
 
     @Override
@@ -55,7 +55,7 @@ final class PollingServiceImpl implements PollingService {
             Supplier<T> functionToPoll, Predicate<T> isResult, Duration timeout) {
 
         try {
-            return PollingUtil.poll(functionToPoll, isResult, timeout);
+            return Polling.poll(functionToPoll, isResult, timeout);
         } catch (TimeoutUncheckedException e) {
             return functionToPoll.get();
         }

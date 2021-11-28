@@ -24,6 +24,7 @@
 
 package org.abego.commons.polling;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.timeout.Timeout;
 import org.abego.commons.timeout.TimeoutSupplier;
 import org.abego.commons.timeout.TimeoutUncheckedException;
@@ -32,11 +33,24 @@ import org.abego.commons.timeout.Timeoutable;
 import java.time.Duration;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
+
+import static java.lang.System.currentTimeMillis;
 
 /**
- * Factory for {@link PollingService} and access to default instance.
+ * The Polling API, including factory for {@link PollingService} and
+ * its default instance.
+ * <p>
+ * <em>Polling</em> refers to the process of waiting for a certain state and
+ * periodically checking if the state is reached.
  */
-public class Polling {
+public final class Polling {
+    private static final int MAX_SLEEP_BETWEEN_POLLS_MILLIS = 100;
+
+    Polling() {
+        throw new MustNotInstantiateException();
+    }
+
     private static final PollingService INSTANCE =
             newPollingService(Timeout.getTimeoutService());
 
@@ -61,9 +75,66 @@ public class Polling {
     }
 
     /**
+     * Return the first value polled from <code>functionToPoll</code> that makes
+     * <code>isResult(value)</code> evaluate to <code>true</code>.
+     *
+     * <p>When <code>condition</code> did not return <code>true</code> within
+     * <code>timeout</code> call {@code onTimeout} with the last polled value
+     * and return the result of the function call.</p>
+     *
+     * @param functionToPoll the function used to poll for the value
+     * @param isResult       function that returns <code>true</code> when the
+     *                       passed value is a possible result value,
+     *                       <code>false</code> otherwise.
+     * @param timeout        the duration the method will poll the value
+     *                       before calling {@code onTimeout}
+     * @param onTimeout      function to call when "on timeout".
+     */
+    @Timeoutable
+    public static <T> T poll(
+            Supplier<T> functionToPoll,
+            Predicate<T> isResult,
+            Duration timeout,
+            UnaryOperator<T> onTimeout) {
+
+        long startTime = currentTimeMillis();
+        long endTime = startTime + timeout.toMillis();
+
+        T lastValue;
+        do {
+
+            lastValue = functionToPoll.get();
+            if (isResult.test(lastValue)) {
+                return lastValue;
+            }
+
+            // Before polling the next time we sleep a little to give other
+            // threads a better chance to do their jobs.
+            // The duration of the sleep adapts over the time: first we poll
+            // very frequently, i.e. sleep only a little. Then the sleep time
+            // increments until it reaches MAX_SLEEP_BETWEEN_POLLS_MILLIS.
+            // This way we can react quickly if the functionToPoll "is fast",
+            // but don't waste CPU time when the functionToPoll "is slow", i.e.
+            // hasn't provided the expected value in the fast phase.
+            long timeToSleep = currentTimeMillis() - startTime;
+
+            try {
+                //noinspection BusyWait
+                Thread.sleep(Math.min(timeToSleep, MAX_SLEEP_BETWEEN_POLLS_MILLIS));
+            } catch (InterruptedException e) {
+                // When the Thread is interrupted behave as if timeouted.
+                Thread.currentThread().interrupt();
+                break;
+            }
+
+        } while (currentTimeMillis() < endTime);
+
+        return onTimeout.apply(lastValue);
+    }
+
+    /**
      * Return the first value polled from {@code functionToPoll} that makes
-     * {@code isResult(value)} evaluate to {@code true}, using the default
-     * PollingService.
+     * {@code isResult(value)} evaluate to {@code true}.
      *
      * <p>Throw a {@link TimeoutUncheckedException} when {@code isResult} did not
      * return {@code true} within {@code timeout}.</p>
@@ -84,7 +155,9 @@ public class Polling {
      */
     @Timeoutable
     public static <T> T poll(Supplier<T> functionToPoll, Predicate<T> isResult, Duration timeout) {
-        return getPollingService().poll(functionToPoll, isResult, timeout);
+        return poll(functionToPoll, isResult, timeout, v -> {
+            throw new TimeoutUncheckedException();
+        });
     }
 
     /**
@@ -112,19 +185,15 @@ public class Polling {
     }
 
     /**
-     * Returns the first value polled from {@code functionToPoll} that makes
-     * {@code isResult(value)} evaluate to {@code true}, or the last
-     * polled value after the timeout occurred, using the default
-     * PollingService.
-     *
-     * <p><em>Polling</em> refers to the process of waiting for a certain state and
-     * periodically checking if the state is reached.</p>
+     * Return the first value polled from <code>functionToPoll</code> that makes
+     * <code>isResult(value)</code> evaluate to <code>true</code> or the last
+     * polled value in case of a timeout.
      *
      * @param <T>            the type of the value to be polled
      * @param functionToPoll the function used to poll for the value
-     * @param isResult       function that returns {@code true} when the
+     * @param isResult       function that returns <code>true</code> when the
      *                       passed value is a possible result value,
-     *                       {@code false} otherwise.
+     *                       <code>false</code> otherwise.
      * @param timeout        the duration the method will poll the value
      *                       before stop polling and returning the last polled
      *                       value.
@@ -133,8 +202,11 @@ public class Polling {
      * polled value after the timeout occurred.
      */
     @Timeoutable
-    public static <T> T pollNoFail(Supplier<T> functionToPoll, Predicate<T> isResult, Duration timeout) {
-        return getPollingService().pollNoFail(functionToPoll, isResult, timeout);
+    public static <T> T pollNoFail(
+            Supplier<T> functionToPoll,
+            Predicate<T> isResult,
+            Duration timeout) {
+        return poll(functionToPoll, isResult, timeout, v -> v);
     }
 
     /**
@@ -159,4 +231,5 @@ public class Polling {
     public static <T> T pollNoFail(Supplier<T> functionToPoll, Predicate<T> isResult) {
         return getPollingService().pollNoFail(functionToPoll, isResult);
     }
+
 }

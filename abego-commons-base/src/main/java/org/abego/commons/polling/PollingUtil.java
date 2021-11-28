@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,11 +34,11 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import static java.lang.System.currentTimeMillis;
-
+/**
+ * @deprecated use {{@link Polling} instead
+ */
+@Deprecated
 public final class PollingUtil {
-
-    private static final int MAX_SLEEP_BETWEEN_POLLS_MILLIS = 100;
 
     PollingUtil() {
         throw new MustNotInstantiateException();
@@ -63,9 +63,7 @@ public final class PollingUtil {
             Supplier<T> functionToPoll,
             Predicate<T> isResult,
             Duration timeout) {
-        return poll(functionToPoll, isResult, timeout, v -> {
-            throw new TimeoutUncheckedException();
-        });
+        return Polling.poll(functionToPoll, isResult, timeout);
     }
 
     /**
@@ -85,7 +83,7 @@ public final class PollingUtil {
             Supplier<T> functionToPoll,
             Predicate<T> isResult,
             Duration timeout) {
-        return poll(functionToPoll, isResult, timeout, v -> v);
+        return Polling.pollNoFail(functionToPoll, isResult, timeout);
     }
 
     /**
@@ -110,40 +108,7 @@ public final class PollingUtil {
             Predicate<T> isResult,
             Duration timeout,
             UnaryOperator<T> onTimeout) {
-
-        long startTime = currentTimeMillis();
-        long endTime = startTime + timeout.toMillis();
-
-        T lastValue;
-        do {
-
-            lastValue = functionToPoll.get();
-            if (isResult.test(lastValue)) {
-                return lastValue;
-            }
-
-            // Before polling the next time we sleep a little to give other
-            // threads a better chance to do their jobs.
-            // The duration of the sleep adapts over the time: first we poll
-            // very frequently, i.e. sleep only a little. Then the sleep time
-            // increments until it reaches MAX_SLEEP_BETWEEN_POLLS_MILLIS.
-            // This way we can react quickly if the functionToPoll "is fast",
-            // but don't waste CPU time when the functionToPoll "is slow", i.e.
-            // hasn't provided the expected value in the fast phase.
-            long timeToSleep = currentTimeMillis() - startTime;
-
-            try {
-                //noinspection BusyWait
-                Thread.sleep(Math.min(timeToSleep, MAX_SLEEP_BETWEEN_POLLS_MILLIS));
-            } catch (InterruptedException e) {
-                // When the Thread is interrupted behave as if timeouted.
-                Thread.currentThread().interrupt();
-                break;
-            }
-
-        } while (currentTimeMillis() < endTime);
-
-        return onTimeout.apply(lastValue);
+        return Polling.poll(functionToPoll, isResult, timeout, onTimeout);
     }
 
 }

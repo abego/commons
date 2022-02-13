@@ -33,6 +33,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -74,6 +75,31 @@ public interface Seq<T> extends Iterable<T> {
     @Nullable
     default T itemOrNull(int index) {
         return (index < 0 || index >= size()) ? null : item(index);
+    }
+
+    /**
+     * Return the <code>index</code>-ed item in the sequence, or
+     * {@code elseValue} when the item does not exist.
+     *
+     * <p><code>index</code> is zero-based.</p>
+     */
+    default T itemOrElse(int index, T elseValue) {
+        return index >= 0 && index < size()
+                ? item(index)
+                : elseValue;
+    }
+
+    /**
+     * Return the <code>index</code>-ed item in the sequence, or
+     * the value provided by the {@code elseValueSupplier} when the item does
+     * not exist.
+     *
+     * <p><code>index</code> is zero-based.</p>
+     */
+    default T itemOrElse(int index, Supplier<T> elseValueSupplier) {
+        return index >= 0 && index < size()
+                ? item(index)
+                : elseValueSupplier.get();
     }
 
     /**

@@ -98,6 +98,26 @@ abstract class AbstractSeqTest {
     }
 
     @Test
+    void itemOrElse_value() {
+        Seq<String> seq = helloSeq();
+
+        assertEquals("h", seq.itemOrElse(0, "X"));
+        assertEquals("o", seq.itemOrElse(4, "X"));
+        assertEquals("X", seq.itemOrElse(-1, "X"));
+        assertEquals("X", seq.itemOrElse(5, "X"));
+    }
+
+    @Test
+    void itemOrElse_valueSupplier() {
+        Seq<String> seq = helloSeq();
+
+        assertEquals("h", seq.itemOrElse(0, () -> "X"));
+        assertEquals("o", seq.itemOrElse(4, () -> "X"));
+        assertEquals("X", seq.itemOrElse(-1, () -> "X"));
+        assertEquals("X", seq.itemOrElse(5, () -> "X"));
+    }
+
+    @Test
     void stream_ok() {
         Seq<String> seq = helloSeq();
 

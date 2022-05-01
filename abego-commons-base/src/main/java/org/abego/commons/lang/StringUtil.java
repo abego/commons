@@ -663,6 +663,30 @@ public final class StringUtil {
         return i == 0 ? s1.compareTo(s2) : i;
     }
 
+    /**
+     * Tests if string {@code s} ends with {@code suffix}, ignoring case
+     * considerations.
+     * <p>
+     * Similar to {@link String#endsWith(String)} but differences just in the
+     * case of corresponding characters are ignored.
+     *
+     * <p>This method does not take locale into account, and may result in an
+     * unsatisfactory ordering for certain locales.</p>
+     *
+     * @param s      the String to check for its suffix
+     * @param suffix the suffix
+     * @return true if the character sequence represented by {@code suffix} is a
+     * suffix of the character sequence represented by {@code s}, ignoring case
+     * considerations; false otherwise.
+     */
+    public static boolean endsWithIgnoreCase(String s, String suffix) {
+        int suffixStart = s.length() - suffix.length();
+        if (suffixStart < 0) {
+            return false;
+        }
+        return s.substring(suffixStart).equalsIgnoreCase(suffix);
+    }
+
     private interface StringBuilderAppender {
         void append(StringBuilder builder, char c);
     }

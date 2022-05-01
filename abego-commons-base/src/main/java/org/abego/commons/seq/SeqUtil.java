@@ -36,6 +36,7 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -99,6 +100,21 @@ public final class SeqUtil {
     @SafeVarargs
     public static <T> Seq<T> newSeq(T... items) {
         return items.length == 0 ? SeqHelper.emptySeq() : newSeqForArray(items);
+    }
+
+    /**
+     * Return a {@link Seq} with the given <code>items</code> mapped according
+     * to the <code>mapper</code>.
+     *
+     * <p> Instead of multiple individual items you may also pass an
+     * <code>int[]</code> with <code>items</code>.
+     */
+    public static <T> Seq<T> newSeq(IntFunction<? extends T> mapper, int... items) {
+        List<T> result = new ArrayList<>();
+        for (int i : items) {
+            result.add(mapper.apply(i));
+        }
+        return newSeq(result);
     }
 
     /**

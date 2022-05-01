@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ import java.util.NoSuchElementException;
 /**
  * A StringPool implementation using a compact String representation
  */
-public final class StringPoolDefault implements StringPool {
+final class StringPoolDefault implements StringPool {
     /**
      * The {@link Charset} used to encode the string text.
      */

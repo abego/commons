@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ import static org.abego.commons.io.PrintStreamUtil.newPrintStream;
 import static org.abego.commons.stringpool.StringPoolDefault.CHARSET_FOR_STRING_TEXT;
 
 
-public final class StringPoolBuilderDefault implements StringPoolBuilder {
+final class StringPoolBuilderDefault implements StringPoolBuilder {
     private final Map<String, Integer> stringToIDMap = new HashMap<>();
     private final ByteArrayOutputStream allStrings = new ByteArrayOutputStream();
     private final PrintStream allStringsPrintStream = newPrintStream(allStrings, CHARSET_FOR_STRING_TEXT);
@@ -69,7 +69,7 @@ public final class StringPoolBuilderDefault implements StringPoolBuilder {
         @Nullable Integer id = stringToIDMap.get(s);
 
         // When already in pool, return id, otherwise add the String.
-        // 
+        //
         // The String is stored in the byte array as its length (number of bytes,
         // in VLQ encoding) immediately followed by the bytes of text of the string in UTF-8.
         // The offset of the first length byte is also used as the String's ID.

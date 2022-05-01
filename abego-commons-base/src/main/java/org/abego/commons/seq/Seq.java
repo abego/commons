@@ -360,6 +360,10 @@ public interface Seq<T> extends Iterable<T> {
         return joined("");
     }
 
+    default Seq<T> rest() {
+        return SeqUtil.newSeq(this.stream().skip(1));
+    }
+
     /**
      * Return <code>true</code> if the specified <code>object</code> is a
      * Seq and equal to this Seq, return <code>false</code> otherwise.

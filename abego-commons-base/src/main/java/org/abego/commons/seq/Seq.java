@@ -239,13 +239,34 @@ public interface Seq<T> extends Iterable<T> {
 
     /**
      * Returns a new Seq consisting of the items of this sequence that match
-     * the <code>predicate</code>.
+     * the <code>condition</code>.
      *
      * <p>See {@link SeqUtil#filter(Seq, Predicate)} for a default implementation.</p>
      *
      * <p>This method has no default implementation to avoid cyclic dependencies.</p>
      */
     Seq<T> filter(Predicate<T> condition);
+
+    /**
+     * Returns {@code true} when all items of this sequence match
+     * the <code>condition</code>, {@code false} otherwise.
+     */
+    default boolean allItemsMatch(Predicate<T> condition) {
+        for (T i : this) {
+            if (!condition.test(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns {@code true} when no item of this sequence matches
+     * the <code>condition</code>, {@code false} otherwise.
+     */
+    default boolean noItemMatches(Predicate<T> condition) {
+        return allItemsMatch(condition.negate());
+    }
 
     /**
      * Returns a new Seq consisting of the results of applying the given

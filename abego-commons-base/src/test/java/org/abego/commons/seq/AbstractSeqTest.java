@@ -240,6 +240,24 @@ abstract class AbstractSeqTest {
     }
 
     @Test
+    void allItemsMatch_ok() {
+        assertTrue(helloSeq().allItemsMatch(i -> !i.equals("a")));
+        assertTrue(helloSeq().allItemsMatch(i -> true));
+
+        assertFalse(helloSeq().allItemsMatch(i -> false));
+        assertFalse(helloSeq().allItemsMatch(i -> i.equals("h")));
+    }
+
+    @Test
+    void noItemMatches_ok() {
+        assertTrue(helloSeq().noItemMatches(i -> i.equals("a")));
+        assertTrue(helloSeq().noItemMatches(i -> false));
+
+        assertFalse(helloSeq().noItemMatches(i -> true));
+        assertFalse(helloSeq().noItemMatches(i -> i.equals("o")));
+    }
+
+    @Test
     void singleItem_ok() {
         assertThrows(NoSuchElementException.class, () -> noItemSeq().singleItem());
         assertEquals("a", singleItemSeq().singleItem());

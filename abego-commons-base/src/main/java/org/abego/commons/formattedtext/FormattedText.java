@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,33 @@
 package org.abego.commons.formattedtext;
 
 public interface FormattedText {
+    default String toPlainText() {
+        StringBuilder result = new StringBuilder();
+        FormattedTextProcessor processor = new FormattedTextProcessor() {
+            @Override
+            public FormattedTextProcessor text(String text) {
+                result.append(text);
+                return this;
+            }
+
+            @Override
+            public FormattedTextProcessor beginBlock() {
+                return this;
+            }
+
+            @Override
+            public FormattedTextProcessor end() {
+                return this;
+            }
+        };
+        processWith(processor);
+        return result.toString();
+    }
 
     void processWith(FormattedTextProcessor processor);
+
+    enum FontStyle {
+        PLAIN, BOLD, ITALIC
+    }
+
 }

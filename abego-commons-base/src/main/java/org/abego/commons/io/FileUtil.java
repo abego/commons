@@ -23,6 +23,7 @@
  */
 package org.abego.commons.io;
 
+import org.abego.commons.lang.ArrayUtil;
 import org.abego.commons.lang.StringUtil;
 import org.abego.commons.lang.ThrowableUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
@@ -53,7 +54,43 @@ public final class FileUtil {
         throw new MustNotInstantiateException();
     }
 
-    // --- Factories / Conversions ---
+    //region Types
+
+    /**
+     * Return a new temporary file with a suffix <code>tempFileSuffix</code>.
+     *
+     * <p>The file will only exist during this virtual machine run and will
+     * be deleted automatically when the virtual machine terminates
+     * (normally).</p>
+     *
+     * <p>See also {@link File#createTempFile(String, String)}.</p>
+     */
+    public static File tempFileForRun(@Nullable String tempFileSuffix) {
+        return runIOCode(() -> {
+            File file = File.createTempFile("abego-tmp", tempFileSuffix);
+            file.deleteOnExit();
+            return file;
+        });
+    }
+
+    /**
+     * Returns a {@link Supplier} to get the text of the given {@code file},
+     * assuming the text is in the given {@code encoding}, or an error text
+     * when the text cannot be read.
+     */
+    public static Supplier<String> getTextOfFileSupplierOrError(
+            File file, Charset encoding) {
+        return () -> {
+            try {
+                return FileUtil.textOfFileIfExisting(file, encoding);
+            } catch (Exception e) {
+                return ThrowableUtil.messageOrClassName(e);
+            }
+        };
+    }
+    //endregion
+
+    //region Factories / Conversions
 
     /**
      * Return a {@link File} for the file with the pathname
@@ -155,20 +192,12 @@ public final class FileUtil {
     }
 
     /**
-     * Return a new temporary file with a suffix <code>tempFileSuffix</code>.
-     *
-     * <p>The file will only exist during this virtual machine run and will
-     * be deleted automatically when the virtual machine terminates
-     * (normally).</p>
-     *
-     * <p>See also {@link File#createTempFile(String, String)}.</p>
+     * Returns a {@link Supplier} to get the text of the given {@code file},
+     * assuming the text is in UTF-8 encoding, or an error text
+     * when the text cannot be read.
      */
-    public static File tempFileForRun(@Nullable String tempFileSuffix) {
-        return runIOCode(() -> {
-            File file = File.createTempFile("abego", tempFileSuffix);
-            file.deleteOnExit();
-            return file;
-        });
+    public static Supplier<String> getTextOfFileSupplierOrError(File file) {
+        return getTextOfFileSupplierOrError(file, UTF_8);
     }
 
     /**
@@ -215,8 +244,9 @@ public final class FileUtil {
             throw new IllegalArgumentException(e);
         }
     }
+    //endregion
 
-    // --- Queries ---
+    //region Queries
 
     /**
      * Predicate: the file <code>pathname</code> is a directory.
@@ -319,7 +349,107 @@ public final class FileUtil {
         return textOf(file(pathname), charsetName);
     }
 
-    // --- Commands ---
+    /**
+     * Returns a {@link Supplier} to get the text of the file defined
+     * by {@code pathname}, assuming the text is in the given {@code encoding}),
+     * or an error text when the text cannot be read,
+     * when {@code pathname} is not {@code null} and not empty; returns
+     * {@code null} otherwise.
+     */
+    @Nullable
+    public static Supplier<String> getTextOfFileSupplierOrError(
+            @Nullable String pathname,
+            Charset encoding) {
+
+        if (StringUtil.hasText(pathname)) {
+            return getTextOfFileSupplierOrError(new File(pathname), encoding);
+
+        } else {
+            return null;
+        }
+    }
+
+    public static String stripExtension(String s) {
+        //noinspection MagicCharacter
+        int endIndex = s.lastIndexOf('.');
+        return endIndex >= 0 ? s.substring(0, endIndex) : s;
+    }
+
+    public static String absolutePath(File parent, String filename) {
+        return absolutePath(new File(parent, filename));
+    }
+
+    public static String absolutePath(String pathname) {
+        return absolutePath(new File(pathname));
+    }
+
+    public static String absolutePath(File file) {
+        return file.getAbsolutePath();
+    }
+
+    public static String canonicalPath(File file) {
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * Returns the path of the {@code file} relative to the given {@code
+     * baseDirectory}
+     *
+     * @param file          the file to consider
+     * @param baseDirectory the directory serving as the base
+     * @return the path of the {@code file} relative to the given {@code
+     * baseDirectory}
+     */
+    public static String pathRelativeTo(File file, File baseDirectory) {
+        return baseDirectory.toPath().relativize(file.toPath()).toString();
+    }
+
+    public static File requireFileExists(File file) {
+        if (!file.exists()) {
+            throw new IllegalArgumentException(String.format(
+                    "File '%s' does not exist.", file.getAbsolutePath())); //NON-NLS
+        }
+        return file;
+    }
+
+    public static File requireDirectory(File directory, String parameterName) {
+        if (!directory.isDirectory()) {
+            throw new IllegalArgumentException(
+                    String.format("Directory expected for %s, got %s", //NON-NLS
+                            parameterName,
+                            directory.getAbsolutePath()));
+        }
+        return directory;
+    }
+    //endregion
+
+    //region Checks
+
+    /**
+     * Returns the first File in {@code files} that specifies
+     * an existing directory, or {@code null}, when
+     * none of the files in {@code files} specifies an existing directory.
+     */
+    @Nullable
+    public static File findExistingDirectory(File[] files) {
+        return ArrayUtil.firstOrNull(files, File::isDirectory);
+    }
+
+    /**
+     * A parameterless function with return type {@code T} that may throw an {@link IOException}
+     */
+    @FunctionalInterface
+    public interface IOFunction<T> {
+        T run() throws IOException;
+    }
+
+    //endregion
+
+    //region Commands
 
     /**
      * Make the <code>file</code> read-only.
@@ -410,6 +540,14 @@ public final class FileUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * A {@link Runnable} that may throw an {@link IOException}.
+     */
+    @FunctionalInterface
+    public interface IOCommand {
+        void run() throws IOException;
     }
 
     public static File mkdirs(File parentDir, String directoryName) {
@@ -532,100 +670,6 @@ public final class FileUtil {
         }
     }
 
-    /**
-     * Returns a {@link Supplier} to get the text of the given {@code file},
-     * assuming the text is in the given {@code encoding}, or an error text
-     * when the text cannot be read.
-     */
-    public static Supplier<String> getTextOfFileSupplierOrError(
-            File file, Charset encoding) {
-        return () -> {
-            try {
-                return FileUtil.textOfFileIfExisting(file, encoding);
-            } catch (Exception e) {
-                return ThrowableUtil.messageOrClassName(e);
-            }
-        };
-    }
-
-    /**
-     * Returns a {@link Supplier} to get the text of the given {@code file},
-     * assuming the text is in UTF-8 encoding, or an error text
-     * when the text cannot be read.
-     */
-    public static Supplier<String> getTextOfFileSupplierOrError(File file) {
-        return getTextOfFileSupplierOrError(file, UTF_8);
-    }
-
-    /**
-     * Returns a {@link Supplier} to get the text of the file defined
-     * by {@code pathname}, assuming the text is in the given {@code encoding}),
-     * or an error text when the text cannot be read,
-     * when {@code pathname} is not {@code null} and not empty; returns
-     * {@code null} otherwise.
-     */
-    @Nullable
-    public static Supplier<String> getTextOfFileSupplierOrError(
-            @Nullable String pathname,
-            Charset encoding) {
-
-        if (StringUtil.hasText(pathname)) {
-            return getTextOfFileSupplierOrError(new File(pathname), encoding);
-
-        } else {
-            return null;
-        }
-    }
-
-    public static File requireFileExists(File file) {
-        if (!file.exists()) {
-            throw new IllegalArgumentException(String.format(
-                    "File '%s' does not exist.", file.getAbsolutePath())); //NON-NLS
-        }
-        return file;
-    }
-
-    public static File requireDirectory(File directory, String parameterName) {
-        if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(
-                    String.format("Directory expected for %s, got %s", //NON-NLS
-                            parameterName,
-                            directory.getAbsolutePath()));
-        }
-        return directory;
-    }
-
-    public static String stripExtension(String s) {
-        //noinspection MagicCharacter
-        int endIndex = s.lastIndexOf('.');
-        return endIndex >= 0 ? s.substring(0, endIndex) : s;
-    }
-
-    public static String absolutePath(File parent, String filename) {
-        return absolutePath(new File(parent, filename));
-    }
-
-    public static String absolutePath(String pathname) {
-        return absolutePath(new File(pathname));
-    }
-
-    public static String absolutePath(File file) {
-        return file.getAbsolutePath();
-    }
-
-    /**
-     * Returns the path of the {@code file} relative to the given {@code
-     * baseDirectory}
-     *
-     * @param file          the file to consider
-     * @param baseDirectory the directory serving as the base
-     * @return the path of the {@code file} relative to the given {@code
-     * baseDirectory}
-     */
-    public static String pathRelativeTo(File file, File baseDirectory) {
-        return baseDirectory.toPath().relativize(file.toPath()).toString();
-    }
-
     public static void copyResourcesToDirectory(
             File source,
             String absoluteResourceDirectoryPath,
@@ -651,22 +695,6 @@ public final class FileUtil {
                     new File(directory, new File(name).getName()));
         }
     }
-
-    /**
-     * A parameterless function with return type {@code T} that may throw an {@link IOException}
-     */
-    @FunctionalInterface
-    public interface IOFunction<T> {
-        T run() throws IOException;
-    }
-
-    /**
-     * A {@link Runnable} that may throw an {@link IOException}.
-     */
-    @FunctionalInterface
-    public interface IOCommand {
-        void run() throws IOException;
-    }
-
+    //endregion
 
 }

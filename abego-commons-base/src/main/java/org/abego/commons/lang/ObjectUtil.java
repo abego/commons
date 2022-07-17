@@ -38,6 +38,13 @@ public final class ObjectUtil {
         throw new MustNotInstantiateException();
     }
 
+    public static boolean allAreNotNull(@Nullable Object... objects) {
+        for (@Nullable Object o : objects) {
+            if (o == null) return false;
+        }
+        return true;
+    }
+
     /**
      * Do nothing, ignore the argument.
      *

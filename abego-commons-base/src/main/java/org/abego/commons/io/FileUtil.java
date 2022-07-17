@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ import org.abego.commons.lang.ArrayUtil;
 import org.abego.commons.lang.StringUtil;
 import org.abego.commons.lang.ThrowableUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.seq.SeqUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.BufferedWriter;
@@ -425,6 +426,17 @@ public final class FileUtil {
         }
         return directory;
     }
+
+    /**
+     * Returns an array with {@link File} objects corresponding to the semicolon
+     * ({@code ';'}) separated list of file pathes in {@code filePathes}.
+     */
+    public static File[] filesFromFilePathes(String filePathes) {
+        return SeqUtil.newSeq(filePathes.split(";"))
+                .map(File::new)
+                .stream().toArray(File[]::new);
+    }
+
     //endregion
 
     //region Checks

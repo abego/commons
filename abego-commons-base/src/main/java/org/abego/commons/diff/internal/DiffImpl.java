@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,9 +41,7 @@ import static org.abego.commons.seq.SeqUtil.newSeq;
 public final class DiffImpl {
 
     public static Seq<Difference> compareLineWise(String textA, String textB) {
-        Seq<String> linesA = lines(textA);
-        Seq<String> linesB = lines(textB);
-        return compare(linesA, linesB);
+        return compare(newSeq(lines(textA)), newSeq(lines(textB)));
     }
 
     public static Seq<Difference> compareCharacterWise(String textA, String textB) {

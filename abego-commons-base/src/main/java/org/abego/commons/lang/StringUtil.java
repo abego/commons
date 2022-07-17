@@ -53,7 +53,6 @@ import static org.abego.commons.lang.CharacterUtil.TAB_CHAR;
 import static org.abego.commons.lang.IntUtil.limit;
 import static org.abego.commons.lang.IterableUtil.textOf;
 import static org.abego.commons.lang.IterableUtil.toIterable;
-import static org.abego.commons.seq.SeqUtil.newSeq;
 
 @SuppressWarnings("WeakerAccess")
 public final class StringUtil {
@@ -620,8 +619,8 @@ public final class StringUtil {
         };
     }
 
-    public static Seq<String> lines(String text) {
-        return newSeq(END_OF_LINE_PATTERN.split(text, -1));
+    public static String[] lines(String text) {
+        return END_OF_LINE_PATTERN.split(text, -1);
     }
 
     public static int lineCount(String text) {
@@ -634,7 +633,11 @@ public final class StringUtil {
     }
 
     public static String firstLine(String text) {
-        return lines(text).first();
+        String[] lines = lines(text);
+        if (lines.length == 0) {
+            throw new NoSuchElementException();
+        }
+        return lines[0];
     }
 
     public static String replaceRange(

@@ -25,14 +25,16 @@
 package org.abego.commons.diff.internal;
 
 import org.abego.commons.diff.Difference;
+import org.abego.commons.seq.AbstractSeq;
 import org.abego.commons.seq.Seq;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static java.util.Objects.requireNonNull;
-import static org.abego.commons.lang.StringUtil.characters;
 import static org.abego.commons.lang.StringUtil.escapedOrNull;
 import static org.abego.commons.lang.StringUtil.lines;
 import static org.abego.commons.lang.StringUtil.stringOrNull;
@@ -48,6 +50,40 @@ public final class DiffImpl {
         Seq<Character> charactersA = characters(textA);
         Seq<Character> charactersB = characters(textB);
         return compare(charactersA, charactersB);
+    }
+
+    static Seq<Character> characters(String text) {
+        return new AbstractSeq<Character>() {
+            @Override
+            public Iterator<Character> iterator() {
+                return new Iterator<Character>() {
+                    private int i = 0;
+
+                    @Override
+                    public boolean hasNext() {
+                        return i < text.length();
+                    }
+
+                    @Override
+                    public Character next() {
+                        if (!hasNext()) {
+                            throw new NoSuchElementException();
+                        }
+                        return text.charAt(i++);
+                    }
+                };
+            }
+
+            @Override
+            public int size() {
+                return text.length();
+            }
+
+            @Override
+            public Character item(int i) {
+                return text.charAt(i);
+            }
+        };
     }
 
     static <T> Seq<Difference> compare(Seq<T> sequenceA, Seq<T> sequenceB) {

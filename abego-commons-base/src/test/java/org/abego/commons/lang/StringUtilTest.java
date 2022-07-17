@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@
 package org.abego.commons.lang;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
-import org.abego.commons.seq.Seq;
 import org.abego.commons.util.ListUtil;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
@@ -439,25 +438,6 @@ class StringUtilTest {
         assertNull(arr[1]);
         assertEquals("bar", arr[2]);
 
-    }
-
-    @Test
-    void characters() {
-        Seq<Character> seq = StringUtil.characters("foo bar");
-
-        // size
-        assertEquals(7, seq.size());
-
-        // item
-        assertEquals('f', seq.item(0));
-        assertEquals('r', seq.item(6));
-
-        // iterator
-        StringBuilder sb = new StringBuilder();
-        for (Character c : seq) {
-            sb.append(c);
-        }
-        assertEquals("foo bar", sb.toString());
     }
 
     @Test

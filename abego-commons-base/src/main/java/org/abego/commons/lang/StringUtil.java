@@ -26,14 +26,11 @@ package org.abego.commons.lang;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.range.IntRange;
-import org.abego.commons.seq.AbstractSeq;
-import org.abego.commons.seq.Seq;
 import org.abego.commons.util.LocaleUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
@@ -583,40 +580,6 @@ public final class StringUtil {
      */
     public static String toLowerCaseSafe(@Nullable String string) {
         return string != null ? string.toLowerCase(Locale.ENGLISH) : "null";
-    }
-
-    public static Seq<Character> characters(String text) {
-        return new AbstractSeq<Character>() {
-            @Override
-            public Iterator<Character> iterator() {
-                return new Iterator<Character>() {
-                    private int i = 0;
-
-                    @Override
-                    public boolean hasNext() {
-                        return i < text.length();
-                    }
-
-                    @Override
-                    public Character next() {
-                        if (!hasNext()) {
-                            throw new NoSuchElementException();
-                        }
-                        return text.charAt(i++);
-                    }
-                };
-            }
-
-            @Override
-            public int size() {
-                return text.length();
-            }
-
-            @Override
-            public Character item(int i) {
-                return text.charAt(i);
-            }
-        };
     }
 
     public static String[] lines(String text) {

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import org.abego.commons.seq.Seq;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
-import static org.abego.commons.lang.StringUtil.characters;
+import static org.abego.commons.diff.internal.DiffImpl.characters;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SequenceDiffDefaultTest {

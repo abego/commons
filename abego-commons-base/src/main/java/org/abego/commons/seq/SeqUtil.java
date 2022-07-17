@@ -118,6 +118,22 @@ public final class SeqUtil {
     }
 
     /**
+     * Return a {@link Seq} with the given <code>items</code> mapped according
+     * to the <code>mapper</code>.
+     *
+     * <p> Instead of multiple individual items you may also pass an
+     * <code>T[]</code> with <code>items</code>.
+     */
+    @SafeVarargs
+    public static <T, R> Seq<R> newSeq(Function<T, R> mapper, T... items) {
+        List<R> result = new ArrayList<>();
+        for (T i : items) {
+            result.add(mapper.apply(i));
+        }
+        return newSeq(result);
+    }
+
+    /**
      * Return a {@link Seq} with the items of the given <code>list</code>.
      *
      * <p>The list must not change after the Seq is created.</p>

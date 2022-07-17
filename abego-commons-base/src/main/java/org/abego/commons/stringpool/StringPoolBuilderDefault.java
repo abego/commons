@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -78,7 +78,7 @@ final class StringPoolBuilderDefault implements StringPoolBuilder {
 
     }
 
-    private int addStringWithId(String s, Integer id) {
+    private int addStringWithId(String s, int id) {
         int byteCount = s.getBytes(CHARSET_FOR_STRING_TEXT).length;
         VLQUtil.encodeUnsignedIntAsVLQ(byteCount, this::writeByte);
         allStringsPrintStream.print(s);

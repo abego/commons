@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -516,7 +516,8 @@ public final class StringUtil {
      * </p>
      */
     public static String joinWithEmptyStringForNull(CharSequence delimiter, @Nullable Object... elements) {
-        return textOf(toIterable(elements), delimiter, "", Object::toString, "");
+        return textOf(toIterable(elements), delimiter, "",
+                o -> o != null ? o.toString() : "", "");
 
     }
 
@@ -659,8 +660,7 @@ public final class StringUtil {
      * unsatisfactory ordering for certain locales.</p>
      */
     public static int compareToIgnoreCaseStable(String s1, String s2) {
-        int i = s1.compareToIgnoreCase(s2);
-        return i == 0 ? s1.compareTo(s2) : i;
+        return ObjectUtil.compareAsTexts(s1, s2);
     }
 
     /**
@@ -684,6 +684,8 @@ public final class StringUtil {
         if (suffixStart < 0) {
             return false;
         }
+
+        //noinspection CallToSuspiciousStringMethod
         return s.substring(suffixStart).equalsIgnoreCase(suffix);
     }
 

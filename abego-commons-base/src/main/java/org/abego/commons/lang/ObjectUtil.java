@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -131,13 +131,16 @@ public final class ObjectUtil {
 
 
     /**
-     * Compares the "toString" representations of o1 and o2,
-     * as defined by {@link StringUtil#compareToIgnoreCaseStable}.
-     *
-     * <p>{@code null} values are assumed to be larger than any String.
-     *
-     * <p>This method does not take locale into account, and may result in an
-     * unsatisfactory ordering for certain locales.</p>
+     * Compares the "toString" representations of o1 and o2.
+     * <p>
+     * Comparison is done as in {@link String#compareToIgnoreCase(String)}, but
+     * if the strings are equal when ignoring the case they are compared again
+     * case sensitively to ensure a stable order between the two strings.
+     * <p>
+     * {@code null} values are assumed to be larger than any String.
+     * <p>
+     * This method does not take locale into account, and may result in an
+     * unsatisfactory ordering for certain locales.
      */
     public static int compareAsTexts(@Nullable Object o1, @Nullable Object o2) {
         if (o1 == null) {
@@ -145,7 +148,12 @@ public final class ObjectUtil {
         } else if (o2 == null) {
             return -1;
         }
-        return StringUtil.compareToIgnoreCaseStable(
-                o1.toString(), o2.toString());
+
+        String s1 = o1.toString();
+        String s2 = o2.toString();
+        //noinspection CallToSuspiciousStringMethod
+        int i = s1.compareToIgnoreCase(s2);
+        //noinspection CallToSuspiciousStringMethod
+        return i == 0 ? s1.compareTo(s2) : i;
     }
 }

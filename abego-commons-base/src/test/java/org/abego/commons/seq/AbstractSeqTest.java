@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.abego.commons.lang.StringUtil.array;
-import static org.abego.commons.seq.SeqHelper.emptySeq;
+import static org.abego.commons.seq.SeqFactories.emptySeq;
 import static org.abego.commons.seq.SeqUtil.newSeq;
 import static org.abego.commons.util.ListUtil.list;
 import static org.abego.commons.util.ListUtil.toList;

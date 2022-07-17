@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,8 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.function.Function;
 
-import static org.abego.commons.seq.SeqUtil.emptySeq;
-import static org.abego.commons.seq.SeqUtil.newSeq;
+import static org.abego.commons.seq.SeqFactories.emptySeq;
+import static org.abego.commons.seq.SeqFactories.newSeq;
 
 abstract class MappedSeq<R> extends AbstractSeq<R> {
 

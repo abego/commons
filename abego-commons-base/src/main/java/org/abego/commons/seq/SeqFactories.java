@@ -24,32 +24,41 @@
 
 package org.abego.commons.seq;
 
-import org.junit.jupiter.api.Test;
+import org.eclipse.jdt.annotation.NonNull;
 
-import static org.abego.commons.seq.SeqFactories.emptySeq;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static org.abego.commons.seq.SeqForArray.newSeqForArray;
-import static org.abego.commons.seq.SeqNonEmptyWrapper.SEQ_MUST_NOT_BE_EMPTY_MESSAGE;
-import static org.abego.commons.seq.SeqNonEmptyWrapper.newSeqNonEmptyWrapped;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.abego.commons.seq.SeqForList.newSeqForList;
 
-class SeqNonEmptyWrapperTest extends AbstractSeqTest {
-
-    @Override
-    Seq<String> singleItemSeq() {
-        return newSeqNonEmptyWrapped(newSeqForArray(SINGLE_ITEM_ARRAY));
+final class SeqFactories {
+    /**
+     * Return a {@link Seq} with the given <code>items</code>.
+     *
+     * <p> Instead of multiple individual items you may also pass an array of type
+     * <code>T[]</code> with <code>items</code>.
+     */
+    @SafeVarargs
+    static <T> Seq<T> newSeq(T... items) {
+        return items.length == 0 ? emptySeq() : newSeqForArray(items);
     }
 
-    @Override
-    Seq<String> helloSeq() {
-        return newSeqNonEmptyWrapped(newSeqForArray(HELLO_ARRAY));
+    /**
+     * Return a {@link Seq} with the items of the given <code>list</code>.
+     *
+     * <p>The list must not change after the Seq is created.</p>
+     */
+    static <T> Seq<T> newSeq(List<T> list) {
+        return list.isEmpty() ? emptySeq() : newSeqForList(list);
     }
 
-    @Test
-    void emptySeqFails() {
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                () -> newSeqNonEmptyWrapped(emptySeq()));
-        assertEquals(SEQ_MUST_NOT_BE_EMPTY_MESSAGE, e.getMessage());
+    @SuppressWarnings("unchecked")
+    static <T> Seq<T> newSeq(Stream<T> stream) {
+        return newSeq((T @NonNull []) stream.toArray());
     }
 
+    static <T> Seq<T> emptySeq() {
+        return EmptySeq.newEmptySeq();
+    }
 }

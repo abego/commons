@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,32 +37,32 @@ public abstract class AbstractSeq<T> implements Seq<T> {
 
     @Override
     public Seq<T> filter(Predicate<T> condition) {
-        return SeqUtil.filter(this, condition);
+        return SeqHelper.filter(this, condition);
     }
 
     @Override
     public <R> Seq<R> map(Function<? super T, ? extends R> mapper) {
-        return SeqUtil.map(this, mapper);
+        return SeqHelper.map(this, mapper);
     }
 
     @Override
     public <S extends Comparable<S>> Seq<T> sortedBy(Function<T, S> sortKey) {
-        return SeqUtil.sortedBy(this, sortKey);
+        return SeqHelper.sortedBy(this, sortKey);
     }
 
     @Override
     public Seq<T> sorted() {
-        return SeqUtil.sorted(this);
+        return SeqHelper.sorted(this);
     }
 
     @Override
     public Seq<T> sorted(Comparator<? super T> comparator) {
-        return SeqUtil.sorted(this, comparator);
+        return SeqHelper.sorted(this, comparator);
     }
 
     @Override
     public Seq<T> sortedByText() {
-        return SeqUtil.sortedByText(this);
+        return SeqHelper.sortedByText(this);
     }
 
     @Override

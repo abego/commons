@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,11 +38,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.abego.commons.lang.IterableUtil.isEmpty;
-import static org.abego.commons.seq.MappedSeq.newMappedSeq;
 import static org.abego.commons.seq.SeqForArray.newSeqForArray;
 import static org.abego.commons.seq.SeqForIterable.newSeqForIterable;
 import static org.abego.commons.seq.SeqForList.newSeqForList;
@@ -59,7 +57,7 @@ public final class SeqUtil {
      * Return an (/the) empty Seq, i.e. a Seq with no items.
      */
     public static <T> Seq<T> emptySeq() {
-        return SeqHelper.emptySeq();
+        return SeqFactories.emptySeq();
     }
 
     /**
@@ -99,7 +97,7 @@ public final class SeqUtil {
      */
     @SafeVarargs
     public static <T> Seq<T> newSeq(T... items) {
-        return items.length == 0 ? SeqHelper.emptySeq() : newSeqForArray(items);
+        return items.length == 0 ? SeqFactories.emptySeq() : newSeqForArray(items);
     }
 
     /**
@@ -139,7 +137,7 @@ public final class SeqUtil {
      * <p>The list must not change after the Seq is created.</p>
      */
     public static <T> Seq<T> newSeq(List<T> list) {
-        return list.isEmpty() ? SeqHelper.emptySeq() : newSeqForList(list);
+        return list.isEmpty() ? SeqFactories.emptySeq() : newSeqForList(list);
     }
 
     /**
@@ -152,7 +150,7 @@ public final class SeqUtil {
         if (iterable instanceof Stream) //noinspection unchecked
             return newSeq((Stream<T>) iterable);
 
-        return isEmpty(iterable) ? SeqHelper.emptySeq() : newSeqForIterable(iterable);
+        return isEmpty(iterable) ? SeqFactories.emptySeq() : newSeqForIterable(iterable);
     }
 
     /**
@@ -191,7 +189,7 @@ public final class SeqUtil {
      * the <code>predicate</code>.
      */
     public static <T> Seq<T> filter(Seq<T> seq, Predicate<T> condition) {
-        return newSeq(seq.stream().filter(condition).collect(Collectors.toList()));
+        return SeqHelper.filter(seq, condition);
     }
 
     /**
@@ -199,7 +197,7 @@ public final class SeqUtil {
      * <code>mapper</code> function to the elements of the <code>seq</code>.
      */
     public static <T, R> Seq<R> map(Seq<T> seq, Function<? super T, ? extends R> mapper) {
-        return newMappedSeq(seq, mapper);
+        return SeqHelper.map(seq, mapper);
     }
 
     /**
@@ -209,7 +207,7 @@ public final class SeqUtil {
     public static <T, S extends Comparable<? super S>> Seq<T> sortedBy(
             Iterable<T> iterable, Function<? super T, ? extends S> sortKey) {
 
-        return newSeq(ListUtil.toSortedList(iterable, Comparator.comparing(sortKey)));
+        return SeqHelper.sortedBy(iterable, sortKey);
     }
 
     /**
@@ -224,9 +222,7 @@ public final class SeqUtil {
      * {@code e1} and {@code e2} in the iterable).
      */
     public static <T> Seq<T> sorted(Iterable<T> iterable) {
-        List<T> list = ListUtil.toList(iterable);
-        list.sort(null);
-        return newSeq(list);
+        return SeqHelper.sorted(iterable);
     }
 
     /**
@@ -235,9 +231,7 @@ public final class SeqUtil {
      * {@link ObjectUtil#compareAsTexts(Object, Object)}.
      */
     public static <T> Seq<T> sortedByText(Iterable<T> iterable) {
-        List<T> list = ListUtil.toList(iterable);
-        list.sort(ObjectUtil::compareAsTexts);
-        return newSeq(list);
+        return SeqHelper.sortedByText(iterable);
     }
 
     /**
@@ -250,9 +244,7 @@ public final class SeqUtil {
      * in the iterable).
      */
     public static <T> Seq<T> sorted(Iterable<T> iterable, Comparator<? super T> comparator) {
-        List<T> list = ListUtil.toList(iterable);
-        list.sort(comparator);
-        return newSeq(list);
+        return SeqHelper.sorted(iterable, comparator);
     }
 
     /**
@@ -326,6 +318,10 @@ public final class SeqUtil {
     public static String toCompactString(Seq<?> seq) {
         //noinspection StringConcatenation
         return "[" + seq.map(Object::toString).joined(",") + "]";
+    }
+
+    public static <T> Seq<T> rest(Seq<T> seq) {
+        return SeqFactories.newSeq(seq.stream().skip(1));
     }
 
 }

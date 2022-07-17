@@ -29,6 +29,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.text.MessageFormat;
+import java.util.function.Supplier;
 
 import static org.abego.commons.lang.ClassUtil.classNameOrNull;
 
@@ -92,6 +93,17 @@ public final class ObjectUtil {
     public static <T> @NonNull T valueOrFail(@Nullable T value, @NonNull String message) {
         if (value == null) {
             throw new NullPointerException(message);
+        }
+        return value;
+    }
+
+    /**
+     * Returns the {@code value} when it is not {@code null}, otherwise throw a
+     * {@link NullPointerException} with the given message.
+     */
+    public static <T> @NonNull T valueOrFail(@Nullable T value, @NonNull Supplier<String> messageSupplier) {
+        if (value == null) {
+            throw new NullPointerException(messageSupplier.get());
         }
         return value;
     }

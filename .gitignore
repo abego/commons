@@ -1,4 +1,5 @@
 .idea/sonarlint/issuestore
+.idea/git_toolbox_prj.xml
 target
 tmp
 bin

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,18 @@ public final class PropertiesIOUtil {
 
     PropertiesIOUtil() {
         throw new MustNotInstantiateException();
+    }
+
+    /**
+     * Adds the properties of {@code newProperties} to the {@code target}.
+     * <p>
+     * Only properties with both key and value being {@link String} objects are
+     * added. (see {@link Properties#stringPropertyNames()}).
+     */
+    public static void addProperties(Properties target, Properties newProperties) {
+        for (String key : newProperties.stringPropertyNames()) {
+            target.setProperty(key, newProperties.getProperty(key));
+        }
     }
 
     public static Properties readProperties(File file, Charset charset)

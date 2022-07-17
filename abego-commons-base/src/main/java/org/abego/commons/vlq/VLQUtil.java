@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,9 @@ package org.abego.commons.vlq;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.util.function.ByteConsumer;
 import org.abego.commons.util.function.ByteSupplier;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 /**
  * A collection of VLQ-related methods.
@@ -121,4 +124,22 @@ public final class VLQUtil {
 
         throw new IllegalStateException(VLQ_ENCODED_NUMBER_TO_LARGE_FOR_ULONG_MESSAGE);
     }
+
+    public static void writeVLQInt(int value, ByteArrayOutputStream outputStream) {
+        VLQUtil.encodeUnsignedIntAsVLQ(value, outputStream::write);
+    }
+
+    public static int readVLQInt(ByteArrayInputStream inputStream) {
+        return VLQUtil.decodeUnsignedIntFromVLQ(() -> (byte) inputStream.read());
+    }
+
+    public static int[] readVLQIntArray(ByteArrayInputStream inputStream) {
+        int size = readVLQInt(inputStream);
+        int[] result = new int[size];
+        for (int i = 0; i < size; i++) {
+            result[i] = readVLQInt(inputStream);
+        }
+        return result;
+    }
+
 }

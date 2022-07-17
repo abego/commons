@@ -474,7 +474,7 @@ public final class StringUtil {
      * {@link String#join(CharSequence, CharSequence...)}).
      * </p>
      */
-    public static String join(CharSequence delimiter, Object... elements) {
+    public static String join(CharSequence delimiter, @Nullable Object... elements) {
         return textOf(toIterable(elements), delimiter);
     }
 

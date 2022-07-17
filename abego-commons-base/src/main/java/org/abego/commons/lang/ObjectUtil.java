@@ -78,6 +78,16 @@ public final class ObjectUtil {
     }
 
     /**
+     * Returns the {@code object} if it is of the given {@code type}, otherwise
+     * {@code null}.
+     */
+    @Nullable
+    public static <T> T instanceOfOrNull(@Nullable Object object, Class<T> type) {
+        //noinspection unchecked
+        return type.isInstance(object) ? (T) object : null;
+    }
+
+    /**
      * Returns the {@code value} when it is not {@code null}, otherwise return the {@code otherValue}.
      *
      * <p>In some programming languages this operation is performed by an "Elvis" operator ("?:").</p>

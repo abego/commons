@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import static org.abego.commons.lang.IntUtil.checkBoundsEndOpen;
 
@@ -104,8 +105,19 @@ public final class ArrayUtil {
 
     public static <T> T lastItem(@NonNull T[] array) {
         if (array.length == 0) {
+            //noinspection DuplicateStringLiteralInspection
             throw new IllegalArgumentException("Empty array has no last item"); //NON-NLS
         }
         return array[array.length - 1];
+    }
+
+    @Nullable
+    public static <T> T firstOrNull(T[] array, Predicate<T> predicate) {
+        for (T i : array) {
+            if (predicate.test(i)) {
+                return i;
+            }
+        }
+        return null;
     }
 }

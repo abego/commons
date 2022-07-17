@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,8 @@ package org.abego.commons.util;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
+import java.io.File;
+
 import static org.abego.commons.lang.StringUtil.escaped;
 import static org.abego.commons.lang.StringUtil.firstChar;
 
@@ -33,6 +35,18 @@ public class PropertiesUtil {
 
     PropertiesUtil() {
         throw new MustNotInstantiateException();
+    }
+
+    public static String userName() {
+        return System.getProperty("user.name");
+    }
+
+    public static File workingDirectory() {
+        return new File(System.getProperty("user.dir"));
+    }
+
+    public static File homeDirectory() {
+        return new File(System.getProperty("user.home"));
     }
 
     public static String toPropertyKey(String string) {

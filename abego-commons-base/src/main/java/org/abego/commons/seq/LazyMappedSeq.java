@@ -24,43 +24,36 @@
 
 package org.abego.commons.seq;
 
-import org.eclipse.jdt.annotation.Nullable;
-
+import java.util.Iterator;
+import java.util.WeakHashMap;
 import java.util.function.Function;
 
-import static org.abego.commons.seq.SeqUtil.emptySeq;
-import static org.abego.commons.seq.SeqUtil.newSeq;
+import static org.abego.commons.util.IteratorUsingAccessor.newIteratorUsingAccessor;
 
-abstract class MappedSeq<R> extends AbstractSeq<R> {
+// Currently not used, needs more testing
+class LazyMappedSeq<T, R> extends MappedSeq<R> {
+    private final Seq<T> originalSeq;
+    private final Function<? super T, ? extends R> mapper;
+    private final WeakHashMap<T, R> cache = new WeakHashMap<>();
 
-    protected MappedSeq() {
+    private LazyMappedSeq(Seq<T> originalSeq, Function<? super T, ? extends R> mapper) {
+        this.originalSeq = originalSeq;
+        this.mapper = mapper;
     }
 
-    public static <T, R> Seq<R> newMappedSeq(
-            Seq<T> originalSeq, Function<? super T, ? extends R> mapper) {
-
-        // Currently no using LazyMappedSeq. Seems to be buggy.
-        // new LazyMappedSeq<>(originalSeq, mapper);
-
-        return mapDirectly(originalSeq, mapper);
+    @Override
+    public Iterator<R> iterator() {
+        return newIteratorUsingAccessor(originalSeq.size(), this::item);
     }
 
-    public static <T, R> Seq<R> newMappedSeqOrEmpty(
-            @Nullable Seq<T> originalSeq,
-            Function<? super T, ? extends R> mapper) {
-        return originalSeq == null
-                ? emptySeq() : newMappedSeq(originalSeq, mapper);
+    @Override
+    public int size() {
+        return originalSeq.size();
     }
 
-    private static <T, R> Seq<R> mapDirectly(
-            Seq<T> originalSeq, Function<? super T, ? extends R> mapper) {
-        @SuppressWarnings("unchecked")
-        R[] arr = (R[]) new Object[originalSeq.size()];
-        int i = 0;
-        for (T item : originalSeq) {
-            arr[i++] = mapper.apply(item);
-        }
-        return newSeq(arr);
+    @Override
+    public R item(int index) {
+        T origItem = originalSeq.item(index);
+        return cache.computeIfAbsent(origItem, mapper);
     }
-
 }

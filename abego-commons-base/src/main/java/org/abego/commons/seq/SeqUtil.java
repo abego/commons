@@ -319,4 +319,13 @@ public final class SeqUtil {
         return newSeq(result);
     }
 
+    /**
+     * Returns a compact "toString" version of the {@code seq}, with
+     * comma-separated "toString" texts of the items wrapped by a "[...]".
+     */
+    public static String toCompactString(Seq<?> seq) {
+        //noinspection StringConcatenation
+        return "[" + seq.map(Object::toString).joined(",") + "]";
+    }
+
 }

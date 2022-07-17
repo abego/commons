@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
@@ -105,11 +106,14 @@ public final class PropertiesIOUtil {
      * When checking for a value files earlier in the above list take precedence
      * over the later ones.
      */
-    public static Properties readPropertiesGroup(String groupName) throws IOException {
-        Properties result =
-                readProperties(propertiesGroupFilesInReversedLookupOrder(groupName));
-        addProperties(result, System.getProperties());
-        return result;
+    public static Properties readPropertiesGroup(String groupName) {
+        try {
+            Properties result = readProperties(propertiesGroupFilesInReversedLookupOrder(groupName));
+            addProperties(result, System.getProperties());
+            return result;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,10 @@ public final class VarUtil {
         return new Variable<>();
     }
 
+    public static <T> Var<T> newVar(T initialValue) {
+        return new Variable<>(initialValue);
+    }
+
     public static <T> Var<T> newVarNotEditable(@NonNull T value) {
         return new VariableNotEditable<>(value);
     }
@@ -61,6 +65,10 @@ public final class VarUtil {
 
     public static Var<String> newTextFileVar(File file) {
         return newTextFileVar(file, StandardCharsets.UTF_8);
+    }
+
+    private static UnsupportedOperationException newVarNotEditableException() {
+        return new UnsupportedOperationException("Var not editable"); //NON-NLS
     }
 
     private static class Variable<T> implements Var<T> {
@@ -101,7 +109,7 @@ public final class VarUtil {
 
         @Override
         public void set(@NonNull T value) {
-            throw new UnsupportedOperationException("Var not editable"); //NON-NLS
+            throw newVarNotEditableException();
         }
 
         @Override
@@ -138,7 +146,7 @@ public final class VarUtil {
 
         @Override
         public void set(@Nullable T value) {
-            throw new UnsupportedOperationException("Var not editable"); //NON-NLS
+            throw newVarNotEditableException();
         }
 
         @Override

@@ -22,8 +22,9 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.io;
+package org.abego.commons.util;
 
+import org.abego.commons.io.PropertiesIOUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.File;

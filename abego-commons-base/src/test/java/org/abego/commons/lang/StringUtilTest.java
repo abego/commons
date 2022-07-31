@@ -30,6 +30,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.abego.commons.lang.StringUtil.arrayNullable;
@@ -486,5 +487,41 @@ class StringUtilTest {
         assertEquals("f", StringUtil.prefix(s, -5));
         assertEquals("", StringUtil.prefix(s, -6));
         assertEquals("", StringUtil.prefix(s, -7));
+    }
+
+    @Test
+    void newIncludesStringPredicate_sample1() {
+        String linesWithOptions = "" +
+                "foo\n" +
+                "bar*\n" +
+                "baz";
+
+        Predicate<String> predicate = StringUtil.newIncludesStringPredicate(linesWithOptions);
+
+        assertFalse(predicate.test(""));
+        assertTrue(predicate.test("foo"));
+        assertFalse(predicate.test("foofoo"));
+        assertTrue(predicate.test("bar"));
+        assertTrue(predicate.test("bars"));
+        assertTrue(predicate.test("baz"));
+        assertFalse(predicate.test("doo"));
+    }
+
+    @Test
+    void newIncludesStringPredicate_empty() {
+        Predicate<String> predicate =
+                StringUtil.newIncludesStringPredicate("");
+
+        assertFalse(predicate.test(""));
+        assertFalse(predicate.test("foo"));
+    }
+
+    @Test
+    void newIncludesStringPredicate_anyString() {
+        Predicate<String> predicate =
+                StringUtil.newIncludesStringPredicate("*");
+
+        assertTrue(predicate.test(""));
+        assertTrue(predicate.test("foo"));
     }
 }

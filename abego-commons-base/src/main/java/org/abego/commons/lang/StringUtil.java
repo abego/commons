@@ -30,9 +30,12 @@ import org.abego.commons.util.LocaleUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +53,7 @@ import static org.abego.commons.lang.CharacterUtil.TAB_CHAR;
 import static org.abego.commons.lang.IntUtil.limit;
 import static org.abego.commons.lang.IterableUtil.textOf;
 import static org.abego.commons.lang.IterableUtil.toIterable;
+import static org.abego.commons.util.function.PredicateUtil.isAnyPredicateTrue;
 
 @SuppressWarnings("WeakerAccess")
 public final class StringUtil {
@@ -657,6 +661,47 @@ public final class StringUtil {
 
     private interface StringBuilderAppender {
         void append(StringBuilder builder, char c);
+    }
+
+    /**
+     * Returns a {@link Predicate} on {@link String} objects that tests if
+     * a given String is one of the given {@code options}, with options
+     * ending with {@code '*'} matching any String that starts with the text
+     * left to the {@code '*'} (i.e. wildcards at the end are supported).
+     */
+    public static Predicate<String> newIncludesStringPredicate(String[] options) {
+        return new IncludesStringPredicate(options);
+    }
+
+    /**
+     * As {@link #newIncludesStringPredicate(String[])}, with every line
+     * of {@code linesWithOptions} defining one option.
+     */
+    public static Predicate<String> newIncludesStringPredicate(String linesWithOptions) {
+        return new IncludesStringPredicate(StringUtil.lines(linesWithOptions));
+    }
+
+    private static final class IncludesStringPredicate implements Predicate<String> {
+        private final List<Predicate<String>> allChecks = new ArrayList<>();
+
+        private IncludesStringPredicate(String[] options) {
+            for (String line : options) {
+                int length = line.length();
+                if (length > 0) {
+                    if (line.endsWith("*")) {
+                        allChecks.add(t -> t.startsWith(line.substring(0, length - 1)));
+                    } else {
+                        //noinspection CallToSuspiciousStringMethod
+                        allChecks.add(t -> t.equals(line));
+                    }
+                }
+            }
+        }
+
+        @Override
+        public boolean test(String valueToTest) {
+            return isAnyPredicateTrue(allChecks, valueToTest);
+        }
     }
 
 }

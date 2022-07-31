@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,4 +42,57 @@ public final class PredicateUtil {
         return o -> false;
     }
 
+    /**
+     * Returns a new {@link Predicate} that is the "or" connection of
+     * the given {@code predicates}, similar to {@link Predicate#or(Predicate)},
+     * but for multiple {@link Predicate}s.
+     */
+    public static <T> Predicate<T> or(
+            Iterable<Predicate<T>> predicates) {
+        return valueToTest -> isAnyPredicateTrue(predicates, valueToTest);
+    }
+
+    /**
+     * Returns a new {@link Predicate} that is the "and" connection of
+     * the given {@code predicates}, similar to {@link Predicate#and(Predicate)},
+     * but for multiple {@link Predicate}s.
+     */
+    public static <T> Predicate<T> and(
+            Iterable<Predicate<T>> predicates) {
+        return valueToTest -> areAllPredicatesTrue(predicates, valueToTest);
+    }
+
+    /**
+     * Returns {@code true} if any of the {@code predicates} returns
+     * {@code true} for the given {@code valueToTest}, {@code false} when all
+     * {@link Predicate}s return {@code false}.
+     * <p>
+     * See also {@link #areAllPredicatesTrue(Iterable, Object)} and
+     * {@link #or(Iterable)}.
+     */
+    public static <T> boolean isAnyPredicateTrue(
+            Iterable<Predicate<T>> predicates, T valueToTest) {
+        for (Predicate<T> predicate : predicates) {
+            if (predicate.test(valueToTest))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns {@code true} if all of the {@code predicates} returns
+     * {@code true} for the given {@code valueToTest}, {@code false} when at
+     * least one of the {@link Predicate}s return {@code false}.
+     * <p>
+     * See also {@link #isAnyPredicateTrue(Iterable, Object)} and
+     * {@link #and(Iterable)}.
+     */
+    public static <T> boolean areAllPredicatesTrue(
+            Iterable<Predicate<T>> predicates, T valueToTest) {
+        for (Predicate<T> predicate : predicates) {
+            if (!predicate.test(valueToTest))
+                return false;
+        }
+        return true;
+    }
 }

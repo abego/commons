@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,11 +27,15 @@ package org.abego.commons.util.function;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Predicate;
+
+import static org.abego.commons.util.ListUtil.toList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PredicateUtilTest {
+
     @Test
     void constructor() {
         assertThrows(MustNotInstantiateException.class, PredicateUtil::new);
@@ -58,5 +62,44 @@ class PredicateUtilTest {
         assertFalse(PredicateUtil.alwaysFalse().test(""));
         assertFalse(PredicateUtil.alwaysFalse().test("foo"));
         assertFalse(PredicateUtil.alwaysFalse().test(null));
+    }
+
+    @Test
+    void and() {
+        Predicate<Integer> isEven = n -> n % 2 == 0;
+        Predicate<Integer> isDividableByThree = n -> n % 3 == 0;
+        Iterable<Predicate<Integer>> predicates =
+                toList(isEven, isDividableByThree);
+
+        Predicate<Integer> isDividableBySix = PredicateUtil.and(predicates);
+
+        assertTrue(isDividableBySix.test(0));
+        assertFalse(isDividableBySix.test(1));
+        assertFalse(isDividableBySix.test(2));
+        assertFalse(isDividableBySix.test(3));
+        assertFalse(isDividableBySix.test(4));
+        assertFalse(isDividableBySix.test(5));
+        assertTrue(isDividableBySix.test(6));
+        assertFalse(isDividableBySix.test(7));
+    }
+
+    @Test
+    void or() {
+        Predicate<Integer> isEven = n -> n % 2 == 0;
+        Predicate<Integer> isDividableByThree = n -> n % 3 == 0;
+        Iterable<Predicate<Integer>> predicates =
+                toList(isEven, isDividableByThree);
+
+        Predicate<Integer> isEvenOrDividableByThree =
+                PredicateUtil.or(predicates);
+
+        assertTrue(isEvenOrDividableByThree.test(0));
+        assertFalse(isEvenOrDividableByThree.test(1));
+        assertTrue(isEvenOrDividableByThree.test(2));
+        assertTrue(isEvenOrDividableByThree.test(3));
+        assertTrue(isEvenOrDividableByThree.test(4));
+        assertFalse(isEvenOrDividableByThree.test(5));
+        assertTrue(isEvenOrDividableByThree.test(6));
+        assertFalse(isEvenOrDividableByThree.test(7));
     }
 }

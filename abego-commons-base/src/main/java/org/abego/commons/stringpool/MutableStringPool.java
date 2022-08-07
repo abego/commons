@@ -24,14 +24,21 @@
 
 package org.abego.commons.stringpool;
 
-import static org.abego.commons.stringpool.StringPoolBuilderDefault.newStringPoolBuilderDefault;
+import org.eclipse.jdt.annotation.Nullable;
 
-public class StringPools {
-    public static StringPoolBuilder builder() {
-        return newStringPoolBuilderDefault();
-    }
+/**
+ * A {@link StringPool} that can be changed by adding new {@link String}s.
+ * <p>
+ * In contrast to the default implementation for {@link StringPool} the default
+ * implementation for {@link MutableStringPool} is less memory efficient.
+ */
+public interface MutableStringPool extends StringPool {
 
-    public static MutableStringPool newMutableStringPool() {
-        return MutableStringPoolImpl.newMutableStringPool();
-    }
+    /**
+     * Adds the {@code string} to the pool and returns the string's id.
+     * <p>
+     * When the string is already in the pool it is not added again, but it's
+     * "old" id is returned.
+     */
+    int add(@Nullable String string);
 }

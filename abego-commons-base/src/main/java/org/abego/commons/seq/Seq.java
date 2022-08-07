@@ -411,4 +411,17 @@ public interface Seq<T> extends Iterable<T> {
      * as required by the general contract of Object.hashCode().
      */
     int hashCode();
+
+    /**
+     * Return the size of the sequence.
+     * <p>
+     * This method just calls {@link #size()}. It was introduced to better
+     * support clients that work on objects following the Java-Beans convention,
+     * e.g. <a href="https://www.stringtemplate.org/">StringTemplate</a>)
+     * If they access a property "size" they will look for a method
+     * {@code getSize()}.
+     */
+    default int getSize() {
+        return size();
+    }
 }

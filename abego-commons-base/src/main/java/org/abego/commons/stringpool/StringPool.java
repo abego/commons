@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,18 @@ public interface StringPool {
      */
     @Nullable
     String getStringOrNull(int id);
+
+    /**
+     * Return the {@link String} with the given <code>id</code> or
+     * throw a {@link NullPointerException} when <code>id == 0</code>, i.e.
+     * <code>id</code> identifies the {@code null} String.
+     */
+    default String getString(int id) {
+        @Nullable String obj = getStringOrNull(id);
+        if (obj == null)
+            throw new NullPointerException();
+        return obj;
+    }
 
     /**
      * Return an {@link Iterable} with all strings in the StringPool.

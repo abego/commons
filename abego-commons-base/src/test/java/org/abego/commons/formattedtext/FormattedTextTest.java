@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,11 @@
 
 package org.abego.commons.formattedtext;
 
+import org.junit.jupiter.api.Test;
+
 import java.awt.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FormattedTextTest {
     static FormattedText getFormattedTextSample() {
@@ -40,5 +44,12 @@ public class FormattedTextTest {
                 .end()
                 .coloredText(Color.red, "colored")
                 .end();
+    }
+
+    @Test
+    void toPlainText() {
+        String text = getFormattedTextSample().toPlainText();
+
+        assertEquals("foobarbazdoocolored", text);
     }
 }

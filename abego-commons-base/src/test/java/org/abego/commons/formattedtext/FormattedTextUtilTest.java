@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,18 @@ package org.abego.commons.formattedtext;
 
 import org.abego.commons.formattedtext.FormattedTextProcessorTest.FormattedTextProcessorSampleUsingDefaults;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.range.IntRange;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.abego.commons.formattedtext.FormattedTextProcessorForHTML.newFormattedTextProcessorForHTML;
+import static org.abego.commons.range.IntRangeDefault.newIntRange;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FormattedTextUtilTest {
 
@@ -48,4 +56,50 @@ class FormattedTextUtilTest {
 
         assertEquals("foo", processor.getText());
     }
+
+    private static String toHTML(FormattedText formattedText) {
+        FormattedTextProcessorForHTML builder = newFormattedTextProcessorForHTML();
+        formattedText.processWith(builder);
+        return builder.build();
+    }
+
+    @Test
+    void withStyledRanges() {
+        String text = "foobar";
+        List<IntRange> ranges = new ArrayList<>();
+        ranges.add(newIntRange(3, 6));
+        Color color = Color.yellow;
+
+        FormattedText ft = FormattedTextUtil.withStyledRanges(
+                text, ranges, color, FormattedText.FontStyle.BOLD);
+
+        assertEquals("foo<b><font color=\"#ffff00\">bar</font></b>",
+                toHTML(ft));
+    }
+
+    @Test
+    void withStyledRangesIfRequired() {
+        String text = "foobar";
+        List<IntRange> ranges = new ArrayList<>();
+        ranges.add(newIntRange(1, 3));
+
+        Object result = FormattedTextUtil.withStyledRangesIfRequired(
+                text, ranges, null, FormattedText.FontStyle.ITALIC);
+
+        assertTrue(result instanceof FormattedText);
+        assertEquals("f<i>oo</i>bar", toHTML((FormattedText) result));
+    }
+
+    @Test
+    void withStyledRangesIfRequired_notFormatted() {
+        String text = "foobar";
+        List<IntRange> ranges = new ArrayList<>();
+
+        Object result = FormattedTextUtil.withStyledRangesIfRequired(
+                text, ranges, null, FormattedText.FontStyle.ITALIC);
+
+        assertTrue(result instanceof String);
+        assertEquals("foobar", result);
+    }
+
 }

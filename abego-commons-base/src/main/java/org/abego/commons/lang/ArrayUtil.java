@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -110,6 +110,11 @@ public final class ArrayUtil {
             throw new IllegalArgumentException("Empty array has no last item"); //NON-NLS
         }
         return array[array.length - 1];
+    }
+
+    public static <T> @NonNull T[] allButLastItem(@NonNull T[] array) {
+        int len = array.length;
+        return len == 0 ? array : Arrays.copyOfRange(array, 0, len - 1);
     }
 
     @Nullable

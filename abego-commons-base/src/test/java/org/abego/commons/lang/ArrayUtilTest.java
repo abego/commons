@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,7 @@ import static org.abego.commons.lang.ArrayUtil.lastItem;
 import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.abego.commons.lang.StringUtil.array;
 import static org.abego.commons.lang.StringUtil.arrayOfNullables;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -134,5 +135,13 @@ class ArrayUtilTest {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                 () -> ignore(lastItem(new String[0])));
         assertEquals("Empty array has no last item", e.getMessage());
+    }
+
+    @Test
+    void allButLastItem() {
+        assertArrayEquals(new String[]{}, ArrayUtil.allButLastItem(new String[]{}));
+        assertArrayEquals(new String[]{}, ArrayUtil.allButLastItem(new String[]{"a"}));
+        assertArrayEquals(new String[]{"a"}, ArrayUtil.allButLastItem(new String[]{"a", "b"}));
+        assertArrayEquals(new String[]{"a", "b"}, ArrayUtil.allButLastItem(new String[]{"a", "b", "c"}));
     }
 }

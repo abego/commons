@@ -245,6 +245,17 @@ public final class FileUtil {
             throw new IllegalArgumentException(e);
         }
     }
+
+    /**
+     * Returns the filename with the (last) extension (e.g. ".txt") removed, if
+     * there is any extension, otherwise returns the unchanged filename.
+     * <p>
+     * A filename starting with a dot but without any other dots has no
+     * extension.
+     */
+    public static String removeFileExtension(String filename) {
+        return filename.replaceAll("(?<!^)[.][^.]*$", "");
+    }
     //endregion
 
     //region Queries

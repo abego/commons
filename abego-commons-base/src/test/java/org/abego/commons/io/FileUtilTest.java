@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -750,4 +750,16 @@ class FileUtilTest {
         assertEquals("bar", pathRelativeTo(file, dir2));
         assertEquals("foo" + File.separator + "bar", pathRelativeTo(file, dir));
     }
+
+    @Test
+    void removeFileExtension() {
+        assertEquals("foo", FileUtil.removeFileExtension("foo"));
+        assertEquals("foo", FileUtil.removeFileExtension("foo.txt"));
+        assertEquals("foo.txt", FileUtil.removeFileExtension("foo.txt.bak"));
+        assertEquals("foo", FileUtil.removeFileExtension("foo."));
+        assertEquals(".foo", FileUtil.removeFileExtension(".foo"));
+        assertEquals(".foo", FileUtil.removeFileExtension(".foo.txt"));
+        assertEquals(".foo", FileUtil.removeFileExtension(".foo."));
+    }
+
 }

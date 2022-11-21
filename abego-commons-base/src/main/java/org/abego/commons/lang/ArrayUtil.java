@@ -28,6 +28,7 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;

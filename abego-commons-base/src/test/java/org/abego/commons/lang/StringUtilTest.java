@@ -35,6 +35,7 @@ import java.util.function.Predicate;
 import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.abego.commons.lang.StringUtil.arrayNullable;
 import static org.abego.commons.lang.StringUtil.camelCased;
+import static org.abego.commons.lang.StringUtil.containsAnyOf;
 import static org.abego.commons.lang.StringUtil.dashCased;
 import static org.abego.commons.lang.StringUtil.escaped;
 import static org.abego.commons.lang.StringUtil.firstChar;
@@ -523,5 +524,29 @@ class StringUtilTest {
 
         assertTrue(predicate.test(""));
         assertTrue(predicate.test("foo"));
+    }
+
+    @Test
+    void containsAnyOf_smoketest() {
+        // first and only matches
+        assertTrue(containsAnyOf("foobarbaz", "z"));
+        // first of many matches
+        assertTrue(containsAnyOf("foobarbaz", "z", "y", "x"));
+        // last of many matches
+        assertTrue(containsAnyOf("foobarbaz", "x", "y", "z"));
+        // middle of many matches
+        assertTrue(containsAnyOf("foobarbaz", "y", "z", "x"));
+        // full text matches
+        assertTrue(containsAnyOf("foobarbaz", "y", "foobarbaz"));
+
+        // empty string always matches
+        assertTrue(containsAnyOf("foobarbaz", "x", ""));
+
+        //empty list -> no match
+        assertFalse(containsAnyOf("foobarbaz"));
+        // first and only does not match
+        assertFalse(containsAnyOf("foobarbaz", "x"));
+        // non of many not match
+        assertFalse(containsAnyOf("foobarbaz", "x", "y", "y2"));
     }
 }

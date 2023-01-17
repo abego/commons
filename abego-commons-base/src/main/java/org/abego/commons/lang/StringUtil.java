@@ -69,41 +69,39 @@ public final class StringUtil {
     private static final Pattern END_OF_LINE_PATTERN = Pattern
             .compile("\\r?\\n");
 
+    //region Factories / Conversions
+
     StringUtil() {
         throw new MustNotInstantiateException();
     }
 
-    public static @Nullable String[] arrayOfNullables(@Nullable String... items) {
-        int length = items.length;
+    /**
+     * Returns the {@code @Nullable} {@code strings} as
+     * a {@code @Nullable String} array.
+     */
+    public static @Nullable String[] arrayOfNullables(@Nullable String... strings) {
+        int length = strings.length;
         @Nullable String[] result = new @Nullable String[length];
-        System.arraycopy(items, 0, result, 0, length);
+        System.arraycopy(strings, 0, result, 0, length);
         return result;
     }
 
-    public static @NonNull String[] array(@NonNull String... items) {
-        int length = items.length;
+    /*
+     * Returns the {@code strings} as a {@code String} array.
+     */
+    public static @NonNull String[] array(@NonNull String... strings) {
+        int length = strings.length;
         @NonNull String[] result = new @NonNull String[length];
-        System.arraycopy(items, 0, result, 0, length);
+        System.arraycopy(strings, 0, result, 0, length);
         return result;
-    }
-
-    public static @Nullable String[] arrayNullable(@Nullable String... items) {
-        int length = items.length;
-        @Nullable String[] result = new @Nullable String[length];
-        System.arraycopy(items, 0, result, 0, length);
-        return result;
-    }
-
-    public static boolean isNullOrEmpty(@Nullable String s) {
-        return s == null || s.isEmpty();
     }
 
     /**
-     * Return true if {@code s} has text, i.e. is not {@code null}
-     * and is not the empty string.
+     * Returns the {@code @Nullable} {@code strings} as
+     * a {@code @Nullable String} array.
      */
-    public static boolean hasText(@Nullable String s) {
-        return !isNullOrEmpty(s);
+    public static @Nullable String[] arrayNullable(@Nullable String... strings) {
+        return arrayOfNullables(strings);
     }
 
     /**
@@ -152,32 +150,16 @@ public final class StringUtil {
         return object == null ? null : object.toString();
     }
 
+    /**
+     * Returns a {@code String} with the given {@code text} repeated {@code n}
+     * times, or an empty string when {@code n <= 0}.
+     */
     public static String repeat(String text, int n) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < n; i++) {
             result.append(text);
         }
         return result.toString();
-    }
-
-    /**
-     * Return the first character of the string.
-     *
-     * @param string [!s.isEmpty()]
-     * @return the first character of the string
-     */
-    public static char firstChar(String string) {
-        return string.charAt(0);
-    }
-
-    /**
-     * Return the last character of the string.
-     *
-     * @param string [!s.isEmpty()]
-     * @return the last character of the string
-     */
-    public static char lastChar(String string) {
-        return string.charAt(string.length() - 1);
     }
 
     /**
@@ -207,6 +189,16 @@ public final class StringUtil {
      */
     public static String unescapeCharacters(String text) {
         return ESCAPED_CHAR.matcher(text).replaceAll("$1");
+    }
+
+    /**
+     * Return the first character of the string.
+     *
+     * @param string [!s.isEmpty()]
+     * @return the first character of the string
+     */
+    public static char firstChar(String string) {
+        return string.charAt(0);
     }
 
     private static String quotedHelper(
@@ -590,6 +582,34 @@ public final class StringUtil {
         return END_OF_LINE_PATTERN.split(text, -1);
     }
 
+    public static String replaceRange(
+            String text, int startIndex, int endIndex, String newRangeText) {
+        return join("",
+                text.substring(0, startIndex),
+                newRangeText,
+                text.substring(endIndex));
+    }
+
+    public static String replaceRange(
+            String text, IntRange range, String newRangeText) {
+        return replaceRange(
+                text, range.getStart(), range.getEnd(), newRangeText);
+    }
+
+    // endregion
+
+    //region Queries
+
+    /**
+     * Return the last character of the string.
+     *
+     * @param string [!s.isEmpty()]
+     * @return the last character of the string
+     */
+    public static char lastChar(String string) {
+        return string.charAt(string.length() - 1);
+    }
+
     public static int lineCount(String text) {
         int i = 1;
         Matcher m = END_OF_LINE_PATTERN.matcher(text);
@@ -607,18 +627,32 @@ public final class StringUtil {
         return lines[0];
     }
 
-    public static String replaceRange(
-            String text, int startIndex, int endIndex, String newRangeText) {
-        return join("",
-                text.substring(0, startIndex),
-                newRangeText,
-                text.substring(endIndex));
+    //region Checks
+    public static boolean isNullOrEmpty(@Nullable String s) {
+        return s == null || s.isEmpty();
     }
 
-    public static String replaceRange(
-            String text, IntRange range, String newRangeText) {
-        return replaceRange(
-                text, range.getStart(), range.getEnd(), newRangeText);
+    //endregion
+
+    /**
+     * Return true if {@code s} has text, i.e. is not {@code null}
+     * and is not the empty string.
+     */
+    public static boolean hasText(@Nullable String s) {
+        return !isNullOrEmpty(s);
+    }
+
+    /**
+     * Returns {@code true} if the {@code text} contains any of the
+     * {@code expectedSubStrings}, otherwise {@code false}.
+     */
+    public static boolean containsAnyOf(String text, String... expectedSubStrings) {
+        for (String s : expectedSubStrings) {
+            if (text.contains(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -703,5 +737,7 @@ public final class StringUtil {
             return isAnyPredicateTrue(allChecks, valueToTest);
         }
     }
+    // endregion
+
 
 }

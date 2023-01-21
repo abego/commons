@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.abego.commons.lang.IterableUtil.isEmpty;
@@ -322,6 +323,10 @@ public final class SeqUtil {
 
     public static <T> Seq<T> rest(Seq<T> seq) {
         return SeqFactories.newSeq(seq.stream().skip(1));
+    }
+
+    public static <T> Seq<T> newSeqUniqueItems(Seq<T> items) {
+        return newSeq(items.stream().collect(Collectors.toSet()));
     }
 
 }

@@ -47,12 +47,6 @@ class StringGraphTest {
         assertStringsAsLinesEquals(expectedStringsInLines, nodes);
     }
 
-    public static void assertEdgesEquals(String expectedEdgesTextsAsLines, Seq<Edge> edges) {
-        assertEquals(expectedEdgesTextsAsLines,
-                edges.size() + "\n" +
-                        edges.sorted().map(Edge::getText).joined("\n"));
-    }
-
     public static StringGraph getSample1() {
         return SAMPLE_1;
     }
@@ -89,7 +83,7 @@ class StringGraphTest {
     }
 
     public static void assertEqualsToAllEdgesOfSample1(Seq<Edge> edges) {
-        assertEdgesEquals("7\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("7\n" +
                         "\"c\" -> \"c\" : \"cycle\"\n" +
                         "\"d\" -> \"e\"\n" +
                         "\"f\" -> \"g\" : \"h\"\n" +
@@ -308,62 +302,62 @@ class StringGraphTest {
 
     @Test
     void allEdgesWith() {
-        assertEdgesEquals("3\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("3\n" +
                         "\"o\" -> \"m3\"\n" +
                         "\"o\" -> \"m1\" : \"field\"\n" +
                         "\"o\" -> \"m2\" : \"field\"",
                 getSample1().allEdgesWith(e -> e.getToNode().startsWith("m")));
-        assertEdgesEquals("1\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"f\" -> \"g\" : \"h\"",
                 getSample1().allEdgesWith(e -> e.getLabel().equals("h")));
-        assertEdgesEquals("0\n",
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
                 getSample1().allEdgesWith(e -> false));
     }
 
     @Test
     void allEdgesLabeled() {
-        assertEdgesEquals("2\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
                         "\"d\" -> \"e\"\n" +
                         "\"o\" -> \"m3\"",
                 getSample1().allEdgesLabeled(""));
-        assertEdgesEquals("2\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
                         "\"c\" -> \"c\" : \"cycle\"\n" +
                         "\"i\" -> \"i\" : \"cycle\"",
                 getSample1().allEdgesLabeled("cycle"));
-        assertEdgesEquals("0\n",
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
                 getSample1().allEdgesLabeled("x"));
     }
 
     @Test
     void allEdgesFromNode() {
-        assertEdgesEquals("0\n",
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
                 getSample1().allEdgesFromNode("a"));
-        assertEdgesEquals("1\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"c\" -> \"c\" : \"cycle\"",
                 getSample1().allEdgesFromNode("c"));
-        assertEdgesEquals("1\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"d\" -> \"e\"",
                 getSample1().allEdgesFromNode("d"));
-        assertEdgesEquals("3\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("3\n" +
                         "\"o\" -> \"m3\"\n" +
                         "\"o\" -> \"m1\" : \"field\"\n" +
                         "\"o\" -> \"m2\" : \"field\"",
                 getSample1().allEdgesFromNode("o"));
-        assertEdgesEquals("0\n",
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
                 getSample1().allEdgesFromNode("x"));
     }
 
     @Test
     void allEdgesToNode() {
-        assertEdgesEquals("0\n",
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
                 getSample1().allEdgesToNode("a"));
-        assertEdgesEquals("1\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"c\" -> \"c\" : \"cycle\"",
                 getSample1().allEdgesToNode("c"));
-        assertEdgesEquals("1\n" +
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"d\" -> \"e\"",
                 getSample1().allEdgesToNode("e"));
-        assertEdgesEquals("0\n",
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
                 getSample1().allEdgesFromNode("x"));
     }
 
@@ -385,6 +379,6 @@ class StringGraphTest {
     void toStringTest() {
         String s = getSample1().toString();
 
-        assertTrue(s.startsWith("StringGraphImpl{nodes="));
+        assertTrue(s.startsWith("StringGraphDefault{nodes="));
     }
 }

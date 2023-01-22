@@ -29,17 +29,17 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Objects;
 
-class StringGraphImpl implements StringGraph {
+class StringGraphDefault implements StringGraph {
     private final Seq<String> nodes;
     private final Seq<Edge> edges;
 
-    private StringGraphImpl(Seq<String> nodes, Seq<Edge> edges) {
+    private StringGraphDefault(Seq<String> nodes, Seq<Edge> edges) {
         this.nodes = nodes;
         this.edges = edges;
     }
 
-    static StringGraphImpl createStringGraph(Seq<String> nodes, Seq<Edge> edges) {
-        return new StringGraphImpl(nodes, edges);
+    static StringGraph createStringGraph(Seq<String> nodes, Seq<Edge> edges) {
+        return new StringGraphDefault(nodes, edges);
     }
 
     @Override
@@ -56,7 +56,7 @@ class StringGraphImpl implements StringGraph {
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StringGraphImpl that = (StringGraphImpl) o;
+        StringGraphDefault that = (StringGraphDefault) o;
         return nodes.equals(that.nodes) && edges.equals(that.edges);
     }
 
@@ -68,6 +68,6 @@ class StringGraphImpl implements StringGraph {
     @Override
     public String toString() {
         //noinspection HardCodedStringLiteral,StringConcatenation,MagicCharacter
-        return "StringGraphImpl{" + "nodes=" + nodes + ", edges=" + edges + '}';
+        return "StringGraphDefault{" + "nodes=" + nodes + ", edges=" + edges + '}';
     }
 }

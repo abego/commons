@@ -24,5 +24,38 @@
 
 package org.abego.commons.stringgraph;
 
-public interface MutableStringGraph extends StringGraph, StringGraphConstructing {
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+abstract class AbstractStringGraphBuilder implements StringGraphBuilder {
+    private final Set<String> nodes = new HashSet<>();
+    private final List<Edge> edges = new ArrayList<>();
+
+    AbstractStringGraphBuilder() {
+    }
+
+    abstract Edge newEdge(String fromNode, String toNode, String edgeLabel);
+
+    public Set<String> getNodes() {
+        return nodes;
+    }
+
+    public List<Edge> getEdges() {
+        return edges;
+    }
+
+    @Override
+    public void addNode(String node) {
+        nodes.add(node);
+    }
+
+    @Override
+    public void addEdge(String fromNode, String toNode, String edgeLabel) {
+        addNode(fromNode);
+        addNode(toNode);
+        edges.add(newEdge(fromNode, toNode, edgeLabel));
+    }
+
 }

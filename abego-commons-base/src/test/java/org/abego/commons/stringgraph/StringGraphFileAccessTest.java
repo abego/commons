@@ -60,7 +60,6 @@ class StringGraphFileAccessTest {
 
     @Test
     void readFileWithWrongFileFormatName(@TempDir File tempDir) throws IOException {
-        StringGraph graph = StringGraphTest.getSample1();
         File file = new File(tempDir, "some.graph");
         ObjectOutputStream objectOutputStream =
                 new ObjectOutputStream(Files.newOutputStream(file.toPath()));
@@ -74,7 +73,6 @@ class StringGraphFileAccessTest {
 
     @Test
     void readFileWithWrongFileFormatVersion(@TempDir File tempDir) throws IOException {
-        StringGraph graph = StringGraphTest.getSample1();
         File file = new File(tempDir, "some.graph");
         ObjectOutputStream objectOutputStream =
                 new ObjectOutputStream(Files.newOutputStream(file.toPath()));

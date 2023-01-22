@@ -412,4 +412,18 @@ class StringGraphTest {
 
         assertTrue(s.startsWith("StringGraphDefault{nodes="));
     }
+
+    @ParameterizedTest
+    @MethodSource("org.abego.commons.stringgraph.StringGraphBuilderTest#stringGraphBuilderProvider")
+    void duplicateEdges(StringGraphBuilder builder) {
+        builder.addEdge("a", "b", "c");
+        builder.addEdge("d", "e", "f");
+        // adding an edge that already exists will not change the graph
+        builder.addEdge("a", "b", "c");
+        StringGraph graph = builder.build();
+
+        EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
+                "\"a\" -> \"b\" : \"c\"\n" +
+                "\"d\" -> \"e\" : \"f\"", graph.allEdges());
+    }
 }

@@ -24,14 +24,12 @@
 
 package org.abego.commons.stringgraph;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 abstract class AbstractStringGraphBuilder implements StringGraphBuilder {
     private final Set<String> nodes = new HashSet<>();
-    private final List<Edge> edges = new ArrayList<>();
+    private final Set<Edge> edges = new HashSet<>();
 
     AbstractStringGraphBuilder() {
     }
@@ -42,7 +40,7 @@ abstract class AbstractStringGraphBuilder implements StringGraphBuilder {
         return nodes;
     }
 
-    public List<Edge> getEdges() {
+    public Set<Edge> getEdges() {
         return edges;
     }
 

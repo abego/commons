@@ -24,35 +24,24 @@
 
 package org.abego.commons.stringgraph;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.abego.commons.seq.SeqUtil;
 
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-class StringGraphBuilderTest {
-
-    static Stream<StringGraphBuilder> stringGraphBuilderProvider() {
-        return Stream.of(
-                StringGraphBuilderBasic.createStringGraphBuilder(),
-                StringGraphBuilderDefault.createStringGraphBuilder());
+class StringGraphBuilderBasic extends AbstractStringGraphBuilder {
+    private StringGraphBuilderBasic() {
     }
 
-    @ParameterizedTest
-    @MethodSource("stringGraphBuilderProvider")
-    void smokeTest(StringGraphBuilder builder) {
+    static StringGraphBuilder createStringGraphBuilder() {
+        return new StringGraphBuilderBasic();
+    }
 
-        builder.addNode("a");
-        builder.addEdge("b", "c");
-        builder.addEdge("d", "e", "f");
-        StringGraph graph = builder.build();
+    @Override
+    Edge newEdge(String fromNode, String toNode, String edgeLabel) {
+        return EdgeDefault.createEdge(fromNode, toNode, edgeLabel);
+    }
 
-        assertNotNull(graph);
-        assertEquals(5, graph.allNodes().size());
-        assertEquals(2, graph.allEdges().size());
-        assertNotEquals("", builder.toString());
+    @Override
+    public StringGraph build() {
+        return StringGraphBasic.createStringGraph(
+                SeqUtil.newSeq(getNodes()), SeqUtil.newSeq(getEdges()));
     }
 }

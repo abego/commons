@@ -35,14 +35,18 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StringGraphTest {
-    //TODO: make the current Default implementation the Basic implementation
     private static final StringGraph SAMPLE_1_BASIC =
-            constructSample1(StringGraphBuilderDefault.createStringGraphBuilder()).build();
+            constructSample1(StringGraphBuilderBasic.createStringGraphBuilder()).build();
     private static final StringGraph SAMPLE_1_DEFAULT =
             constructSample1(StringGraphBuilderDefault.createStringGraphBuilder()).build();
 
     static Stream<StringGraph> stringGraphSample1Provider() {
+        //TODO: use stringGraphBuilderProvider to create this
         return Stream.of(SAMPLE_1_BASIC, SAMPLE_1_DEFAULT);
+    }
+
+    static Stream<StringGraphBuilder> stringGraphBuilderProvider() {
+        return StringGraphBuilderTest.stringGraphBuilderProvider();
     }
 
     public static void assertStringsAsLinesEquals(
@@ -387,14 +391,10 @@ class StringGraphTest {
     }
 
     @ParameterizedTest
-    @MethodSource("stringGraphSample1Provider")
-    void equalsAndHashcode(StringGraph sample1) {
-        // the following stmt is not fully correct. It should use the same
-        // StringGraphBuilder as the sample1 instance. We will fix this when
-        // we run into the error (i.e. once we provide an additional
-        // StringGraph[Builder] implementation.
-        StringGraphBuilder stringGraphBuilder = StringGraphs.createStringGraphBuilder();
-        StringGraph otherSample1 = constructSample1(stringGraphBuilder).build();
+    @MethodSource("stringGraphBuilderProvider")
+    void equalsAndHashcode(StringGraphBuilder builder) {
+        StringGraph sample1 = constructSample1(builder).build();
+        StringGraph otherSample1 = constructSample1(builder).build();
         int h1 = sample1.hashCode();
         int h2 = otherSample1.hashCode();
 
@@ -410,11 +410,11 @@ class StringGraphTest {
     void toStringTest(StringGraph sample1) {
         String s = sample1.toString();
 
-        assertTrue(s.startsWith("StringGraphDefault{nodes="));
+        assertTrue(s.startsWith("StringGraph"));
     }
 
     @ParameterizedTest
-    @MethodSource("org.abego.commons.stringgraph.StringGraphBuilderTest#stringGraphBuilderProvider")
+    @MethodSource("stringGraphBuilderProvider")
     void duplicateEdges(StringGraphBuilder builder) {
         builder.addEdge("a", "b", "c");
         builder.addEdge("d", "e", "f");

@@ -28,7 +28,6 @@ import org.abego.commons.seq.Seq;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,7 +35,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static org.abego.commons.seq.SeqUtil.emptySeq;
 import static org.abego.commons.seq.SeqUtil.newSeq;
@@ -102,12 +100,12 @@ class StringGraphDefault implements StringGraph {
         return newSeq(result);
     }
 
-    static StringGraphBuilder createBuilder() {
-        return new MyBuilder();
-    }
-
     private static void updateMap(Map<String, Set<Edge>> map, String key, Edge edge) {
         map.computeIfAbsent(key, k -> new HashSet<>()).add(edge);
+    }
+
+    static StringGraphBuilder createBuilder() {
+        return new MyBuilder();
     }
 
     static StringGraph createStringGraph(Set<String> nodes, Set<Edge> edges) {
@@ -215,64 +213,7 @@ class StringGraphDefault implements StringGraph {
         return Objects.hash(nodes, edges);
     }
 
-    private interface EdgePropertyEqualsToTest extends Predicate<Edge> {
-        EdgeProperty getProperty();
-
-        String getExpectedPropertyValue();
-
-        default Set<Edge> edges() {
-            return getProperty().edgesWithPropertyValue(getExpectedPropertyValue());
-        }
-
-        @Override
-        default boolean test(Edge edge) {
-            return getProperty().getValue(edge).equals(getExpectedPropertyValue());
-        }
-    }
-
-    private static class EdgeProperty {
-        private final Function<Edge, String> propertyGetter;
-        private final Map<String, Set<Edge>> propertyToEdgeLinks;
-
-        EdgePropertyEqualsToTest isEqualTo(String expectedValue) {
-            return new MyPropEqualsTest(expectedValue);
-        }
-
-        EdgeProperty(Function<Edge, String> propertyGetter,
-                     Map<String, Set<Edge>> propertyToEdgeLinks) {
-            this.propertyGetter = propertyGetter;
-            this.propertyToEdgeLinks = propertyToEdgeLinks;
-        }
-
-        Set<Edge> edgesWithPropertyValue(String expectedValue) {
-            Set<Edge> f = propertyToEdgeLinks.get(expectedValue);
-            //noinspection unchecked
-            return f == null ? Collections.EMPTY_SET : f;
-        }
-
-        String getValue(Edge edge) {
-            return propertyGetter.apply(edge);
-        }
-
-        private final class MyPropEqualsTest implements EdgePropertyEqualsToTest {
-
-            private final String expectedPropertyValue;
-
-            private MyPropEqualsTest(String expectedPropertyValue) {
-                this.expectedPropertyValue = expectedPropertyValue;
-            }
-
-            public EdgeProperty getProperty() {
-                return EdgeProperty.this;
-            }
-
-            public String getExpectedPropertyValue() {
-                return expectedPropertyValue;
-            }
-        }
-    }
-
-    static class MyBuilder extends AbstractStringGraphBuilder {
+    private static class MyBuilder extends AbstractStringGraphBuilder {
         @Override
         public StringGraph build() {
             return createStringGraph(getNodes(), getEdges());

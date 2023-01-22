@@ -34,7 +34,9 @@ abstract class AbstractStringGraphBuilder implements StringGraphBuilder {
     AbstractStringGraphBuilder() {
     }
 
-    abstract Edge newEdge(String fromNode, String toNode, String edgeLabel);
+    protected Edge newEdge(String fromNode, String toNode, String edgeLabel) {
+        return EdgeDefault.createEdge(fromNode, toNode, edgeLabel);
+    }
 
     public Set<String> getNodes() {
         return nodes;

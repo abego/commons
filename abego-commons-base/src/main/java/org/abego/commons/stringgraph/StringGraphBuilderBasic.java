@@ -35,11 +35,6 @@ class StringGraphBuilderBasic extends AbstractStringGraphBuilder {
     }
 
     @Override
-    Edge newEdge(String fromNode, String toNode, String edgeLabel) {
-        return EdgeDefault.createEdge(fromNode, toNode, edgeLabel);
-    }
-
-    @Override
     public StringGraph build() {
         return StringGraphBasic.createStringGraph(
                 SeqUtil.newSeq(getNodes()), SeqUtil.newSeq(getEdges()));

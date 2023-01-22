@@ -25,15 +25,25 @@
 package org.abego.commons.stringgraph;
 
 import org.abego.commons.seq.Seq;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StringGraphTest {
-    private static final StringGraph SAMPLE_1 =
-            constructSample1(StringGraphs.createStringGraphBuilder()).build();
+    //TODO: make the current Default implementation the Basic implementation
+    private static final StringGraph SAMPLE_1_BASIC =
+            constructSample1(StringGraphBuilderDefault.createStringGraphBuilder()).build();
+    private static final StringGraph SAMPLE_1_DEFAULT =
+            constructSample1(StringGraphBuilderDefault.createStringGraphBuilder()).build();
+
+    static Stream<StringGraph> stringGraphSample1Provider() {
+        return Stream.of(SAMPLE_1_BASIC, SAMPLE_1_DEFAULT);
+    }
 
     public static void assertStringsAsLinesEquals(
             String expectedStringsInLines, Seq<String> nodes) {
@@ -48,7 +58,7 @@ class StringGraphTest {
     }
 
     public static StringGraph getSample1() {
-        return SAMPLE_1;
+        return SAMPLE_1_BASIC;
     }
 
     public static <T extends StringGraphConstructing> T constructSample1(T constructing) {
@@ -99,29 +109,33 @@ class StringGraphTest {
         assertEqualsToAllEdgesOfSample1(graph.allEdges());
     }
 
-    @Test
-    void allNodes() {
-        assertEqualsToAllNodesOfSample1(getSample1().allNodes());
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allNodes(StringGraph sample1) {
+        assertEqualsToAllNodesOfSample1(sample1.allNodes());
     }
 
-    @Test
-    void allEdges() {
-        assertEqualsToAllEdgesOfSample1(getSample1().allEdges());
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allEdges(StringGraph sample1) {
+        assertEqualsToAllEdgesOfSample1(sample1.allEdges());
     }
 
-    @Test
-    void allFromNodes() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allFromNodes(StringGraph sample1) {
         assertNodesEquals("5\n" +
                         "c\n" +
                         "d\n" +
                         "f\n" +
                         "i\n" +
                         "o",
-                getSample1().allFromNodes());
+                sample1.allFromNodes());
     }
 
-    @Test
-    void allToNodes() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allToNodes(StringGraph sample1) {
         assertNodesEquals("7\n" +
                         "c\n" +
                         "e\n" +
@@ -130,254 +144,271 @@ class StringGraphTest {
                         "m1\n" +
                         "m2\n" +
                         "m3",
-                getSample1().allToNodes());
+                sample1.allToNodes());
     }
 
-    @Test
-    void allEdgeLabels() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allEdgeLabels(StringGraph sample1) {
         assertStringsAsLinesEquals("4\n" +
                         "\n" +
                         "cycle\n" +
                         "field\n" +
                         "h",
-                getSample1().allEdgeLabels());
+                sample1.allEdgeLabels());
     }
 
-    @Test
-    void allNodesFromNode() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allNodesFromNode(StringGraph sample1) {
         // node without edges
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNode("a"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNode("a"));
         // single node
         assertStringsAsLinesEquals("1\n" +
                         "g",
-                getSample1().allNodesFromNode("f"));
+                sample1.allNodesFromNode("f"));
         // multiple nodes
         assertStringsAsLinesEquals("3\n" +
                         "m1\n" +
                         "m2\n" +
                         "m3",
-                getSample1().allNodesFromNode("o"));
+                sample1.allNodesFromNode("o"));
         // self cyclic
         assertStringsAsLinesEquals("1\n" +
                         "c",
-                getSample1().allNodesFromNode("c"));
+                sample1.allNodesFromNode("c"));
         // toNode that is no fromNode
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNode("g"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNode("g"));
         // missing node
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNode("x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNode("x"));
     }
 
-    @Test
-    void allEdgeLabelsFromNode() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allEdgeLabelsFromNode(StringGraph sample1) {
         // node without edges
-        assertStringsAsLinesEquals("0\n", getSample1().allEdgeLabelsFromNode("a"));
+        assertStringsAsLinesEquals("0\n", sample1.allEdgeLabelsFromNode("a"));
         // single node, empty label
         assertStringsAsLinesEquals("1\n" +
                         "",
-                getSample1().allEdgeLabelsFromNode("d"));
+                sample1.allEdgeLabelsFromNode("d"));
         // single node, non-empty label
         assertStringsAsLinesEquals("1\n" +
                         "h",
-                getSample1().allEdgeLabelsFromNode("f"));
+                sample1.allEdgeLabelsFromNode("f"));
         // multiple nodes
         assertStringsAsLinesEquals("2\n" +
                         "\n" +
                         "field",
-                getSample1().allEdgeLabelsFromNode("o"));
+                sample1.allEdgeLabelsFromNode("o"));
         // self cyclic
         assertStringsAsLinesEquals("1\n" +
                         "cycle",
-                getSample1().allEdgeLabelsFromNode("c"));
+                sample1.allEdgeLabelsFromNode("c"));
         // toNode that is no fromNode
-        assertStringsAsLinesEquals("0\n", getSample1().allEdgeLabelsFromNode("g"));
+        assertStringsAsLinesEquals("0\n", sample1.allEdgeLabelsFromNode("g"));
         // missing node
-        assertStringsAsLinesEquals("0\n", getSample1().allEdgeLabelsFromNode("x"));
+        assertStringsAsLinesEquals("0\n", sample1.allEdgeLabelsFromNode("x"));
     }
 
-    @Test
-    void allNodesFromNodeViaEdgeLabeled() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allNodesFromNodeViaEdgeLabeled(StringGraph sample1) {
         // node without edges
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNodeViaEdgeLabeled("a", ""));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNodeViaEdgeLabeled("a", ""));
         // single node, empty label
         assertStringsAsLinesEquals("1\n" +
                         "e",
-                getSample1().allNodesFromNodeViaEdgeLabeled("d", ""));
+                sample1.allNodesFromNodeViaEdgeLabeled("d", ""));
         // single node, empty label, query wrong label
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNodeViaEdgeLabeled("d", "x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNodeViaEdgeLabeled("d", "x"));
         // single node, non-empty label
         assertStringsAsLinesEquals("1\n" +
                         "g",
-                getSample1().allNodesFromNodeViaEdgeLabeled("f", "h"));
+                sample1.allNodesFromNodeViaEdgeLabeled("f", "h"));
         // single node, non-empty label, query wrong label
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNodeViaEdgeLabeled("f", "x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNodeViaEdgeLabeled("f", "x"));
         // multiple nodes
         assertStringsAsLinesEquals("1\n" +
                         "m3",
-                getSample1().allNodesFromNodeViaEdgeLabeled("o", ""));
+                sample1.allNodesFromNodeViaEdgeLabeled("o", ""));
         assertStringsAsLinesEquals("2\n" +
                         "m1\n" +
                         "m2",
-                getSample1().allNodesFromNodeViaEdgeLabeled("o", "field"));
+                sample1.allNodesFromNodeViaEdgeLabeled("o", "field"));
         // multiple nodes, query wrong label
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNodeViaEdgeLabeled("o", "x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNodeViaEdgeLabeled("o", "x"));
         // self cyclic
         assertStringsAsLinesEquals("1\n" +
                         "c",
-                getSample1().allNodesFromNodeViaEdgeLabeled("c", "cycle"));
+                sample1.allNodesFromNodeViaEdgeLabeled("c", "cycle"));
         // self cyclic, query wrong label
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNodeViaEdgeLabeled("c", "x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNodeViaEdgeLabeled("c", "x"));
         // toNode that is no fromNode
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNodeViaEdgeLabeled("g", "h"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNodeViaEdgeLabeled("g", "h"));
         // missing node
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesFromNodeViaEdgeLabeled("x", ""));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesFromNodeViaEdgeLabeled("x", ""));
     }
 
-    @Test
-    void allNodesToNode() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allNodesToNode(StringGraph sample1) {
         // node without edges
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNode("a"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNode("a"));
         // single node
         assertStringsAsLinesEquals("1\n" +
                         "d",
-                getSample1().allNodesToNode("e"));
+                sample1.allNodesToNode("e"));
         // self cyclic
         assertStringsAsLinesEquals("1\n" +
                         "c",
-                getSample1().allNodesToNode("c"));
+                sample1.allNodesToNode("c"));
         // fromNode that is no toNode
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNode("d"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNode("d"));
         // missing node
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNode("x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNode("x"));
     }
 
-    @Test
-    void allEdgeLabelsToNode() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allEdgeLabelsToNode(StringGraph sample1) {
         // node without edges
-        assertStringsAsLinesEquals("0\n", getSample1().allEdgeLabelsToNode("a"));
+        assertStringsAsLinesEquals("0\n", sample1.allEdgeLabelsToNode("a"));
         // single node, empty label
         assertStringsAsLinesEquals("1\n" +
                         "",
-                getSample1().allEdgeLabelsToNode("e"));
+                sample1.allEdgeLabelsToNode("e"));
         // single node, non-empty label
         assertStringsAsLinesEquals("1\n" +
                         "h",
-                getSample1().allEdgeLabelsToNode("g"));
+                sample1.allEdgeLabelsToNode("g"));
         // self cyclic
         assertStringsAsLinesEquals("1\n" +
                         "cycle",
-                getSample1().allEdgeLabelsToNode("c"));
+                sample1.allEdgeLabelsToNode("c"));
         // fromNode that is no toNode
-        assertStringsAsLinesEquals("0\n", getSample1().allEdgeLabelsToNode("d"));
+        assertStringsAsLinesEquals("0\n", sample1.allEdgeLabelsToNode("d"));
         // missing node
-        assertStringsAsLinesEquals("0\n", getSample1().allEdgeLabelsToNode("x"));
+        assertStringsAsLinesEquals("0\n", sample1.allEdgeLabelsToNode("x"));
     }
 
-    @Test
-    void allNodesToNodeViaEdgeLabeled() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allNodesToNodeViaEdgeLabeled(StringGraph sample1) {
         // node without edges
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNodeViaEdgeLabeled("a", ""));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNodeViaEdgeLabeled("a", ""));
         // single node, empty label
         assertStringsAsLinesEquals("1\n" +
                         "d",
-                getSample1().allNodesToNodeViaEdgeLabeled("e", ""));
+                sample1.allNodesToNodeViaEdgeLabeled("e", ""));
         // single node, empty label, query wrong label
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNodeViaEdgeLabeled("e", "x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNodeViaEdgeLabeled("e", "x"));
         // single node, non-empty label
         assertStringsAsLinesEquals("1\n" +
                         "f",
-                getSample1().allNodesToNodeViaEdgeLabeled("g", "h"));
+                sample1.allNodesToNodeViaEdgeLabeled("g", "h"));
         // single node, non-empty label, query wrong label
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNodeViaEdgeLabeled("g", "x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNodeViaEdgeLabeled("g", "x"));
         // self cyclic
         assertStringsAsLinesEquals("1\n" +
                         "c",
-                getSample1().allNodesToNodeViaEdgeLabeled("c", "cycle"));
+                sample1.allNodesToNodeViaEdgeLabeled("c", "cycle"));
         // self cyclic, query wrong label
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNodeViaEdgeLabeled("c", "x"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNodeViaEdgeLabeled("c", "x"));
         // fromNode that is no toNode
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNodeViaEdgeLabeled("f", "h"));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNodeViaEdgeLabeled("f", "h"));
         // missing node
-        assertStringsAsLinesEquals("0\n", getSample1().allNodesToNodeViaEdgeLabeled("x", ""));
+        assertStringsAsLinesEquals("0\n", sample1.allNodesToNodeViaEdgeLabeled("x", ""));
     }
 
-    @Test
-    void allEdgesWith() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allEdgesWith(StringGraph sample1) {
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("3\n" +
                         "\"o\" -> \"m3\"\n" +
                         "\"o\" -> \"m1\" : \"field\"\n" +
                         "\"o\" -> \"m2\" : \"field\"",
-                getSample1().allEdgesWith(e -> e.getToNode().startsWith("m")));
+                sample1.allEdgesWith(e -> e.getToNode().startsWith("m")));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"f\" -> \"g\" : \"h\"",
-                getSample1().allEdgesWith(e -> e.getLabel().equals("h")));
+                sample1.allEdgesWith(e -> e.getLabel().equals("h")));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
-                getSample1().allEdgesWith(e -> false));
+                sample1.allEdgesWith(e -> false));
     }
 
-    @Test
-    void allEdgesLabeled() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allEdgesLabeled(StringGraph sample1) {
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
                         "\"d\" -> \"e\"\n" +
                         "\"o\" -> \"m3\"",
-                getSample1().allEdgesLabeled(""));
+                sample1.allEdgesLabeled(""));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("2\n" +
                         "\"c\" -> \"c\" : \"cycle\"\n" +
                         "\"i\" -> \"i\" : \"cycle\"",
-                getSample1().allEdgesLabeled("cycle"));
+                sample1.allEdgesLabeled("cycle"));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
-                getSample1().allEdgesLabeled("x"));
+                sample1.allEdgesLabeled("x"));
     }
 
-    @Test
-    void allEdgesFromNode() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allEdgesFromNode(StringGraph sample1) {
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
-                getSample1().allEdgesFromNode("a"));
+                sample1.allEdgesFromNode("a"));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"c\" -> \"c\" : \"cycle\"",
-                getSample1().allEdgesFromNode("c"));
+                sample1.allEdgesFromNode("c"));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"d\" -> \"e\"",
-                getSample1().allEdgesFromNode("d"));
+                sample1.allEdgesFromNode("d"));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("3\n" +
                         "\"o\" -> \"m3\"\n" +
                         "\"o\" -> \"m1\" : \"field\"\n" +
                         "\"o\" -> \"m2\" : \"field\"",
-                getSample1().allEdgesFromNode("o"));
+                sample1.allEdgesFromNode("o"));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
-                getSample1().allEdgesFromNode("x"));
+                sample1.allEdgesFromNode("x"));
     }
 
-    @Test
-    void allEdgesToNode() {
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void allEdgesToNode(StringGraph sample1) {
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
-                getSample1().allEdgesToNode("a"));
+                sample1.allEdgesToNode("a"));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"c\" -> \"c\" : \"cycle\"",
-                getSample1().allEdgesToNode("c"));
+                sample1.allEdgesToNode("c"));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("1\n" +
                         "\"d\" -> \"e\"",
-                getSample1().allEdgesToNode("e"));
+                sample1.allEdgesToNode("e"));
         EdgeDefaultTest.assertEdgesEqualsIgnoreOrder("0\n",
-                getSample1().allEdgesFromNode("x"));
+                sample1.allEdgesFromNode("x"));
     }
 
-    @Test
-    void equalsAndHashcode() {
-        StringGraph g1 = getSample1();
-        StringGraph g2 = constructSample1(StringGraphs.createStringGraphBuilder()).build();
-        int h1 = g1.hashCode();
-        int h2 = g2.hashCode();
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void equalsAndHashcode(StringGraph sample1) {
+        // the following stmt is not fully correct. It should use the same
+        // StringGraphBuilder as the sample1 instance. We will fix this when
+        // we run into the error (i.e. once we provide an additional
+        // StringGraph[Builder] implementation.
+        StringGraphBuilder stringGraphBuilder = StringGraphs.createStringGraphBuilder();
+        StringGraph otherSample1 = constructSample1(stringGraphBuilder).build();
+        int h1 = sample1.hashCode();
+        int h2 = otherSample1.hashCode();
 
-        assertNotEquals(g1, "not a graph");
-        assertNotEquals(g1, null);
-        assertEquals(g1, g1);
-        assertEquals(g1, g2);
+        assertNotEquals(sample1, "not a graph");
+        assertNotEquals(sample1, null);
+        assertEquals(sample1, sample1);
+        assertEquals(sample1, otherSample1);
         assertEquals(h1, h2);
     }
 
-    @Test
-    void toStringTest() {
-        String s = getSample1().toString();
+    @ParameterizedTest
+    @MethodSource("stringGraphSample1Provider")
+    void toStringTest(StringGraph sample1) {
+        String s = sample1.toString();
 
         assertTrue(s.startsWith("StringGraphDefault{nodes="));
     }

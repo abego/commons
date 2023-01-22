@@ -24,7 +24,10 @@
 
 package org.abego.commons.stringgraph;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -32,9 +35,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class StringGraphBuilderTest {
 
-    @Test
-    void smokeTest() {
-        StringGraphBuilder builder = StringGraphs.createStringGraphBuilder();
+    static Stream<StringGraphBuilder> stringGraphBuilderProvider() {
+        return Stream.of(
+                StringGraphBuilderDefault.createStringGraphBuilder(),
+                StringGraphBuilderDefault.createStringGraphBuilder());
+    }
+
+    @ParameterizedTest
+    @MethodSource("stringGraphBuilderProvider")
+    void smokeTest(StringGraphBuilder builder) {
 
         builder.addNode("a");
         builder.addEdge("b", "c");

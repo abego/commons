@@ -36,6 +36,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static org.abego.commons.seq.SeqUtil.emptySeq;
 import static org.abego.commons.seq.SeqUtil.newSeq;
@@ -44,6 +45,7 @@ import static org.abego.commons.util.function.PredicateUtil.and;
 class StringGraphDefault implements StringGraph {
     private final Seq<String> nodes;
     private final Seq<Edge> edges;
+    private final Set<Edge> edgesSet;
     /**
      * Links every fromNode to the Edges it belongs to.
      */
@@ -62,6 +64,7 @@ class StringGraphDefault implements StringGraph {
     private final EdgeProperty edgePropertyLabel = new EdgeProperty(Edge::getLabel, labelToEdgesLinks);
 
     private StringGraphDefault(Set<String> nodes, Set<Edge> edges) {
+        this.edgesSet = edges;
         this.nodes = newSeq(nodes);
         this.edges = newSeq(edges);
 
@@ -87,8 +90,22 @@ class StringGraphDefault implements StringGraph {
         return result;
     }
 
-    private Seq<String> findEdgesWithPropertiesEqualToAndMap(
+    /**
+     * Returns the values of the given property for all Edges associated with
+     * the given key, without duplicate values.
+     */
+    private static Seq<String> uniqueResultsOfEdgesWithPropertyEqualTo(
             Function<Edge, String> edgeToResultMapper,
+            EdgePropertyEqualsToTest propertyTest) {
+        Set<Edge> edges = propertyTest.edges();
+        if (edges.isEmpty()) {
+            return emptySeq();
+        } else {
+            return newSeq(edges.stream().map(edgeToResultMapper).distinct());
+        }
+    }
+
+    private Stream<Edge> edgesWithPropertiesEqualTo(
             EdgePropertyEqualsToTest... propertyTests) {
         // get the Edge Sets for every property set.
         // return with emptySeq if any of these sets is empty.
@@ -96,30 +113,32 @@ class StringGraphDefault implements StringGraph {
         for (EdgePropertyEqualsToTest t : propertyTests) {
             Set<Edge> edges = t.edges();
             if (edges.isEmpty()) {
-                return emptySeq();
+                return Stream.empty();
             }
             edgesPerTest.add(edges);
         }
 
-        Seq<Edge> edgesToTest = edges;
+        Set<Edge> edgesToTest = edgesSet;
         Predicate<Edge>[] remainingTests = propertyTests;
 
-        // Find the test that has the smallest Edge set associated (if any)
+        // Find the test with the smallest Edge set associated to it (if any)
         int minEdgeCountTestIndex = indexOfTestWithSmallestEdgeSet(edgesPerTest);
         if (minEdgeCountTestIndex >= 0) {
             // If any test has an associated Edge set we can use that Edge set
             // (instead of "all" edges) to find the Edges matching all
             // property tests.
-            edgesToTest = newSeq(edgesPerTest.get(minEdgeCountTestIndex));
+            edgesToTest = edgesPerTest.get(minEdgeCountTestIndex);
             // As the found test is already applied the Edge set we don't need
             // to re-test and can remove that test from the remainingTests.
             remainingTests = withItemAtIndexRemoved(
                     propertyTests, minEdgeCountTestIndex);
         }
 
-        Seq<Edge> foundEdges = remainingTests.length == 0
-                ? edgesToTest : edgesToTest.filter(and(remainingTests));
-        return foundEdges.map(edgeToResultMapper);
+        Stream<Edge> result = edgesToTest.stream();
+        if (remainingTests.length > 0) {
+            result = result.filter(and(remainingTests));
+        }
+        return result;
     }
 
     private int indexOfTestWithSmallestEdgeSet(List<Set<Edge>> edgesPerTest) {
@@ -147,20 +166,10 @@ class StringGraphDefault implements StringGraph {
         return new StringGraphDefault(nodes, edges);
     }
 
-    /**
-     * Returns the values of the given property for all Edges associated with
-     * the given key, without duplicate values.
-     */
-    private static Seq<String> getUniquePropertyValues(
-            Map<String, Set<Edge>> map,
-            String key,
-            Function<Edge, String> edgePropertyMapper) {
-        @Nullable Set<Edge> edges = map.get(key);
-        if (edges == null) {
-            return emptySeq();
-        } else {
-            return newSeq(edges.stream().map(edgePropertyMapper).distinct());
-        }
+    private Stream<String> findEdgesWithPropertiesEqualToAndMap(
+            Function<Edge, String> edgeToResultMapper,
+            EdgePropertyEqualsToTest... propertyTests) {
+        return edgesWithPropertiesEqualTo(propertyTests).map(edgeToResultMapper);
     }
 
     @Override
@@ -190,45 +199,43 @@ class StringGraphDefault implements StringGraph {
 
     @Override
     public Seq<String> allNodesFromNode(String fromNode) {
-        return getUniquePropertyValues(
-                fromNodeToEdgesLinks, fromNode, Edge::getToNode);
+        return uniqueResultsOfEdgesWithPropertyEqualTo(
+                Edge::getToNode, edgePropertyFromNode.isEqualTo(fromNode));
     }
 
     @Override
     public Seq<String> allEdgeLabelsFromNode(String fromNode) {
-        return getUniquePropertyValues(
-                fromNodeToEdgesLinks, fromNode, Edge::getLabel);
+        return uniqueResultsOfEdgesWithPropertyEqualTo(
+                Edge::getLabel, edgePropertyFromNode.isEqualTo(fromNode));
     }
 
     @Override
     public Seq<String> allNodesFromNodeViaEdgeLabeled(
             String fromNode, String edgeLabel) {
-        return findEdgesWithPropertiesEqualToAndMap(
+        return newSeq(findEdgesWithPropertiesEqualToAndMap(
                 Edge::getToNode,
                 edgePropertyFromNode.isEqualTo(fromNode),
-                edgePropertyLabel.isEqualTo(edgeLabel)
-        );
+                edgePropertyLabel.isEqualTo(edgeLabel)));
     }
 
     @Override
     public Seq<String> allNodesToNode(String toNode) {
-        return getUniquePropertyValues(
-                toNodeToEdgesLinks, toNode, Edge::getFromNode);
+        return uniqueResultsOfEdgesWithPropertyEqualTo(
+                Edge::getFromNode, edgePropertyToNode.isEqualTo(toNode));
     }
 
     @Override
     public Seq<String> allEdgeLabelsToNode(String toNode) {
-        return getUniquePropertyValues(
-                toNodeToEdgesLinks, toNode, Edge::getLabel);
+        return uniqueResultsOfEdgesWithPropertyEqualTo(
+                Edge::getLabel, edgePropertyToNode.isEqualTo(toNode));
     }
 
     @Override
     public Seq<String> allNodesToNodeViaEdgeLabeled(String toNode, String edgeLabel) {
-        return findEdgesWithPropertiesEqualToAndMap(
+        return newSeq(findEdgesWithPropertiesEqualToAndMap(
                 Edge::getFromNode,
                 edgePropertyToNode.isEqualTo(toNode),
-                edgePropertyLabel.isEqualTo(edgeLabel)
-        );
+                edgePropertyLabel.isEqualTo(edgeLabel)));
     }
 
     @Override

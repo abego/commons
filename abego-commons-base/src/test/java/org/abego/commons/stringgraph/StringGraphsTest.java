@@ -42,7 +42,7 @@ class StringGraphsTest {
 
     @Test
     void writeReadStringGraph(@TempDir File tempDir) {
-        StringGraph graph = StringGraphTest.getSample1();
+        StringGraph graph = StringGraphTest.getAnySample1();
         File file = new File(tempDir, "sample.graph");
 
         StringGraphs.writeStringGraph(graph, file);

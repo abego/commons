@@ -35,14 +35,14 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StringGraphTest {
-    private static final StringGraph SAMPLE_1_BASIC =
-            constructSample1(StringGraphBuilderBasic.createStringGraphBuilder()).build();
-    private static final StringGraph SAMPLE_1_DEFAULT =
-            constructSample1(StringGraphBuilderDefault.createStringGraphBuilder()).build();
+    private static final StringGraph ANY_SAMPLE1 =
+            stringGraphSample1Provider().findAny()
+                    .orElseThrow(() -> new IllegalStateException(
+                            "No StringGraphBuilderProvider defined."));
 
     static Stream<StringGraph> stringGraphSample1Provider() {
-        //TODO: use stringGraphBuilderProvider to create this
-        return Stream.of(SAMPLE_1_BASIC, SAMPLE_1_DEFAULT);
+        return stringGraphBuilderProvider()
+                .map(b -> constructSample1(b).build());
     }
 
     static Stream<StringGraphBuilder> stringGraphBuilderProvider() {
@@ -61,8 +61,13 @@ class StringGraphTest {
         assertStringsAsLinesEquals(expectedStringsInLines, nodes);
     }
 
-    public static StringGraph getSample1() {
-        return SAMPLE_1_BASIC;
+    /**
+     * Returns a "Sample1" graph, created by any available StringGraphBuilder.
+     * <p>
+     * The StringGraphBuilder used may change any time.
+     */
+    public static StringGraph getAnySample1() {
+        return ANY_SAMPLE1;
     }
 
     public static <T extends StringGraphConstructing> T constructSample1(T constructing) {

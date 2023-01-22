@@ -88,7 +88,7 @@ class StringGraphFileAccessTest {
 
     @Test
     void constructStringGraphFromFile(@TempDir File tempDir) {
-        StringGraph graph = StringGraphTest.getSample1();
+        StringGraph graph = StringGraphTest.getAnySample1();
         StringGraphException e = assertThrows(StringGraphException.class,
                 () -> StringGraphs.writeStringGraph(graph, tempDir));
         assertTrue(e.getMessage().startsWith("Error when writing graph to "));

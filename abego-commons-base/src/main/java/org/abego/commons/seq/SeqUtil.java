@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
@@ -45,6 +46,7 @@ import static org.abego.commons.lang.IterableUtil.isEmpty;
 import static org.abego.commons.seq.SeqForArray.newSeqForArray;
 import static org.abego.commons.seq.SeqForIterable.newSeqForIterable;
 import static org.abego.commons.seq.SeqForList.newSeqForList;
+import static org.abego.commons.seq.SeqForSet.newSeqForSet;
 import static org.abego.commons.seq.SeqNonEmptyUtil.newSeqNonEmpty;
 import static org.abego.commons.util.ListUtil.sortedList;
 
@@ -142,12 +144,22 @@ public final class SeqUtil {
     }
 
     /**
+     * Return a {@link Seq} with the items of the given <code>list</code>.
+     *
+     * <p>The list must not change after the Seq is created.</p>
+     */
+    public static <T> Seq<T> newSeq(Set<T> set) {
+        return set.isEmpty() ? SeqFactories.emptySeq() : newSeqForSet(set);
+    }
+
+    /**
      * Return a {@link Seq} for the given <code>iterable</code>.
      *
      * <p>The Iterable must not change after the Seq is created.</p>
      */
     public static <T, S extends T> Seq<T> newSeq(Iterable<S> iterable) {
         if (iterable instanceof List) return newSeq((List<T>) iterable);
+        if (iterable instanceof Set) return newSeq((Set<T>) iterable);
         if (iterable instanceof Stream) //noinspection unchecked
             return newSeq((Stream<T>) iterable);
 

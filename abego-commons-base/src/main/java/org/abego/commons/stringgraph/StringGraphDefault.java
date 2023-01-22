@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static org.abego.commons.seq.SeqUtil.emptySeq;
 import static org.abego.commons.seq.SeqUtil.newSeq;
@@ -72,16 +73,14 @@ class StringGraphDefault implements StringGraph {
     }
 
     private static Seq<String> findEdgesWithPropertiesEqualToAndMap(
-            EdgeProperty property1,
-            String expectedProperty1Value,
-            EdgeProperty property2,
-            String expectedProperty2Value,
-            Function<Edge, String> edgeToResultMapper) {
-        Set<Edge> f = property1.edgesWithPropertyValue(expectedProperty1Value);
+            Function<Edge, String> edgeToResultMapper,
+            EdgePropertyEqualsToTest property1Test,
+            EdgePropertyEqualsToTest property2Test) {
+        Set<Edge> f = property1Test.edges();
         if (f.isEmpty()) {
             return emptySeq();
         }
-        Set<Edge> l = property2.edgesWithPropertyValue(expectedProperty2Value);
+        Set<Edge> l = property2Test.edges();
         if (l.isEmpty()) {
             return emptySeq();
         }
@@ -89,13 +88,13 @@ class StringGraphDefault implements StringGraph {
         List<String> result = new ArrayList<>();
         if (f.size() < l.size()) {
             for (Edge e : f) {
-                if (property2.getValue(e).equals(expectedProperty2Value)) {
+                if (property2Test.test(e)) {
                     result.add(edgeToResultMapper.apply(e));
                 }
             }
         } else {
             for (Edge e : l) {
-                if (property1.getValue(e).equals(expectedProperty1Value)) {
+                if (property1Test.test(e)) {
                     result.add(edgeToResultMapper.apply(e));
                 }
             }
@@ -172,9 +171,9 @@ class StringGraphDefault implements StringGraph {
     public Seq<String> allNodesFromNodeViaEdgeLabeled(
             String fromNode, String edgeLabel) {
         return findEdgesWithPropertiesEqualToAndMap(
-                edgePropertyFromNode, fromNode,
-                edgePropertyLabel, edgeLabel,
-                Edge::getToNode);
+                Edge::getToNode, edgePropertyFromNode.isEqualTo(fromNode),
+                edgePropertyLabel.isEqualTo(edgeLabel)
+        );
     }
 
     @Override
@@ -192,9 +191,9 @@ class StringGraphDefault implements StringGraph {
     @Override
     public Seq<String> allNodesToNodeViaEdgeLabeled(String toNode, String edgeLabel) {
         return findEdgesWithPropertiesEqualToAndMap(
-                edgePropertyToNode, toNode,
-                edgePropertyLabel, edgeLabel,
-                Edge::getFromNode);
+                Edge::getFromNode, edgePropertyToNode.isEqualTo(toNode),
+                edgePropertyLabel.isEqualTo(edgeLabel)
+        );
     }
 
     @Override
@@ -216,9 +215,28 @@ class StringGraphDefault implements StringGraph {
         return Objects.hash(nodes, edges);
     }
 
+    private interface EdgePropertyEqualsToTest extends Predicate<Edge> {
+        EdgeProperty getProperty();
+
+        String getExpectedPropertyValue();
+
+        default Set<Edge> edges() {
+            return getProperty().edgesWithPropertyValue(getExpectedPropertyValue());
+        }
+
+        @Override
+        default boolean test(Edge edge) {
+            return getProperty().getValue(edge).equals(getExpectedPropertyValue());
+        }
+    }
+
     private static class EdgeProperty {
         private final Function<Edge, String> propertyGetter;
         private final Map<String, Set<Edge>> propertyToEdgeLinks;
+
+        EdgePropertyEqualsToTest isEqualTo(String expectedValue) {
+            return new MyPropEqualsTest(expectedValue);
+        }
 
         EdgeProperty(Function<Edge, String> propertyGetter,
                      Map<String, Set<Edge>> propertyToEdgeLinks) {
@@ -234,6 +252,23 @@ class StringGraphDefault implements StringGraph {
 
         String getValue(Edge edge) {
             return propertyGetter.apply(edge);
+        }
+
+        private final class MyPropEqualsTest implements EdgePropertyEqualsToTest {
+
+            private final String expectedPropertyValue;
+
+            private MyPropEqualsTest(String expectedPropertyValue) {
+                this.expectedPropertyValue = expectedPropertyValue;
+            }
+
+            public EdgeProperty getProperty() {
+                return EdgeProperty.this;
+            }
+
+            public String getExpectedPropertyValue() {
+                return expectedPropertyValue;
+            }
         }
     }
 

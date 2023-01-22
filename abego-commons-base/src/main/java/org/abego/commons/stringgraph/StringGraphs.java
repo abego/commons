@@ -28,7 +28,7 @@ import java.io.File;
 
 public class StringGraphs {
     public static StringGraphBuilder createStringGraphBuilder() {
-        return StringGraphBuilderDefault.createStringGraphBuilder();
+        return StringGraphDefault.createBuilder();
     }
 
     public static void writeStringGraph(StringGraph stringGraph, File file) {

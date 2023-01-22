@@ -37,8 +37,8 @@ class StringGraphBuilderTest {
 
     static Stream<StringGraphBuilder> stringGraphBuilderProvider() {
         return Stream.of(
-                StringGraphBuilderBasic.createStringGraphBuilder(),
-                StringGraphBuilderDefault.createStringGraphBuilder());
+                StringGraphBasic.createBuilder(),
+                StringGraphDefault.createBuilder());
     }
 
     @ParameterizedTest

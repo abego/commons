@@ -25,6 +25,7 @@
 package org.abego.commons.stringgraph;
 
 import org.abego.commons.seq.Seq;
+import org.abego.commons.seq.SeqUtil;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Objects;
@@ -40,9 +41,20 @@ class StringGraphBasic implements StringGraph {
     private final Seq<String> nodes;
     private final Seq<Edge> edges;
 
+    public static StringGraphBuilder createBuilder() {
+        return new MyBuilder();
+    }
+
     private StringGraphBasic(Seq<String> nodes, Seq<Edge> edges) {
         this.nodes = nodes;
         this.edges = edges;
+    }
+
+    private static class MyBuilder extends AbstractStringGraphBuilder {
+        public StringGraph build() {
+            return createStringGraph(
+                    SeqUtil.newSeq(getNodes()), SeqUtil.newSeq(getEdges()));
+        }
     }
 
     static StringGraph createStringGraph(Seq<String> nodes, Seq<Edge> edges) {

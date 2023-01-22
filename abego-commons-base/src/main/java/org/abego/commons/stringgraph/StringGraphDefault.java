@@ -35,9 +35,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static org.abego.commons.seq.SeqUtil.emptySeq;
 import static org.abego.commons.seq.SeqUtil.newSeq;
+import static org.abego.commons.util.function.PredicateUtil.and;
 
 class StringGraphDefault implements StringGraph {
     private final Seq<String> nodes;
@@ -70,34 +72,67 @@ class StringGraphDefault implements StringGraph {
         }
     }
 
-    private static Seq<String> findEdgesWithPropertiesEqualToAndMap(
+    private static EdgePropertyEqualsToTest[] withItemAtIndexRemoved(
+            EdgePropertyEqualsToTest[] propertyTests, int index) {
+        int n = propertyTests.length;
+        if (index < 0 || index >= n) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        EdgePropertyEqualsToTest[] result = new EdgePropertyEqualsToTest[n - 1];
+        System.arraycopy(propertyTests, 0, result, 0, index);
+        int nRight = n - index - 1;
+        if (nRight > 0)
+            System.arraycopy(propertyTests, index + 1, result, index, nRight);
+        return result;
+    }
+
+    private Seq<String> findEdgesWithPropertiesEqualToAndMap(
             Function<Edge, String> edgeToResultMapper,
-            EdgePropertyEqualsToTest property1Test,
-            EdgePropertyEqualsToTest property2Test) {
-        Set<Edge> f = property1Test.edges();
-        if (f.isEmpty()) {
-            return emptySeq();
-        }
-        Set<Edge> l = property2Test.edges();
-        if (l.isEmpty()) {
-            return emptySeq();
-        }
-        // find the proper one by iterating over the shorter set
-        List<String> result = new ArrayList<>();
-        if (f.size() < l.size()) {
-            for (Edge e : f) {
-                if (property2Test.test(e)) {
-                    result.add(edgeToResultMapper.apply(e));
-                }
+            EdgePropertyEqualsToTest... propertyTests) {
+        // get the Edge Sets for every property set.
+        // return with emptySeq if any of these sets is empty.
+        List<Set<Edge>> edgesPerTest = new ArrayList<>();
+        for (EdgePropertyEqualsToTest t : propertyTests) {
+            Set<Edge> edges = t.edges();
+            if (edges.isEmpty()) {
+                return emptySeq();
             }
-        } else {
-            for (Edge e : l) {
-                if (property1Test.test(e)) {
-                    result.add(edgeToResultMapper.apply(e));
-                }
+            edgesPerTest.add(edges);
+        }
+
+        Seq<Edge> edgesToTest = edges;
+        Predicate<Edge>[] remainingTests = propertyTests;
+
+        // Find the test that has the smallest Edge set associated (if any)
+        int minEdgeCountTestIndex = indexOfTestWithSmallestEdgeSet(edgesPerTest);
+        if (minEdgeCountTestIndex >= 0) {
+            // If any test has an associated Edge set we can use that Edge set
+            // (instead of "all" edges) to find the Edges matching all
+            // property tests.
+            edgesToTest = newSeq(edgesPerTest.get(minEdgeCountTestIndex));
+            // As the found test is already applied the Edge set we don't need
+            // to re-test and can remove that test from the remainingTests.
+            remainingTests = withItemAtIndexRemoved(
+                    propertyTests, minEdgeCountTestIndex);
+        }
+
+        Seq<Edge> foundEdges = remainingTests.length == 0
+                ? edgesToTest : edgesToTest.filter(and(remainingTests));
+        return foundEdges.map(edgeToResultMapper);
+    }
+
+    private int indexOfTestWithSmallestEdgeSet(List<Set<Edge>> edgesPerTest) {
+        int minEdgeCount = Integer.MAX_VALUE;
+        int minEdgeCountTestIndex = -1;
+        for (int i = 0; i < edgesPerTest.size(); i++) {
+            int n = edgesPerTest.get(i).size();
+            if (n < minEdgeCount) {
+                minEdgeCount = n;
+                minEdgeCountTestIndex = i;
             }
         }
-        return newSeq(result);
+        return minEdgeCountTestIndex;
     }
 
     private static void updateMap(Map<String, Set<Edge>> map, String key, Edge edge) {
@@ -169,7 +204,8 @@ class StringGraphDefault implements StringGraph {
     public Seq<String> allNodesFromNodeViaEdgeLabeled(
             String fromNode, String edgeLabel) {
         return findEdgesWithPropertiesEqualToAndMap(
-                Edge::getToNode, edgePropertyFromNode.isEqualTo(fromNode),
+                Edge::getToNode,
+                edgePropertyFromNode.isEqualTo(fromNode),
                 edgePropertyLabel.isEqualTo(edgeLabel)
         );
     }
@@ -189,7 +225,8 @@ class StringGraphDefault implements StringGraph {
     @Override
     public Seq<String> allNodesToNodeViaEdgeLabeled(String toNode, String edgeLabel) {
         return findEdgesWithPropertiesEqualToAndMap(
-                Edge::getFromNode, edgePropertyToNode.isEqualTo(toNode),
+                Edge::getFromNode,
+                edgePropertyToNode.isEqualTo(toNode),
                 edgePropertyLabel.isEqualTo(edgeLabel)
         );
     }

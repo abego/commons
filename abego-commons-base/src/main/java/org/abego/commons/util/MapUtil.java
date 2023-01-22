@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,12 @@ public final class MapUtil {
         throw new MustNotInstantiateException();
     }
 
+    /**
+     * Returns a new Map created for the given list of (name, value) pairs.
+     * <p>
+     * The name must be a String, the value can be any value. Names must not
+     * be redefined.
+     */
     public static Map<String, @Nullable Object> getStringObjectMap(
             String name,
             @Nullable Object value,

@@ -63,6 +63,16 @@ public final class PredicateUtil {
     }
 
     /**
+     * Returns a new {@link Predicate} that is the "and" connection of
+     * the given {@code predicates}, similar to {@link Predicate#and(Predicate)},
+     * but for multiple {@link Predicate}s.
+     */
+    @SafeVarargs
+    public static <T> Predicate<T> and(Predicate<T>... predicates) {
+        return valueToTest -> areAllPredicatesTrue(valueToTest, predicates);
+    }
+
+    /**
      * Returns {@code true} if any of the {@code predicates} returns
      * {@code true} for the given {@code valueToTest}, {@code false} when all
      * {@link Predicate}s return {@code false}.
@@ -89,6 +99,21 @@ public final class PredicateUtil {
      */
     public static <T> boolean areAllPredicatesTrue(
             Iterable<Predicate<T>> predicates, T valueToTest) {
+        for (Predicate<T> predicate : predicates) {
+            if (!predicate.test(valueToTest))
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Returns {@code true} if all of the {@code predicates} returns
+     * {@code true} for the given {@code valueToTest}, {@code false} when at
+     * least one of the {@link Predicate}s return {@code false}.
+     */
+    @SafeVarargs
+    public static <T> boolean areAllPredicatesTrue(
+            T valueToTest, Predicate<T>... predicates) {
         for (Predicate<T> predicate : predicates) {
             if (!predicate.test(valueToTest))
                 return false;

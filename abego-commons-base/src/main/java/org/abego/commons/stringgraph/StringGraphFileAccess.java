@@ -75,7 +75,7 @@ class StringGraphFileAccess {
             StringGraph stringGraph, ObjectOutputStream objectOutputStream)
             throws IOException {
         objectOutputStream.writeObject(NODES_TAG);
-        Seq<String> allNodes = stringGraph.allNodes();
+        Seq<String> allNodes = stringGraph.nodes();
         objectOutputStream.writeInt(allNodes.getSize());
         for (String s : allNodes) {
             objectOutputStream.writeObject(s);
@@ -86,7 +86,7 @@ class StringGraphFileAccess {
             StringGraph stringGraph, ObjectOutputStream objectOutputStream)
             throws IOException {
         objectOutputStream.writeObject(EDGES_TAG);
-        Seq<Edge> allEdges = stringGraph.allEdges();
+        Seq<Edge> allEdges = stringGraph.edges();
         objectOutputStream.writeInt(allEdges.getSize());
         for (Edge e : allEdges) {
             objectOutputStream.writeObject(e.getFromNode());

@@ -51,8 +51,8 @@ class StringGraphBuilderTest {
         StringGraph graph = builder.build();
 
         assertNotNull(graph);
-        assertEquals(5, graph.allNodes().size());
-        assertEquals(2, graph.allEdges().size());
+        assertEquals(5, graph.nodes().size());
+        assertEquals(2, graph.edges().size());
         assertNotEquals("", builder.toString());
     }
 }

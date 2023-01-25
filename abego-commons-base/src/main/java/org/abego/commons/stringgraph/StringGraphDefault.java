@@ -173,44 +173,44 @@ class StringGraphDefault implements StringGraph {
     }
 
     @Override
-    public Seq<String> allFromNodes() {
+    public Seq<String> fromNodes() {
         return newSeq(fromNodeToEdgesLinks.keySet());
     }
 
     @Override
-    public Seq<String> allNodes() {
+    public Seq<String> nodes() {
         return nodes;
     }
 
     @Override
-    public Seq<Edge> allEdges() {
+    public Seq<Edge> edges() {
         return edges;
     }
 
     @Override
-    public Seq<String> allToNodes() {
+    public Seq<String> toNodes() {
         return newSeq(toNodeToEdgesLinks.keySet());
     }
 
     @Override
-    public Seq<String> allEdgeLabels() {
+    public Seq<String> edgeLabels() {
         return newSeq(labelToEdgesLinks.keySet());
     }
 
     @Override
-    public Seq<String> allNodesFromNode(String fromNode) {
+    public Seq<String> nodesFromNode(String fromNode) {
         return uniqueResultsOfEdgesWithPropertyEqualTo(
                 Edge::getToNode, edgePropertyFromNode.isEqualTo(fromNode));
     }
 
     @Override
-    public Seq<String> allEdgeLabelsFromNode(String fromNode) {
+    public Seq<String> edgeLabelsFromNode(String fromNode) {
         return uniqueResultsOfEdgesWithPropertyEqualTo(
                 Edge::getLabel, edgePropertyFromNode.isEqualTo(fromNode));
     }
 
     @Override
-    public Seq<String> allNodesFromNodeViaEdgeLabeled(
+    public Seq<String> nodesFromNodeViaEdgeLabeled(
             String fromNode, String edgeLabel) {
         return newSeq(findEdgesWithPropertiesEqualToAndMap(
                 Edge::getToNode,
@@ -219,19 +219,19 @@ class StringGraphDefault implements StringGraph {
     }
 
     @Override
-    public Seq<String> allNodesToNode(String toNode) {
+    public Seq<String> nodesToNode(String toNode) {
         return uniqueResultsOfEdgesWithPropertyEqualTo(
                 Edge::getFromNode, edgePropertyToNode.isEqualTo(toNode));
     }
 
     @Override
-    public Seq<String> allEdgeLabelsToNode(String toNode) {
+    public Seq<String> edgeLabelsToNode(String toNode) {
         return uniqueResultsOfEdgesWithPropertyEqualTo(
                 Edge::getLabel, edgePropertyToNode.isEqualTo(toNode));
     }
 
     @Override
-    public Seq<String> allNodesToNodeViaEdgeLabeled(String toNode, String edgeLabel) {
+    public Seq<String> nodesToNodeViaEdgeLabeled(String toNode, String edgeLabel) {
         return newSeq(findEdgesWithPropertiesEqualToAndMap(
                 Edge::getFromNode,
                 edgePropertyToNode.isEqualTo(toNode),

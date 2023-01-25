@@ -32,72 +32,72 @@ import static org.abego.commons.seq.SeqUtil.newSeq;
 import static org.abego.commons.seq.SeqUtil.newSeqUniqueItems;
 
 public interface StringGraph {
-    Seq<String> allNodes();
+    Seq<String> nodes();
 
-    Seq<Edge> allEdges();
+    Seq<Edge> edges();
 
-    default Seq<String> allFromNodes() {
-        return newSeqUniqueItems(allEdges().map(Edge::getFromNode));
+    default Seq<String> fromNodes() {
+        return newSeqUniqueItems(edges().map(Edge::getFromNode));
     }
 
-    default Seq<String> allToNodes() {
-        return newSeqUniqueItems(allEdges().map(Edge::getToNode));
+    default Seq<String> toNodes() {
+        return newSeqUniqueItems(edges().map(Edge::getToNode));
     }
 
-    default Seq<String> allEdgeLabels() {
-        return newSeqUniqueItems(allEdges().map(Edge::getLabel));
+    default Seq<String> edgeLabels() {
+        return newSeqUniqueItems(edges().map(Edge::getLabel));
     }
 
-    default Seq<String> allNodesFromNode(String fromNode) {
-        return newSeqUniqueItems(allEdgesFromNode(fromNode).map(Edge::getToNode));
+    default Seq<String> nodesFromNode(String fromNode) {
+        return newSeqUniqueItems(edgesFromNode(fromNode).map(Edge::getToNode));
     }
 
-    default Seq<String> allEdgeLabelsFromNode(String fromNode) {
-        return newSeqUniqueItems(allEdgesFromNode(fromNode).map(Edge::getLabel));
+    default Seq<String> edgeLabelsFromNode(String fromNode) {
+        return newSeqUniqueItems(edgesFromNode(fromNode).map(Edge::getLabel));
     }
 
-    default Seq<String> allNodesFromNodeViaEdgeLabeled(String fromNode, String edgeLabel) {
+    default Seq<String> nodesFromNodeViaEdgeLabeled(String fromNode, String edgeLabel) {
         //noinspection CallToSuspiciousStringMethod
         return newSeqUniqueItems(
-                allEdgesWith(edge ->
+                edgesWith(edge ->
                         edge.getFromNode().equals(fromNode) &&
                                 edge.getLabel().equals(edgeLabel))
                         .map(Edge::getToNode));
     }
 
-    default Seq<String> allNodesToNode(String toNode) {
-        return newSeqUniqueItems(allEdgesToNode(toNode).map(Edge::getFromNode));
+    default Seq<String> nodesToNode(String toNode) {
+        return newSeqUniqueItems(edgesToNode(toNode).map(Edge::getFromNode));
     }
 
-    default Seq<String> allEdgeLabelsToNode(String toNode) {
-        return newSeqUniqueItems(allEdgesToNode(toNode).map(Edge::getLabel));
+    default Seq<String> edgeLabelsToNode(String toNode) {
+        return newSeqUniqueItems(edgesToNode(toNode).map(Edge::getLabel));
     }
 
-    default Seq<String> allNodesToNodeViaEdgeLabeled(String toNode, String edgeLabel) {
+    default Seq<String> nodesToNodeViaEdgeLabeled(String toNode, String edgeLabel) {
         //noinspection CallToSuspiciousStringMethod
         return newSeqUniqueItems(
-                allEdgesWith(edge ->
+                edgesWith(edge ->
                         edge.getToNode().equals(toNode) &&
                                 edge.getLabel().equals(edgeLabel))
                         .map(Edge::getFromNode));
     }
 
-    default Seq<Edge> allEdgesWith(Predicate<Edge> edgePredicate) {
-        return newSeq(allEdges().filter(edgePredicate));
+    default Seq<Edge> edgesWith(Predicate<Edge> edgePredicate) {
+        return newSeq(edges().filter(edgePredicate));
     }
 
-    default Seq<Edge> allEdgesLabeled(String edgeLabel) {
+    default Seq<Edge> edgesLabeled(String edgeLabel) {
         //noinspection CallToSuspiciousStringMethod
-        return allEdgesWith(edge -> edge.getLabel().equals(edgeLabel));
+        return edgesWith(edge -> edge.getLabel().equals(edgeLabel));
     }
 
-    default Seq<Edge> allEdgesFromNode(String fromNode) {
+    default Seq<Edge> edgesFromNode(String fromNode) {
         //noinspection CallToSuspiciousStringMethod
-        return allEdgesWith(edge -> edge.getFromNode().equals(fromNode));
+        return edgesWith(edge -> edge.getFromNode().equals(fromNode));
     }
 
-    default Seq<Edge> allEdgesToNode(String toNode) {
+    default Seq<Edge> edgesToNode(String toNode) {
         //noinspection CallToSuspiciousStringMethod
-        return allEdgesWith(edge -> edge.getToNode().equals(toNode));
+        return edgesWith(edge -> edge.getToNode().equals(toNode));
     }
 }

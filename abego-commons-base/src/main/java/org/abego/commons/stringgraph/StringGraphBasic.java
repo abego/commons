@@ -62,12 +62,12 @@ class StringGraphBasic implements StringGraph {
     }
 
     @Override
-    public Seq<String> allNodes() {
+    public Seq<String> nodes() {
         return nodes;
     }
 
     @Override
-    public Seq<Edge> allEdges() {
+    public Seq<Edge> edges() {
         return edges;
     }
 

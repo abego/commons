@@ -35,6 +35,8 @@ import static org.abego.commons.lang.IterableUtil.toStringOfIterable;
 
 public abstract class AbstractSeq<T> implements Seq<T> {
 
+    private static final int TO_STRING_STOP_LENGTH = 200;
+
     @Override
     public Seq<T> filter(Predicate<T> condition) {
         return SeqHelper.filter(this, condition);
@@ -83,6 +85,6 @@ public abstract class AbstractSeq<T> implements Seq<T> {
      */
     @Override
     public String toString() {
-        return toStringOfIterable(this);
+        return toStringOfIterable(this, TO_STRING_STOP_LENGTH);
     }
 }

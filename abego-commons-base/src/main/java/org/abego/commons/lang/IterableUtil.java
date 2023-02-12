@@ -72,6 +72,10 @@ public final class IterableUtil {
      * @param nullValueText the text to use as an item's text when the item is
      *                      <code>null</code>.
      *                      [Default: "null"]
+     * @param stopLength    when the text constructed reaches or exceeds a 
+     *                      length of <code>stopLength</code> no more item texts
+     *                      are appended but an <code>"..."</code>
+     *                      [Default: Integer.MAX_VALUE]
      */
     public static <T> void appendTextOf(
             StringBuilder stringBuilder,
@@ -79,7 +83,9 @@ public final class IterableUtil {
             CharSequence separator,
             String emptyText,
             Function<T, String> textOfItem,
-            CharSequence nullValueText) {
+            CharSequence nullValueText,
+            int stopLength) {
+
         boolean addSeparator = false;
         boolean isEmpty = true;
         for (@Nullable T item : items) {
@@ -90,10 +96,25 @@ public final class IterableUtil {
             else
                 addSeparator = true;
 
+            if (stringBuilder.length() >= stopLength) {
+                stringBuilder.append("...");
+                break;
+            }
             stringBuilder.append(item == null ? nullValueText : textOfItem.apply(item));
         }
         if (isEmpty)
             stringBuilder.append(emptyText);
+    }
+
+    public static <T> void appendTextOf(
+            StringBuilder stringBuilder,
+            Iterable<T> items,
+            CharSequence separator,
+            String emptyText,
+            Function<T, String> textOfItem,
+            CharSequence nullValueText) {
+        appendTextOf(stringBuilder, items, separator, emptyText, textOfItem,
+                nullValueText, Integer.MAX_VALUE);
     }
 
     /**
@@ -238,15 +259,26 @@ public final class IterableUtil {
      *
      * <p>This method is typically used in the "toString()" methods of concrete
      * {@link Iterable} implementations.</p>
+     *
+     * @param iterable   the Iterable to process
+     * @param stopLength when the text constructed reaches or exceeds a
+     *                   length of <code>stopLength</code> no more item texts
+     *                   are appended but an <code>"..."</code>
+     *                   [Default: Integer.MAX_VALUE]
      */
-    public static String toStringOfIterable(Iterable<?> iterable) {
+    public static String toStringOfIterable(Iterable<?> iterable, int stopLength) {
         StringBuilder sb = new StringBuilder();
         sb.append(iterable.getClass().getName());
         //noinspection MagicCharacter
         sb.append('[');
-        appendTextOf(sb, iterable, ", ", "", String::valueOf, StringUtil.NULL_STRING);
+        appendTextOf(sb, iterable, ", ", "",
+                String::valueOf, StringUtil.NULL_STRING, stopLength);
         //noinspection MagicCharacter
         return sb.append(']').toString();
+    }
+
+    public static String toStringOfIterable(Iterable<?> iterable) {
+        return toStringOfIterable(iterable, Integer.MAX_VALUE);
     }
 
     @Nullable

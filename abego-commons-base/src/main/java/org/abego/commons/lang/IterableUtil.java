@@ -26,13 +26,16 @@ package org.abego.commons.lang;
 
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.util.CollectionUtil;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("WeakerAccess")
 public final class IterableUtil {
@@ -255,6 +258,23 @@ public final class IterableUtil {
         }
         return null;
     }
+
+    /**
+     * Sorts the {@code toString} representations of the {@code iterable}'s
+     * items and returns them as {@code '\n'}-separated lines.
+     * <p>
+     * {@code '\n'} characters in the {@code toString} representation of an
+     * item are not escaped, i.e. you may end up with more lines than items
+     * if items have {@code '\n'} characters in their {@code toString} text.
+     */
+    public static <T> String asSortedLines(Iterable<T> iterable) {
+        return CollectionUtil.addAll(new ArrayList<>(), iterable)
+                .stream()
+                .map(Objects::toString)
+                .sorted()
+                .collect(Collectors.joining("\n"));
+    }
+
 
     private static class VarArgsIterable<T> implements Iterable<T> {
 

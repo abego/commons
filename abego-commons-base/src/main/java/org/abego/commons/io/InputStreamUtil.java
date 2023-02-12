@@ -24,11 +24,15 @@
 package org.abego.commons.io;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.text.LineProcessor;
 import org.abego.commons.util.ScannerUtil;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -75,5 +79,30 @@ public final class InputStreamUtil {
     public static void write(InputStream inputStream, File file) {
         runIOCode(() -> copy(inputStream, file.toPath(), REPLACE_EXISTING));
     }
+
+    /**
+     * Reads the (UTF-8 encoded) {@code inputStream} line-by-line and passes
+     * the lines to the {@code lineProcessor}.
+     * <p>
+     * The {@code lineProcessor} is also informed when the reading starts/ends.
+     */
+    public static void readLineWise(InputStream inputStream, LineProcessor lineProcessor) throws IOException {
+        lineProcessor.start();
+        int lineNumber = 0;
+        try (BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(
+                             inputStream, StandardCharsets.UTF_8))) {
+            String line;
+            do {
+                line = reader.readLine();
+                if (line != null) {
+                    lineNumber++;
+                    lineProcessor.processLine(line, lineNumber);
+                }
+            } while (line != null);
+        }
+        lineProcessor.end(lineNumber);
+    }
+
 
 }

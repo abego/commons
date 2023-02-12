@@ -28,6 +28,8 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.eclipse.jdt.annotation.NonNull;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -191,5 +193,87 @@ class VLQUtilTest {
         assertEquals(VLQ_ENCODED_NUMBER_TO_LARGE_FOR_ULONG_MESSAGE, e.getMessage());
     }
 
+    @Test
+    void writeSignedVLQInt_readSignedVLQInt() {
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        // around 0, both sides
+        VLQUtil.writeSignedVLQInt(0, outputStream);
+        VLQUtil.writeSignedVLQInt(-1, outputStream);
+        VLQUtil.writeSignedVLQInt(1, outputStream);
+        VLQUtil.writeSignedVLQInt(-2, outputStream);
+        VLQUtil.writeSignedVLQInt(2, outputStream);
+
+        // around the switch from 1 to 2 bytes, both sides
+        VLQUtil.writeSignedVLQInt(-62, outputStream);
+        VLQUtil.writeSignedVLQInt(62, outputStream);
+        VLQUtil.writeSignedVLQInt(-63, outputStream);
+        VLQUtil.writeSignedVLQInt(63, outputStream);
+        VLQUtil.writeSignedVLQInt(-64, outputStream);
+        VLQUtil.writeSignedVLQInt(64, outputStream);
+        VLQUtil.writeSignedVLQInt(-65, outputStream);
+        VLQUtil.writeSignedVLQInt(65, outputStream);
+        VLQUtil.writeSignedVLQInt(-66, outputStream);
+        VLQUtil.writeSignedVLQInt(66, outputStream);
+
+        // around the switch from 2 to 3 bytes, both sides
+        VLQUtil.writeSignedVLQInt(-8190, outputStream);
+        VLQUtil.writeSignedVLQInt(8190, outputStream);
+        VLQUtil.writeSignedVLQInt(-8191, outputStream);
+        VLQUtil.writeSignedVLQInt(8191, outputStream);
+        VLQUtil.writeSignedVLQInt(-8192, outputStream);
+        VLQUtil.writeSignedVLQInt(8192, outputStream);
+        VLQUtil.writeSignedVLQInt(-8193, outputStream);
+        VLQUtil.writeSignedVLQInt(8193, outputStream);
+        VLQUtil.writeSignedVLQInt(-8194, outputStream);
+        VLQUtil.writeSignedVLQInt(8194, outputStream);
+
+        // at both ends of the signed int range
+        VLQUtil.writeSignedVLQInt(Integer.MAX_VALUE - 1, outputStream);
+        VLQUtil.writeSignedVLQInt(Integer.MAX_VALUE, outputStream);
+        VLQUtil.writeSignedVLQInt(Integer.MIN_VALUE + 1, outputStream);
+        VLQUtil.writeSignedVLQInt(Integer.MIN_VALUE, outputStream);
+
+        // now try to read the signed numbers
+        ByteArrayInputStream inputStream =
+                new ByteArrayInputStream(outputStream.toByteArray());
+
+        assertEquals(0, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-1, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(1, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-2, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(2, VLQUtil.readSignedVLQInt(inputStream));
+
+        // around the switch from 1 to 2 bytes, both sides
+        assertEquals(-62, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(62, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-63, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(63, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-64, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(64, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-65, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(65, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-66, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(66, VLQUtil.readSignedVLQInt(inputStream));
+
+        // around the switch from 2 to 3 bytes, both sides
+        assertEquals(-8190, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(8190, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-8191, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(8191, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-8192, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(8192, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-8193, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(8193, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(-8194, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(8194, VLQUtil.readSignedVLQInt(inputStream));
+
+        // at both ends of the signed int range
+        assertEquals(Integer.MAX_VALUE - 1, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(Integer.MAX_VALUE, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(Integer.MIN_VALUE + 1, VLQUtil.readSignedVLQInt(inputStream));
+        assertEquals(Integer.MIN_VALUE, VLQUtil.readSignedVLQInt(inputStream));
+    }
 
 }

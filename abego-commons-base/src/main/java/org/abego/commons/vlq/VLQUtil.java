@@ -42,6 +42,7 @@ public final class VLQUtil {
 
     static final String VALUE_MUST_NOT_BE_NEGATIVE_MESSAGE = "value must not be negative"; //NON-NLS
     static final String VLQ_ENCODED_NUMBER_TO_LARGE_FOR_UINT_MESSAGE = "VLQ encoded number too large to fit into an unsigned int. Try to read it in a long."; //NON-NLS
+    static final String VLQ_ENCODED_NUMBER_OUT_OF_RANGE_FOR_SIGNED_INT_MESSAGE = "VLQ encoded number out of range for unsigned int."; //NON-NLS
     static final String VLQ_ENCODED_NUMBER_TO_LARGE_FOR_ULONG_MESSAGE = "VLQ encoded number too large to fit into an unsigned long."; //NON-NLS
     private static final int MAX_7BIT_INT_VALUE = 127;
     private static final int UNSIGNED_INT_BYTE_MASK = 0x7f;

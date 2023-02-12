@@ -57,6 +57,15 @@ public final class VLQUtil {
         encodeUnsignedLongAsVLQ(value, byteConsumer);
     }
 
+    public static void encodeSignedIntAsVLQ(int value, ByteConsumer byteConsumer) {
+        boolean isNegative = value < 0;
+
+        long unsignedValue = isNegative
+                ? ((long) (-value - 1) << 1) ^ 1
+                : (long) value << 1;
+        encodeUnsignedLongAsVLQ(unsignedValue, byteConsumer);
+    }
+
     public static void encodeUnsignedLongAsVLQ(long value, ByteConsumer byteConsumer) {
         if (value < 0) {
             throw new IllegalArgumentException(VALUE_MUST_NOT_BE_NEGATIVE_MESSAGE);
@@ -103,6 +112,25 @@ public final class VLQUtil {
         throw new IllegalStateException(VLQ_ENCODED_NUMBER_TO_LARGE_FOR_UINT_MESSAGE);
     }
 
+    public static int decodeSignedIntFromVLQ(ByteSupplier byteSupplier) {
+        long unsignedValue = decodeUnsignedLongFromVLQ(byteSupplier);
+        long l = unsignedValue >> 1;
+        if ((unsignedValue & 1) == 0) {
+            // >= 0
+            if (l > Integer.MAX_VALUE) {
+                throw new IllegalStateException(VLQ_ENCODED_NUMBER_OUT_OF_RANGE_FOR_SIGNED_INT_MESSAGE);
+            }
+            return (int) l;
+        } else {
+            // negative
+            long result = -l - 1;
+            if (result < Integer.MIN_VALUE) {
+                throw new IllegalStateException(VLQ_ENCODED_NUMBER_OUT_OF_RANGE_FOR_SIGNED_INT_MESSAGE);
+            }
+            return (int) result;
+        }
+    }
+
     public static long decodeUnsignedLongFromVLQ(ByteSupplier byteSupplier) {
         long value = 0;
         int shift = 0;
@@ -132,6 +160,14 @@ public final class VLQUtil {
 
     public static int readVLQInt(ByteArrayInputStream inputStream) {
         return VLQUtil.decodeUnsignedIntFromVLQ(() -> (byte) inputStream.read());
+    }
+
+    public static void writeSignedVLQInt(int value, ByteArrayOutputStream outputStream) {
+        encodeSignedIntAsVLQ(value, outputStream::write);
+    }
+
+    public static int readSignedVLQInt(ByteArrayInputStream inputStream) {
+        return VLQUtil.decodeSignedIntFromVLQ(() -> (byte) inputStream.read());
     }
 
     public static int[] readVLQIntArray(ByteArrayInputStream inputStream) {

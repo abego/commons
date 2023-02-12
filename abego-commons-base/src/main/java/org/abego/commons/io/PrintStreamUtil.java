@@ -26,7 +26,10 @@ package org.abego.commons.io;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -62,6 +65,16 @@ public final class PrintStreamUtil {
 
     public static PrintStream newPrintStream(OutputStream outputStream) {
         return newPrintStream(outputStream, StandardCharsets.UTF_8);
+    }
+
+    public static PrintStream newPrintStreamToBufferedFile(File file, Charset charset) {
+        return runIOCode(() -> new PrintStream(
+                new BufferedOutputStream(new FileOutputStream(file)),
+                false, charset.name()));
+    }
+
+    public static PrintStream newPrintStreamToBufferedFile(File file) {
+        return newPrintStreamToBufferedFile(file, StandardCharsets.UTF_8);
     }
 
     /**

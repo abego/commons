@@ -369,6 +369,33 @@ public interface Seq<T> extends Iterable<T> {
         return first();
     }
 
+    /**
+     * Return any item of this sequence meeting the condition.
+     * <p>
+     * Throw a {@link NoSuchElementException} when no such item exists in the
+     * sequence.
+     * <p>
+     * It is not required to always return the first item meeting the condition.
+     */
+    default T anyItem(Predicate<T> condition) {
+        T result = anyItemOrNull(condition);
+        if (result == null) {
+            throw new NoSuchElementException(NO_SUCH_ELEMENT_MESSAGE);
+        }
+        return result;
+    }
+
+    /**
+     * Return any item of this sequence meeting the condition, or
+     * <code>null</code> when no such item exists in the sequence.
+     * <p>
+     * It is not required to always return the first item meeting the condition.
+     */
+    @Nullable
+    default T anyItemOrNull(Predicate<T> condition) {
+        return firstOrNull(condition);
+    }
+
     default String joined(CharSequence separator, Function<T, String> mapToString) {
         return String.join(separator, map(mapToString));
     }

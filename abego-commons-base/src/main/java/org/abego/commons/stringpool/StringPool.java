@@ -78,6 +78,14 @@ public interface StringPool {
      */
     Iterable<StringAndID> allStringAndIDs();
 
+    default boolean isByteAccessSupported() {
+        return false;
+    }
+
+    default byte[] getBytes() {
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Holds a {@link String} and its ID in this StringPool.
      */

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,19 @@
 package org.abego.commons.stringpool;
 
 
+import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static org.abego.commons.lang.IterableUtil.asSortedLines;
 import static org.abego.commons.stringpool.StringPoolBuilderDefault.newStringPoolBuilderDefault;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 class StringPoolTest {
@@ -66,6 +70,7 @@ class StringPoolTest {
         assertEquals("world", sp.getStringOrNull(idWorld));
         assertEquals("Dolly", sp.getStringOrNull(idDolly));
         assertEquals(null, sp.getStringOrNull(0));
+        assertThrows(NullPointerException.class, () -> sp.getString(0));
     }
 
     StringPoolBuilder newStringPoolBuilder() {
@@ -136,6 +141,21 @@ class StringPoolTest {
     }
 
     @Test
+    void allStringsOneItem() {
+        StringPoolBuilder spb = newStringPoolBuilder();
+
+        spb.add("Hello");
+
+        StringPool sp = spb.build();
+
+        Iterator<String> iter = sp.allStrings().iterator();
+
+        assertEquals("Hello", iter.next());
+        assertFalse(iter.hasNext());
+        assertThrows(NoSuchElementException.class, iter::next);
+    }
+
+    @Test
     void allStringAndIDs() {
         StringPoolBuilder spb = newStringPoolBuilder();
 
@@ -166,4 +186,131 @@ class StringPoolTest {
         assertThrows(NoSuchElementException.class, iter::next);
 
     }
+
+    @Test
+    void addJoined() {
+        StringPoolBuilder spb = newStringPoolBuilder();
+
+        int idFoobar = spb.addJoined("foo", "bar");
+        // adding a string already added as a joined string should return the old one.
+        int idFoobar2 = spb.add("foobar");
+
+        // using 3 parts
+        int idHelloWorld = spb.addJoined("Hello", " ", "World");
+
+        // using 4 parts
+        int idHelloDolly = spb.addJoined("Hello", " ", "Dolly", "!");
+        // same as the line above but with extra null and empty values
+        int idHelloDolly2 = spb.addJoined(null, "", "Hello", " ", null, "", "Dolly", "!");
+
+        StringPool sp = spb.build();
+
+        assertEquals(idFoobar, idFoobar2);
+        assertEquals("foobar", sp.getString(idFoobar));
+
+        assertEquals("Hello World", sp.getString(idHelloWorld));
+
+        assertEquals(idHelloDolly, idHelloDolly2);
+        assertEquals("Hello Dolly!", sp.getString(idHelloDolly));
+    }
+
+    @Test
+    void addJoinedCheckForReuse() {
+        StringPoolBuilder spb = newStringPoolBuilder();
+
+        // add some common separators first to ensure they get small IDs
+        // (to fit in one byte)
+        spb.addJoined("com.example.myapp");
+        spb.addJoined("com.example.myapp", ".", "ClassA");
+        spb.addJoined("com.example.myapp", ".", "ClassB");
+        spb.addJoined("com.example.myapp", ".", "ClassB", "#", "method1", "(", ")");
+        spb.addJoined("com.example.myapp", ".", "ClassB", "#", "method2", "(", "int", ")");
+        spb.addJoined("com.example.myapp", ".", "ClassB", "#", "method2", "(", "int", ",", "int", ")");
+        spb.addJoined("com.example.myapp", ".", "ClassB", "#", "method2", "(", "String", ",", "int", ")");
+        spb.addJoined("com.example.myapp", ".", "ClassB", "#", "method2(String,int)");
+
+        StringPool sp = spb.build();
+
+        // Note: these assertions may fail in the future when the implementation 
+        // of StringPoolBuilderDefault changes. 
+        // Either adapt test then or remove, as it tests implementation details.
+        String expectedText = "#\n" +
+                "(\n" +
+                ")\n" +
+                ",\n" +
+                ".\n" +
+                "ClassA\n" +
+                "ClassB\n" +
+                "String\n" +
+                "com.example.myapp\n" +
+                "com.example.myapp.ClassA\n" +
+                "com.example.myapp.ClassB\n" +
+                "com.example.myapp.ClassB#method1()\n" +
+                "com.example.myapp.ClassB#method2(String,int)\n" +
+                "com.example.myapp.ClassB#method2(int)\n" +
+                "com.example.myapp.ClassB#method2(int,int)\n" +
+                "int\n" +
+                "method1\n" +
+                "method2";
+        assertEquals("" +
+                expectedText, asSortedLines(sp.allStrings()));
+
+        // as the implementation reuses strings the space required for
+        // the "bytes" array is actually smaller than the total length of the 
+        // 'all strings'.
+        assertTrue(sp.getBytes().length < expectedText.length());
+    }
+
+    @Test
+    void byteAccess() {
+        StringPoolBuilder spb = newStringPoolBuilder();
+
+        spb.add("Hello");
+
+        StringPool sp = spb.build();
+
+        // The current implementation supports byte access
+        assertTrue(sp.isByteAccessSupported());
+        assertNotNull(sp.getBytes());
+    }
+
+    @Test
+    void byteAccessNotSupported() {
+        StringPool sp = new StringPool() {
+            @Override
+            public @Nullable String getStringOrNull(int id) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public Iterable<String> allStrings() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public Iterable<StringAndID> allStringAndIDs() {
+                throw new UnsupportedOperationException();
+            }
+        };
+
+        // The default implementation does not support byte access
+        assertFalse(sp.isByteAccessSupported());
+        assertThrows(UnsupportedOperationException.class, sp::getBytes);
+    }
+
+    @Test
+    void contains() {
+        StringPoolBuilder spb = newStringPoolBuilder();
+
+        spb.add("Hello");
+
+        StringPool sp = spb.build();
+
+        // The current implementation supports byte access
+        assertTrue(spb.contains(null));
+        assertTrue(spb.contains("Hello"));
+        assertFalse(spb.contains("World"));
+    }
+
+
 }

@@ -31,7 +31,9 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.abego.commons.io.FileUtil.runIOCode;
@@ -78,9 +80,86 @@ final class StringPoolBuilderDefault implements StringPoolBuilder {
 
     }
 
+    @Override
+    public int addJoined(@Nullable String... stringParts) {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean hasNonNullPart = false;
+        for (String s : stringParts) {
+            if (s != null) {
+                hasNonNullPart = true;
+                stringBuilder.append(s);
+            }
+        }
+        // when there are only null strings parts (or no parts at all)
+        // return the id for the null string.
+        if (!hasNonNullPart) {
+            return add(null);
+        }
+
+        String joinedText = stringBuilder.toString();
+
+        // When the effective String already exists we reuse that and 
+        // don't create a new joined String that would be a duplicate.
+        @Nullable Integer id = stringToIDMap.get(joinedText);
+        if (id != null) {
+            return id;
+        }
+
+        // Construct the joined String.
+        return constructJoinedString(joinedText, stringParts);
+    }
+
+    private int constructJoinedString(String joinedText,
+                                      @Nullable String... stringParts) {
+        // add the parts of the joined string to the builder
+        List<Integer> partIDs = new ArrayList<>();
+        for (String s : stringParts) {
+            if (s != null && !s.isEmpty()) {
+                partIDs.add(add(s));
+            }
+        }
+
+        // depending on the number of parts just added we continue differently
+        int n = partIDs.size();
+        switch (n) {
+
+            case 0: // no parts was added, so the stringParts only consist of 
+                // empty strings (and possibly some nulls). As the 
+                // "all-null" case was already covered before, we are now
+                // in the "empty string" case.
+                return add("");
+
+            case 1: // Effectively only one item was added. No need for a 
+                // joined string, just return the id of the single part.    
+                return partIDs.get(0);
+
+            default: // the "real" joined String case, with at least two parts.
+                int id = allStrings.size();
+                // write the number of parts this joined String consists of
+                VLQUtil.encodeSignedIntAsVLQ(-n, this::writeByte);
+                // write the IDs of all parts
+                for (int i : partIDs) {
+                    VLQUtil.encodeUnsignedIntAsVLQ(i, this::writeByte);
+                }
+
+                // make sure the String can be found and reused in a future "add" call.
+                stringToIDMap.put(joinedText, id);
+
+                return id;
+        }
+    }
+
+    @Override
+    public boolean contains(@Nullable String string) {
+        if (string == null) {
+            return true;
+        }
+        return stringToIDMap.containsKey(string);
+    }
+
     private int addStringWithId(String s, int id) {
         int byteCount = s.getBytes(CHARSET_FOR_STRING_TEXT).length;
-        VLQUtil.encodeUnsignedIntAsVLQ(byteCount, this::writeByte);
+        VLQUtil.encodeSignedIntAsVLQ(byteCount, this::writeByte);
         allStringsPrintStream.print(s);
 
         // make sure the String can be found and reused in a future "add" call.

@@ -22,32 +22,40 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.stringgraph;
+package org.abego.commons.stringpool;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class StringGraphsTest {
+class StringPoolsTest {
 
     @Test
-    void createStringGraphBuilder() {
-        StringGraphBuilder builder = StringGraphs.createStringGraphBuilder();
+    void builder() {
+        StringPoolBuilder builder = StringPools.builder();
 
         assertNotNull(builder);
     }
 
     @Test
-    void writeReadStringGraph(@TempDir File tempDir) {
-        StringGraph graph = StringGraphTest.getAnySample1();
-        File file = new File(tempDir, "sample.graph");
+    void newStringPool() {
+        StringPoolBuilder builder = StringPools.builder();
+        int id = builder.add("foo");
+        StringPool sp = builder.build();
 
-        StringGraphs.writeStringGraph(graph, file);
-        StringGraph readGraph = StringGraphs.readStringGraph(file);
+        StringPool sp2 = StringPools.newStringPool(sp.getBytes());
 
-        StringGraphTest.assertEqualToSample1(readGraph);
+        assertNotEquals(sp, sp2);
+        assertEquals("foo", sp.getString(id));
+        assertEquals("foo", sp2.getString(id));
+    }
+
+    @Test
+    void newMutableStringPool() {
+        MutableStringPool stringPool = StringPools.newMutableStringPool();
+
+        assertNotNull(stringPool);
     }
 }

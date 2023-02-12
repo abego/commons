@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,7 @@ final class StringPoolDefault implements StringPool {
      */
     static final Charset CHARSET_FOR_STRING_TEXT = StandardCharsets.UTF_8;
 
+    //TODO: review the format description as we now also support joined strings
     /**
      * The bytes holding all strings of this {@link StringPool}.
      *
@@ -129,14 +130,33 @@ final class StringPoolDefault implements StringPool {
         };
     }
 
+    @Override
+    public boolean isByteAccessSupported() {
+        return true;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return bytes;
+    }
 
     private String readStringAtOffset(int[] offsetVar) {
         ByteSupplier readByte = () -> bytes[offsetVar[0]++];
 
-        int byteCount = VLQUtil.decodeUnsignedIntFromVLQ(readByte);
-        String result = new String(bytes, offsetVar[0], byteCount, StandardCharsets.UTF_8);
-        offsetVar[0] += byteCount;
-        return result;
+        int n = VLQUtil.decodeSignedIntFromVLQ(readByte);
+        if (n >= 0) {
+            String result = new String(bytes, offsetVar[0], n, StandardCharsets.UTF_8);
+            offsetVar[0] += n;
+            return result;
+        } else {
+            int nParts = -n;
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < nParts; i++) {
+                int partID = VLQUtil.decodeUnsignedIntFromVLQ(readByte);
+                int[] partIDVar = new int[]{partID};
+                builder.append(readStringAtOffset(partIDVar));
+            }
+            return builder.toString();
+        }
     }
-
 }

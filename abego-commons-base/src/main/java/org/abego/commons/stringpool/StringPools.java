@@ -25,10 +25,15 @@
 package org.abego.commons.stringpool;
 
 import static org.abego.commons.stringpool.StringPoolBuilderDefault.newStringPoolBuilderDefault;
+import static org.abego.commons.stringpool.StringPoolDefault.newStringPoolDefault;
 
 public class StringPools {
     public static StringPoolBuilder builder() {
         return newStringPoolBuilderDefault();
+    }
+
+    public static StringPool newStringPool(byte[] bytes) {
+        return newStringPoolDefault(bytes);
     }
 
     public static MutableStringPool newMutableStringPool() {

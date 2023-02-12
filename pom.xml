@@ -2,7 +2,7 @@
 <!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+  ~ Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -104,11 +104,11 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <org.eclipse.jdt.annotation.version>2.2.300</org.eclipse.jdt.annotation.version>
         <pitest-junit5-plugin.version>0.7</pitest-junit5-plugin.version>
         <pitest-maven.version>1.4.2</pitest-maven.version>
-        <org.eclipse.jdt.annotation.version>2.2.300</org.eclipse.jdt.annotation.version>
     </properties>
 
     <dependencies>

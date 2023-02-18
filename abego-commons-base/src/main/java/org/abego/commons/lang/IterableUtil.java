@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -292,19 +292,37 @@ public final class IterableUtil {
     }
 
     /**
-     * Sorts the {@code toString} representations of the {@code iterable}'s
-     * items and returns them as {@code '\n'}-separated lines.
+     * Sorts the texts of the {@code iterable}'s items (as defined by
+     * {@code itemTextProvider}) and returns them as {@code '\n'}-separated lines.
      * <p>
-     * {@code '\n'} characters in the {@code toString} representation of an
-     * item are not escaped, i.e. you may end up with more lines than items
-     * if items have {@code '\n'} characters in their {@code toString} text.
+     * {@code '\n'} characters in the items' texts are not escaped, i.e. you may
+     * end up with more lines than items if items' texts contain {@code '\n'}
+     * characters.
+     *
+     * @param iterable         provides the items to work on
+     * @param itemTextProvider (default Objects::toString)
      */
-    public static <T> String asSortedLines(Iterable<T> iterable) {
+    public static <T> String asSortedLines(Iterable<T> iterable,
+                                           Function<T, String> itemTextProvider) {
         return CollectionUtil.addAll(new ArrayList<>(), iterable)
                 .stream()
-                .map(Objects::toString)
+                .map(itemTextProvider)
                 .sorted()
                 .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Sorts the texts of the {@code iterable}'s items (as defined by
+     * {@code toString}) and returns them as {@code '\n'}-separated lines.
+     * <p>
+     * {@code '\n'} characters in the items' texts are not escaped, i.e. you may
+     * end up with more lines than items if items' texts contain {@code '\n'}
+     * characters.
+     *
+     * @param iterable provides the items to work on
+     */
+    public static <T> String asSortedLines(Iterable<T> iterable) {
+        return asSortedLines(iterable, Objects::toString);
     }
 
 

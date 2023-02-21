@@ -61,7 +61,7 @@ public interface StringPoolBuilder {
      * <p>
      * You may use this method instead of {@link #add(String)} when certain
      * substrings of the strings you are adding to the builder are repeating.
-     * An implementation of the {@link StringPoolBuilder} may store such strings
+     * An implementation of the  may store such strings
      * in a more compact form, thus reducing the memory requirements for the
      * resulting {@link StringPool}.
      * <p>
@@ -76,11 +76,20 @@ public interface StringPoolBuilder {
      *                    to be added to builder.
      */
     default int addJoined(@Nullable String... stringParts) {
-        StringBuilder joinedString = new StringBuilder();
+        return add(joinedString(stringParts));
+    }
+
+    @Nullable
+    default String joinedString(@Nullable String... stringParts) {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean hasNonNullPart = false;
         for (String s : stringParts) {
-            if (s != null) joinedString.append(s);
+            if (s != null) {
+                hasNonNullPart = true;
+                stringBuilder.append(s);
+            }
         }
-        return add(joinedString.toString());
+        return hasNonNullPart ? stringBuilder.toString() : null;
     }
 
     /**

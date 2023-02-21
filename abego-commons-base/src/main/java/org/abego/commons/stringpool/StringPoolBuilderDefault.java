@@ -43,8 +43,8 @@ import static org.abego.commons.stringpool.StringPoolDefault.CHARSET_FOR_STRING_
 
 final class StringPoolBuilderDefault implements StringPoolBuilder {
     private final Map<String, Integer> stringToIDMap = new HashMap<>();
-    private final ByteArrayOutputStream allStrings = new ByteArrayOutputStream();
-    private final PrintStream allStringsPrintStream = newPrintStream(allStrings, CHARSET_FOR_STRING_TEXT);
+    private final ByteArrayOutputStream allStringsByteStream = new ByteArrayOutputStream();
+    private final PrintStream allStringsPrintStream = newPrintStream(allStringsByteStream, CHARSET_FOR_STRING_TEXT);
     private final byte[] oneByte = new byte[1];
 
     private StringPoolBuilderDefault() {
@@ -76,37 +76,28 @@ final class StringPoolBuilderDefault implements StringPoolBuilder {
         // in VLQ encoding) immediately followed by the bytes of text of the string in UTF-8.
         // The offset of the first length byte is also used as the String's ID.
 
-        return id != null ? id : addStringWithId(s, allStrings.size());
+        return id != null ? id : addStringWithId(s, allStringsByteStream.size());
 
     }
 
     @Override
     public int addJoined(@Nullable String... stringParts) {
-        StringBuilder stringBuilder = new StringBuilder();
-        boolean hasNonNullPart = false;
-        for (String s : stringParts) {
-            if (s != null) {
-                hasNonNullPart = true;
-                stringBuilder.append(s);
-            }
-        }
-        // when there are only null strings parts (or no parts at all)
-        // return the id for the null string.
-        if (!hasNonNullPart) {
-            return add(null);
+        String string = joinedString(stringParts);
+        if (string == null) {
+            return 0;
         }
 
-        String joinedText = stringBuilder.toString();
+        @NonNull String s = string; // We need this extra variable s to please Eclipse's Nullable checker
 
         // When the effective String already exists we reuse that and 
         // don't create a new joined String that would be a duplicate.
-        @Nullable Integer id = stringToIDMap.get(joinedText);
+        @Nullable Integer id = stringToIDMap.get(s);
         if (id != null) {
             return id;
         }
 
         // Construct the joined String.
-        return constructJoinedString(joinedText, stringParts);
+        return constructJoinedString(s, stringParts);
     }
 
     private int constructJoinedString(String joinedText,
@@ -123,7 +114,7 @@ final class StringPoolBuilderDefault implements StringPoolBuilder {
         int n = partIDs.size();
         switch (n) {
 
-            case 0: // no parts was added, so the stringParts only consist of 
+            case 0: // no part was added, so the stringParts only consist of 
                 // empty strings (and possibly some nulls). As the 
                 // "all-null" case was already covered before, we are now
                 // in the "empty string" case.
@@ -134,7 +125,7 @@ final class StringPoolBuilderDefault implements StringPoolBuilder {
                 return partIDs.get(0);
 
             default: // the "real" joined String case, with at least two parts.
-                int id = allStrings.size();
+                int id = allStringsByteStream.size();
                 // write the number of parts this joined String consists of
                 VLQUtil.encodeSignedIntAsVLQ(-n, this::writeByte);
                 // write the IDs of all parts
@@ -175,7 +166,7 @@ final class StringPoolBuilderDefault implements StringPoolBuilder {
 
     @Override
     public StringPool build() {
-        return StringPoolDefault.newStringPoolDefault(allStrings.toByteArray());
+        return StringPoolDefault.newStringPoolDefault(allStringsByteStream.toByteArray());
     }
 
 }

@@ -56,7 +56,7 @@ final class ProgressWithRangeImpl implements ProgressWithRange {
                                   Options options) {
         if (minValue > maxValue) {
             throw new IllegalArgumentException(String.format(
-                    "minValue must be <= maxValue. Got minValue: %d, maxValue: %d",
+                    "minValue must be <= maxValue. Got minValue: %d, maxValue: %d", //NON-NLS
                     minValue, maxValue));
         }
         this.topic = topic;
@@ -211,7 +211,10 @@ final class ProgressWithRangeImpl implements ProgressWithRange {
 
         @Override
         public int getPercentageDone() {
-            return (getValue() - getMinValue()) * 100 / getRangeSize();
+            int rangeSize = getRangeSize();
+            return rangeSize != 0
+                    ? (getValue() - getMinValue()) * 100 / rangeSize
+                    : 100;
         }
 
         @Override

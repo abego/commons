@@ -219,4 +219,18 @@ class ProgressWithRangeImplTest {
                 "Topic", 10, 5, EmptyProgressListener.getInstance()));
         assertEquals("minValue must be <= maxValue. Got minValue: 10, maxValue: 5", e.getMessage());
     }
+
+    @Test
+    void bugZeroSizeRangeAndPercentageDone() {
+        StringBuilder output = new StringBuilder();
+        ProgressWithRange.Listener listener = event -> output.append(
+                String.format("Done: %d %%\n", event.getPercentageDone()));
+
+        ProgressWithRange progress = ProgressWithRangeImpl.createProgressWithRange(
+                "Topic", 10, 10,
+                listener);
+        progress.close();
+
+        assertEquals("Done: 100 %\nDone: 100 %\n", output.toString());
+    }
 }

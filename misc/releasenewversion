@@ -103,7 +103,7 @@ misc/setartifactversion "abego-commons" "$version" "abego-commons-test/pom.xml"
 # --- Do the Git stuff  ---------------------------------------------------
 echo "Pushing changes to Git server..."
 git add .
-git commit -m "Release ${version}"
+git commit -m "build: Release ${version}"
 git tag "v${version}" # tag the commit as `vx.y.z` (e.g. "`v0.10.0`")
 git push origin "v${version}" #o push the changes to the Git server, incl. tag.
 
@@ -113,7 +113,7 @@ misc/setartifactversion "abego-commons" "${nextVersion}-SNAPSHOT" "pom.xml"
 misc/setartifactversion "abego-commons" "${nextVersion}-SNAPSHOT" "abego-commons-base/pom.xml"
 misc/setartifactversion "abego-commons" "${nextVersion}-SNAPSHOT" "abego-commons-test/pom.xml"
 git add .
-git commit -m "Prepare for next development iteration"
+git commit -m "build: Prepare for next development iteration"
 git push origin
 
 # --- Deploying to Maven Central ------------------------------------------

@@ -31,7 +31,10 @@ import org.eclipse.jdt.annotation.Nullable;
  *
  * <p>Use {@link #add(String)} to add all {@link String}s to be included in the StringPool. Then call {@link #build()}
  * to create the actual StringPool.</p>
+ *
+ * @deprecated use https://github.com/abego/abego-stringpool instead
  */
+@Deprecated
 public interface StringPoolBuilder {
 
     /**

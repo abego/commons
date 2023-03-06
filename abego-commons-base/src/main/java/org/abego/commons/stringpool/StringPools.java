@@ -27,6 +27,12 @@ package org.abego.commons.stringpool;
 import static org.abego.commons.stringpool.StringPoolBuilderDefault.newStringPoolBuilderDefault;
 import static org.abego.commons.stringpool.StringPoolDefault.newStringPoolDefault;
 
+/**
+ * The module's entry.
+ *
+ * @deprecated use https://github.com/abego/abego-stringpool instead
+ */
+@Deprecated
 public class StringPools {
     public static StringPoolBuilder builder() {
         return newStringPoolBuilderDefault();

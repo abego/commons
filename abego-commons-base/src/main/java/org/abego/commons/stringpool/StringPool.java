@@ -45,8 +45,11 @@ import org.eclipse.jdt.annotation.Nullable;
  * </p>
  *
  * <p>A {@code null} String has the ID {@code 0}.</p>
+ *
+ *  @deprecated use https://github.com/abego/abego-stringpool instead
  */
 @SuppressWarnings("EmptyMethod")
+@Deprecated
 public interface StringPool {
 
     /**

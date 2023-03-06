@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,10 @@
 /**
  * Manage sets of {@link java.lang.String}s, with an implementation that uses a
  * compact String representation.
+ *
+ * @deprecated use https://github.com/abego/abego-stringpool instead
  */
+@Deprecated
 @NonNullByDefault
 package org.abego.commons.stringpool;
-
 import org.eclipse.jdt.annotation.NonNullByDefault;

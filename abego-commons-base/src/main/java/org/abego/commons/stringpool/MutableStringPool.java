@@ -31,7 +31,10 @@ import org.eclipse.jdt.annotation.Nullable;
  * <p>
  * In contrast to the default implementation for {@link StringPool} the default
  * implementation for {@link MutableStringPool} is less memory efficient.
+ *
+ * @deprecated use https://github.com/abego/abego-stringpool instead
  */
+@Deprecated
 public interface MutableStringPool extends StringPool {
 
     /**

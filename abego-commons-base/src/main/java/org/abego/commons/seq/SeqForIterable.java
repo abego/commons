@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,21 +36,22 @@ import static org.abego.commons.util.ListUtil.toList;
 // (No need to override "equals" as AbstractSeq implements "equals" in an abstract way using the iterator)
 final class SeqForIterable<T> extends AbstractSeq<T> implements SeqNonEmpty<T> {
 
-    private final Iterable<? extends T> iterable;
+    private final Iterable<T> iterable;
     @Nullable
     private List<T> list;
 
+    @SuppressWarnings("unchecked")
     private SeqForIterable(Iterable<? extends T> iterable) {
-        this.iterable = iterable;
+        this.iterable = (Iterable<T>) iterable;
     }
 
     static <T, S extends T> SeqForIterable<T> newSeqForIterable(Iterable<S> iterable) {
-        return new SeqForIterable<T>(iterable);
+        return new SeqForIterable<>(iterable);
     }
 
     @Override
     public Iterator<T> iterator() {
-        return (Iterator<T>) iterable.iterator();
+        return iterable.iterator();
     }
 
     @Override
@@ -69,7 +70,7 @@ final class SeqForIterable<T> extends AbstractSeq<T> implements SeqNonEmpty<T> {
     }
 
     private List<T> getList() {
-        // this code is a little bit more complicated 
+        // this code is a little more complicated 
         // than you may expect, but this makes the Nullable checks work
         @Nullable List<T> result = list;
         if (result == null) {

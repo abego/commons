@@ -1,5 +1,6 @@
 .idea/sonarlint/issuestore
 .idea/git_toolbox_prj.xml
+.idea/vcs.xml
 target
 tmp
 bin

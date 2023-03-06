@@ -1,5 +1,122 @@
 # CHANGELOG
 
+## 0.12.0
+
+### New
+
+#### Submodules
+
+- progress
+
+#### Types
+
+- AssertRetrying/Service
+- FormattedText#FontStyle
+- IOFunction
+- IOFunctionUtil
+- LineProcessor
+- Polling/Service
+- PredicateUtil
+- PropertiesGroup
+- PropertiesIOUtil
+- SimpleSet
+- StackTraceElementUtil
+- StringEvaluatorUtil
+- Timeouts/TimeoutSupport
+- UncheckedFileNotFoundException
+- URIUtil
+- VarNullable
+
+#### Methods
+
+- ArrayUtil#allButLastItem
+- ArrayUtil#firstOrNull
+- FileUtil#canonicalPath
+- FileUtil#filesFromFilePathes
+- FileUtil#findExistingDirectory
+- FileUtil#copyFile
+- FileUtil#emptyFile
+- FileUtil#findExistingDirectory
+- FileUtil#mkdirs
+- FileUtil#removeFileExtension
+- FormattedText#toPlainText()
+- FormattedTextUtil#withStyledRanges
+- FormattedTextUtil#withStyledRangesIfRequired
+- InputStreamUtil#readLineWise
+- IterableUtil#appendTextOf
+- IterableUtil#asSortedLines(Iterable<T>, Function<T,String>)
+- ListUtil#toList(Iterable)  // generalized
+- ObjectUtil#allAreNotNull
+- ObjectUtil#compareAsTexts
+- ObjectUtil#instanceOfOrNull
+- ObjectUtil#valueOrFail
+- PrintStreamUtil#newPrintStreamToBufferedFile
+- PropertiesIOUtil#addProperties
+- PropertiesIOUtil#readProperties/readPropertiesGroup
+- PropertiesUtil: add access to some SystemProperties
+- Seq#allItemsMatch
+- Seq#first(Predicate)
+- Seq#firstOrNull()
+- Seq#firstOrNull(Predicate)
+- Seq#getSize()
+- Seq#hasItemWith(Predicate)
+- Seq#indexOfFirst(Predicate)
+- Seq#itemOrElse
+- Seq#itemOrNull
+- Seq#last()
+- Seq#noItemMatches
+- Seq#rest()
+- Seq#sortedByText
+- SeqUtil#newSeq(Enumeration)
+- SeqUtil#newSeq(Function<T,R> mapper, T... items)
+- SeqUtil#newSeq(Iterable)
+- SeqUtil#newSeq(mapper, int...)
+- SeqUtil#newSeqUniqueItems
+- SeqUtil#sortedByText
+- SeqUtil#toCompactString(Seq<?>)
+- SeqUtil#toSeq(Iterable)
+- SetUtil#asSet(T...)
+- StringUtil#compareToIgnoreCaseStable
+- StringUtil#containsAnyOf
+- StringUtil#endsWithIgnoreCase
+- StringUtil#lineCount
+- StringUtil#newIncludesStringPredicate
+- SystemUtil#isMacOS
+- VarUtil#newVar(T initialValue)
+- VLQUtil#writeVLQInt/readVLQInt/readVLQIntArray
+
+### Changes (Possibly incompatible)
+
+- Move Seq#rest -> SeqUtil#rest
+- Remove StringUtil#characters(String):Seq (now internal in DiffImpl)
+- StringUtil#lines returns String[] (not Seq<String>)
+- TimeoutService... (not ...Support...)
+
+### Bug Fixes
+
+- StringPoolBuilder#addJoined does not handle `null` cases correctly
+
+### Deprecation
+
+- PollingUtil (use Polling instead)
+- URLUtil#toFile(URL) (use FileUtil#toFile(URL))
+- StringPool module (use https://github.com/abego/abego-stringpool instead)
+
+### Improvements
+
+- AbstractSeq#toString: use stopLength feature to limit the toString length
+- Seq: better support for Sets
+- StringUtil#join: support null elements
+- StringUtil#joinWithEmptyStringForNull: support null elements
+- VLQUtil: support signed int and (unsigned) long encoding/decoding
+- removed dependency to "org.abego.guitesting"
+- improved build/release process (e.g. no signing by default)
+- tuning (avoid boxing, better implementations, ...)
+- documentation
+- reformatting
+- more tests
+- reduce warnings
+
 ## 0.11.0
 
 ### New

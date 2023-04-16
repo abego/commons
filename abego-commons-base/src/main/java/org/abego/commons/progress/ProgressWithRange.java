@@ -41,6 +41,10 @@ public interface ProgressWithRange {
 
     int getMinValue();
 
+    /**
+     * Returns the maximal value of the range, or {@link Integer#MAX_VALUE} when
+     * this is an "open range", i.e. the maximal value not known.
+     */
     int getMaxValue();
 
     String getText();

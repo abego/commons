@@ -41,18 +41,27 @@ final class ProgressListenerWithPrintStreamOutput
 
     @Override
     public void accept(ProgressWithRangeImpl.Event event) {
-        String remainingTimeText = event.getRemainingTime()
-                .map(t -> String.format("%d s", t.getSeconds())).orElse("?"); //NON-NLS
         String decoratedText = !event.getText().isEmpty()
                 ? String.format(" - %s", event.getText())  //NON-NLS
                 : "";
-        printStream.printf("[%d s] %s (%d of %d, %d %%, remaining time: %s)%s%n", //NON-NLS
-                event.getElapsedTime().getSeconds(),
-                event.getTopic(),
-                event.getOffsetInRange(),
-                event.getRangeSize(),
-                event.getPercentageDone(),
-                remainingTimeText,
-                decoratedText);
+        if (event.getMaxValue() == Integer.MAX_VALUE) {
+            // Open range end: -> don't display remaining time etc.) 
+            printStream.printf("[%d s] %s (%d)%s%n", //NON-NLS
+                    event.getElapsedTime().getSeconds(),
+                    event.getTopic(),
+                    event.getOffsetInRange(),
+                    decoratedText);
+        } else {
+            String remainingTimeText = event.getRemainingTime()
+                    .map(t -> String.format("%d s", t.getSeconds())).orElse("?"); //NON-NLS
+            printStream.printf("[%d s] %s (%d of %d, %d %%, remaining time: %s)%s%n", //NON-NLS
+                    event.getElapsedTime().getSeconds(),
+                    event.getTopic(),
+                    event.getOffsetInRange(),
+                    event.getRangeSize(),
+                    event.getPercentageDone(),
+                    remainingTimeText,
+                    decoratedText);
+        }
     }
 }

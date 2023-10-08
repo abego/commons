@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.abego.commons.util;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
+import java.util.function.Consumer;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,4 +48,13 @@ public final class LoggerUtil {
     public static void enableLogToConsole(String loggerName) {
         enableLogToConsole(loggerName, Level.ALL);
     }
+
+    /**
+     * Returns a {@code Consumer<String>} that logs accepted {@code String}s
+     * to the {@code logger} as warnings.
+     */
+    public static Consumer<String> logStringsAsWarnings(Logger logger) {
+        return i -> logger.log(Level.WARNING, i);
+    }
+
 }

@@ -591,18 +591,18 @@ class FileUtilTest {
     void writeTextOK(@TempDir File tempDir) {
         String filename = "file.txt";
 
-        writeText(tempDir, filename, "foo bär");
+        File file = writeText(tempDir, filename, "foo bär");
 
-        assertEquals("foo bär", textOf(new File(tempDir, filename)));
+        assertEquals("foo bär", textOf(file));
     }
 
     @Test
     void writeText_charsetOK(@TempDir File tempDir) {
         String filename = "file.txt";
 
-        writeText(tempDir, filename, "foo bär", StandardCharsets.UTF_8);
+        File file = writeText(tempDir, filename, "foo bär", StandardCharsets.UTF_8);
 
-        assertEquals("foo bär", textOf(new File(tempDir, filename)));
+        assertEquals("foo bär", textOf(file));
     }
 
     @Test

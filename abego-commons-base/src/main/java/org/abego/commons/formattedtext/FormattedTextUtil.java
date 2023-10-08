@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -106,7 +106,7 @@ public final class FormattedTextUtil {
 
     /**
      * As {@link #withStyledRanges(String, Iterable, Color, FontStyle...)}, but
-     * returns the unchanged {@code text} (as a {@link String} when no range
+     * returns the unchanged {@code text} (as a {@link String}) when no range
      * needs to formatted, i.e. all text is plain text.
      *
      * @return {@link String} or {@link FormattedText}

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +27,14 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public final class ReaderUtil {
 
@@ -49,9 +49,9 @@ public final class ReaderUtil {
      * is encoded using the given {@code charset}.
      */
     public static Reader reader(File file, Charset charset)
-            throws FileNotFoundException {
+            throws IOException {
         return new BufferedReader(new InputStreamReader(
-                new FileInputStream(file), charset));
+                Files.newInputStream(file.toPath()), charset));
     }
 
     /**
@@ -64,7 +64,7 @@ public final class ReaderUtil {
     public static Reader newReader(File file, Charset charset) {
         try {
             return reader(file, charset);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             //noinspection DuplicateStringLiteralInspection
             throw new UncheckedIOException(
                     String.format(

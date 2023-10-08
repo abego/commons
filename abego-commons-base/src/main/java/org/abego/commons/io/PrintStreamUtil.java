@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,12 +29,12 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import static org.abego.commons.io.BufferedReaderUtil.newBufferedReader;
 import static org.abego.commons.io.FileUtil.runIOCode;
@@ -69,7 +69,7 @@ public final class PrintStreamUtil {
 
     public static PrintStream newPrintStreamToBufferedFile(File file, Charset charset) {
         return runIOCode(() -> new PrintStream(
-                new BufferedOutputStream(new FileOutputStream(file)),
+                new BufferedOutputStream(Files.newOutputStream(file.toPath())),
                 false, charset.name()));
     }
 

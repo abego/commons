@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -134,4 +134,25 @@ public final class URLUtil {
             return false;
         }
     }
+
+    /**
+     * Assuming the {@code url} refers to a JAR resource/file the method
+     * returns the "JAR:" protocol URL to refer to entries within that JAR.
+     *
+     * @param url   the {@link URL} to the JAR resource/file
+     * @param entry the path to the entry within the JAR.
+     *              (Default: "", i.e. the root directory in the JAR)
+     * @see <a href="https://docs.oracle.com/cd/E19253-01/819-0913/author/jar.html#jarprotocol">The JAR Protocol</a>
+     */
+    public static URL asJarProtocolURL(URL url, String entry) {
+        return URLUtil.toURL(String.format("jar:%s!/%s", url, entry)); //NON-NLS
+    }
+
+    /**
+     * See {@link #asJarProtocolURL(URL, String)}.
+     */
+    public static URL asJarProtocolURL(URL url) {
+        return asJarProtocolURL(url, "");
+    }
+
 }

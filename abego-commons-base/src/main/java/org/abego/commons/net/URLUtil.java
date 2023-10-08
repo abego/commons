@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,6 @@ package org.abego.commons.net;
 import org.abego.commons.io.InputStreamUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -39,8 +38,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-
-import static org.abego.commons.lang.exception.UncheckedException.newUncheckedException;
 
 public final class URLUtil {
     URLUtil() {
@@ -60,18 +57,6 @@ public final class URLUtil {
             return new URL(spec);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(String.format("Invalid URL specification: %s", spec), e); //NON-NLS
-        }
-    }
-
-    /**
-     * Deprecated. Use {@link org.abego.commons.io.FileUtil#toFile(URL)} instead
-     */
-    @Deprecated
-    public static File toFile(URL url) {
-        try {
-            return URIUtil.toFile(url.toURI());
-        } catch (URISyntaxException e) {
-            throw newUncheckedException(e);
         }
     }
 

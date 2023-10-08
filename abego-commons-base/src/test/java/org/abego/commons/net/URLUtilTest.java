@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,7 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -44,7 +42,6 @@ import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
 import static org.abego.commons.net.URLUtil.isURI;
 import static org.abego.commons.net.URLUtil.isURL;
 import static org.abego.commons.net.URLUtil.textOf;
-import static org.abego.commons.net.URLUtil.toFile;
 import static org.abego.commons.net.URLUtil.urlDecode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -159,22 +156,4 @@ class URLUtilTest {
                 () -> urlDecode("foo", ""));
         assertEquals("java.io.UnsupportedEncodingException: URLDecoder: empty string enc parameter", e.getMessage());
     }
-
-    @Test
-    void toFile_OK() throws MalformedURLException {
-        File file = toFile(new URL("file:/foo/bar.baz"));
-
-        assertEquals("/foo/bar.baz", file.getPath());
-    }
-
-    @Test
-    void toFile_URISyntaxException_OK() throws MalformedURLException {
-        URL url = new URL("file:/foo/bar|s");
-
-        Exception e = assertThrows(Exception.class, () -> toFile(url));
-
-        assertEquals("Illegal character in path at index 13: file:/foo/bar|s",
-                e.getMessage());
-    }
-
 }

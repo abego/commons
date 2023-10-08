@@ -40,7 +40,7 @@ class PropertiesGroupTest {
                 "abego.commons.testing", "testing.abego", ".config/abego.de/testing");
         Properties props = pg.getProperties();
         // use some "strange" property names to avoid the test fails because
-        // accidently somebody used the same name in a shared/global properties
+        // accidentally somebody used the same name in a shared/global properties
         // file.
         String fooValue = pg.getProperty("foo-used-for-abego.commons-tests");
         String barValue = pg.getProperty("bar-used-for-abego.commons-tests", "baz");

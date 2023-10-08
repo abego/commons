@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,9 +55,9 @@ class OutputStreamUtilTest {
 
     @Test
     void getOutputStreamFailingOnWrite_ok() {
-        OutputStream ostream = getOutputStreamFailingOnWrite("will fail on write");
+        OutputStream stream = getOutputStreamFailingOnWrite("will fail on write");
 
-        IllegalStateException e = assertThrows(IllegalStateException.class, () -> ostream.write(123));
+        IllegalStateException e = assertThrows(IllegalStateException.class, () -> stream.write(123));
         assertEquals("will fail on write", e.getMessage());
     }
 }

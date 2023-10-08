@@ -48,7 +48,7 @@ public final class URLUtil {
      * Returns an {@code URL} object from the {@code String} representation
      * given in {@code spec}.
      *
-     * @param spec an Uniform Resource Identifier specification, as define in
+     * @param spec a Uniform Resource Identifier specification, as define in
      *             RFC2396
      * @return the URL as specified by spec
      */
@@ -77,7 +77,7 @@ public final class URLUtil {
     }
 
     /**
-     * Decodes a application/x-www-form-urlencoded string
+     * Decodes an application/x-www-form-urlencoded string
      * using a specific encoding scheme.
      * <p>
      * The supplied encoding is used to determine what characters
@@ -92,7 +92,7 @@ public final class URLUtil {
     }
 
     /**
-     * Decodes a application/x-www-form-urlencoded string using UTF-8.
+     * Decodes an application/x-www-form-urlencoded string using UTF-8.
      * <p>
      * UTF-8 is used to determine what characters
      * are represented by any consecutive sequences of the form "%xy".
@@ -126,7 +126,7 @@ public final class URLUtil {
      *
      * @param url   the {@link URL} to the JAR resource/file
      * @param entry the path to the entry within the JAR.
-     *              (Default: "", i.e. the root directory in the JAR)
+     *              Default: "", i.e. the root directory in the JAR.
      * @see <a href="https://docs.oracle.com/cd/E19253-01/819-0913/author/jar.html#jarprotocol">The JAR Protocol</a>
      */
     public static URL asJarProtocolURL(URL url, String entry) {

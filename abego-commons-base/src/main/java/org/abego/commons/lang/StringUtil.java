@@ -60,8 +60,7 @@ import static org.abego.commons.util.function.PredicateUtil.isAnyPredicateTrue;
 public final class StringUtil {
 
     /**
-     * The string to represent represent a <code>null</code> value, i.e.
-     * <code>"null"</code>.
+     * The string to represent a <code>null</code> value, i.e. {@code null}.
      */
     public static final String NULL_STRING = "null"; //NON-NLS
 
@@ -531,7 +530,7 @@ public final class StringUtil {
     }
 
     /**
-     * Return the {@code string} if it has {@code maxLen} or less characters,
+     * Return the {@code string} if it has {@code maxLen} or fewer characters,
      * otherwise a string of length {@code maxLen} starting with the left of
      * {@code string} and ending with {@code truncatedStringSuffix}.
      */
@@ -551,7 +550,7 @@ public final class StringUtil {
     }
 
     /**
-     * Return the {@code string} if it has {@code maxLen} or less characters,
+     * Return the {@code string} if it has {@code maxLen} or fewer characters,
      * otherwise a string of length {@code maxLen} starting with the left of
      * {@code string} and ending with "...".
      */

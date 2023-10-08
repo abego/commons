@@ -529,11 +529,11 @@ class FileUtilTest {
     @Test
     void toFile_withURISyntax() throws MalformedURLException {
 
-        // Regarding URL and URI one often hears: "Every URL is also an URI".
+        // Regarding URL and URI one often hears: "Every URL is also a URI".
         //
-        // However this is not true when using the Java implementations. In Java
-        // the "[...]" (valid in an URL) are not accepted in an URI.
-        // Therefore we can create a valid URL to a file that makes toFile
+        // However, this is not true when using the Java implementations. In Java
+        // the "[...]" (valid in an URL) are not accepted in a URI.
+        // Therefore, we can create a valid URL to a file that makes toFile
         // fail.
         URL url = new URL("file:/some/[2]/file.txt");
 

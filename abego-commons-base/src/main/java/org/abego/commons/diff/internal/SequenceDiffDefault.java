@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ import static org.abego.commons.lang.CharacterUtil.TAB_CHAR;
 import static org.abego.commons.seq.SeqUtil.newSeq;
 
 /**
- * Provides a implementation for the SequenceDiff interface using a dynamic
+ * Provides an implementation for the SequenceDiff interface using a dynamic
  * programming algorithm to compute edit distances.
  * <p>
  * The algorithm has a time and space complexity of O(n*m).

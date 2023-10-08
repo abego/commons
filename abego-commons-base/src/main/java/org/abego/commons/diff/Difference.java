@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import org.abego.commons.range.IntRange;
  * "rangeInB").
  *
  * <p>
- * Assume that sequence B is an edited version of sequence A the following holds:
+ * Assume that sequence B is an edited version of sequence A, the following holds:
  * <ul>
  * <li>When rangeInA is empty, the items of sequence B at rangeInB were added to sequence B.</li>
  * <li>When rangeInB is empty, the items of sequence A at rangeInA were deleted.</li>

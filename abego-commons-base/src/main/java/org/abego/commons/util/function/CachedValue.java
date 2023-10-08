@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -48,8 +48,8 @@ public final class CachedValue<T> implements Supplier<@NonNull T> {
         synchronized (this) {
             @Nullable T v = value;
             return v != null ? v : initValue(); }
-        // Keep the } in the line above to please the coverage tool.
-        // Otherwise we would see an unobserved line
+        // Keep the  closing brace in the line above to please the coverage tool.
+        // Otherwise, we would see an unobserved line
 // @formatter:on
     }
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ import java.util.stream.StreamSupport;
  * <p>
  * In contrast to an {@link Iterable} or a {@link Stream} a Seq also provides
  * the number of items in the sequence ({@link #size()}) as well as indexed
- * access to the items ({@link #item(int)}). Also Seq introduces the concept of
+ * access to the items ({@link #item(int)}). Also, Seq introduces the concept of
  * a "single item" sequence.
  */
 public interface Seq<T> extends Iterable<T> {

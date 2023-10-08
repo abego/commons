@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,7 +52,7 @@ public final class BlackboardDefault<T> implements Blackboard<T> {
     public boolean isEmpty() {
         // @formatter:off
         synchronized (itemList) {
-            return itemList.isEmpty(); } // '}' in same line as last statement to avoid wrong code coverage info
+            return itemList.isEmpty(); } // closing brace in same line as last statement to avoid wrong code coverage info
         // @formatter:on
     }
 
@@ -60,7 +60,7 @@ public final class BlackboardDefault<T> implements Blackboard<T> {
     public Seq<T> items() {
         // @formatter:off
         synchronized (itemList) {
-            return newSeq(new ArrayList<>(itemList)); } // '}' in same line as last statement to avoid wrong code coverage info
+            return newSeq(new ArrayList<>(itemList)); } //  closing brace in same line as last statement to avoid wrong code coverage info
         // @formatter:on
     }
 
@@ -75,7 +75,7 @@ public final class BlackboardDefault<T> implements Blackboard<T> {
                     return o;
                 }
             }
-            return null; } // '}' in same line as last statement to avoid wrong code coverage info
+            return null; } //  closing brace in same line as last statement to avoid wrong code coverage info
         // @formatter:on
     }
 
@@ -102,7 +102,7 @@ public final class BlackboardDefault<T> implements Blackboard<T> {
     public String text() {
         // @formatter:off
         synchronized (itemList) {
-            return IterableUtil.textOf(itemList, "\n"); } // '}' in same line as last statement to avoid wrong code coverage info
+            return IterableUtil.textOf(itemList, "\n"); } //  closing brace in same line as last statement to avoid wrong code coverage info
         // @formatter:on
     }
 

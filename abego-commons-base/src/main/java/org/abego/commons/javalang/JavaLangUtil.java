@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,7 +56,7 @@ public final class JavaLangUtil {
 
         char[] chars = text.toCharArray();
 
-        // all characters from 1 .. end must be JavaIdentifierPart chars
+        // all characters from 1 to end must be JavaIdentifierPart chars
         for (int i = 1; i < chars.length; i++) {
             if (!isJavaIdentifierPart(chars[i])) {
                 return false;

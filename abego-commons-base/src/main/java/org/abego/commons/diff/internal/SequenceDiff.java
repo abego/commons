@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,6 @@ interface SequenceDiff<T> {
      * <p>
      * The differences are returned as a sequence of "{@link AlignedItemPair}s.
      * For every pair of the result sequence the following holds:
-     *
      * <table border="1" summary="Kinds of Differences">
      * <tr>
      * <td>first</td>

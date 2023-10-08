@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,7 +88,7 @@ class BooleanSupplierUtilTest {
 
         otherThread.interrupt();
 
-        // The interrupts ends the waitUntil, i.e. the code following the
+        // The interrupts end the waitUntil, i.e. the code following the
         // waitUntil is executed and writes the "foo".
         waitUntil(() -> "foo".equals(sb.toString()));
         assertEquals("foo", sb.toString());

@@ -134,7 +134,7 @@ class ProgressWithRangeImplTest {
                 "[3 s] Topic (4 of 10, 40 %, remaining time: 4 s) - four\n" +
                 "[9 s] Topic (9 of 10, 90 %, remaining time: 1 s) - nine\n", printStream.text());
 
-        // closing. (only 999ms since last event, but as this is "close" an
+        // closing. Only 999ms since last event, but as this is "close" an
         // event is emitted anyway. The pause only applies to update events.
         progress.close();
         assertEquals(10, progress.getValue());

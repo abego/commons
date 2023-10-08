@@ -239,7 +239,7 @@
             <plugins>
                 <plugin>
                     <!-- see https://stackoverflow.com/a/13043842
-                         "How to eliminate the “maven-enforcer-plugin (goal ”enforce“) is ignored by m2e” warning by eclipse?" -->
+                         "How to eliminate the “maven-enforcer-plugin (goal "enforce") is ignored by m2e” warning by eclipse?" -->
                     <groupId>org.eclipse.m2e</groupId>
                     <artifactId>lifecycle-mapping</artifactId>
                     <version>1.0.0</version>

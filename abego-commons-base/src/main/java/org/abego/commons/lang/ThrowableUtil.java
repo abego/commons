@@ -38,7 +38,7 @@ public final class ThrowableUtil {
 
     /**
      * Return the message of the <code>throwable</code> if it has one, otherwise
-     * the throwable's class name.
+     * the name of the class of the throwable.
      */
     public static String messageOrClassName(Throwable throwable) {
         String message = throwable.getMessage();

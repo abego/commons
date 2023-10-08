@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -314,7 +314,7 @@ public final class FileUtil {
     }
 
     /**
-     * Return the text of <code>file</code> (an UTF-8 encoded text file).
+     * Return the text of <code>file</code> (a UTF-8 encoded text file).
      */
     public static String textOf(File file) {
         return textOf(file, UTF_8);
@@ -342,7 +342,7 @@ public final class FileUtil {
     }
 
     /**
-     * Return the text of the file named <code>pathname</code>, an
+     * Return the text of the file named <code>pathname</code>, a
      * UTF-8 encoded text file.
      */
     public static String textOfFile(String pathname) {
@@ -376,7 +376,7 @@ public final class FileUtil {
     }
 
     /**
-     * Return the text of <code>file</code>, an UTF-8 encoded text file,
+     * Return the text of <code>file</code>, a UTF-8 encoded text file,
      * if the file exists, otherwise the empty string.
      */
     public static String textOfFileIfExisting(File file) {

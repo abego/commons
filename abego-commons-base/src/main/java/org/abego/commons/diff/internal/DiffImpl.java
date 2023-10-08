@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -183,7 +183,7 @@ public final class DiffImpl {
 
             if (line1 == null) {
                 // line1 and line2 cannot be null at the same time in an alignedItemPair.
-                // Therefore `requireNonNull(line2)` will never fail.
+                // Therefore, `requireNonNull(line2)` will never fail.
                 addLine(sb, "+", requireNonNull(line2));
             } else if (line2 == null) {
                 addLine(sb, "-", line1);

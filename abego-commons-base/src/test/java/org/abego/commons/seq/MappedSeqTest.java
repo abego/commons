@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ class MappedSeqTest {
     @Test
     void newMappedSeqOrEmpty() {
 
-        // non empty
+        // non-empty
         Seq<Integer> seq = SeqUtil.newSeq(4, 7, 2);
         Function<Integer, String> mapper = i -> "{" + i + "}";
         Seq<String> result = MappedSeq.newMappedSeqOrEmpty(seq, mapper);

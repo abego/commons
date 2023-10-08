@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,15 +31,17 @@ package org.abego.commons.seq;
 public interface SeqNonEmptyWithAppended<T> extends SeqNonEmpty<T> {
 
     /**
-     * Return a new {SeqNonEmptyWithAppended with the same items as
-     * <code>this</code> Seq plus the given <code>items</code> added (at the end).
+     * Return a new  instance with the same
+     * items as <code>this</code> Seq plus the given <code>items</code>
+     * added (at the end).
      */
     @SuppressWarnings("unchecked")
     SeqNonEmptyWithAppended<T> appended(T... items);
 
     /**
-     * Return a new {SeqNonEmptyWithAppended with the same items as
-     * <code>this</code> Seq plus the given <code>items</code> added (at the end).
+     * Return a new  instance with the same 
+     * items as <code>this</code> Seq plus the given <code>items</code> 
+     * added (at the end).
      */
     SeqNonEmptyWithAppended<T> appended(Iterable<T> items);
 }

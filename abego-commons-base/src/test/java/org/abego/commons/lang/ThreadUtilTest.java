@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class ThreadUtilTest {
     /**
-     * The maximum duration of a "non-sleeping" sleep call, in milli seconds
+     * The maximum duration of a "non-sleeping" sleep call, in milliseconds
      *
      * <p>(Determined experimentally)</p>
      */

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,10 @@
 
 package org.abego.commons.lang;
 
+/**
+ * Typically instances of this class are used in a {@code try}-with-resources
+ * statement to ensure some code is executed when the try block is exited.
+ */
 public final class RunOnClose implements AutoCloseable {
 
     private final Runnable runnable;
@@ -33,8 +37,8 @@ public final class RunOnClose implements AutoCloseable {
     }
 
     /**
-     * Return a RunOnClose that {@link #close()} method will run the
-     * the value to {@code onCloseValue}.
+     * Return a RunOnClose that will run the {@code runnable} when the returned
+     * instance's {@link #close()} method is called.
      */
     public static RunOnClose runOnClose(Runnable runnable) {
 

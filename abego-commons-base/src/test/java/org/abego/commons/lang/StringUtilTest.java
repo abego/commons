@@ -547,12 +547,12 @@ class StringUtilTest {
         assertFalse(containsAnyOf("foobarbaz"));
         // first and only does not match
         assertFalse(containsAnyOf("foobarbaz", "x"));
-        // non of many not match
+        // none of many not match
         assertFalse(containsAnyOf("foobarbaz", "x", "y", "y2"));
     }
 
     @Test
-    void linecount() {
+    void lineCount() {
         assertEquals(1, StringUtil.lineCount(""));
         assertEquals(1, StringUtil.lineCount("a"));
         assertEquals(2, StringUtil.lineCount("a\nb"));
@@ -609,11 +609,11 @@ class StringUtilTest {
             out.append(s);
             out.append("\n");
         };
-        Consumer<String> indender = StringUtil.indent(addLine);
+        Consumer<String> indenter = StringUtil.indent(addLine);
 
         addLine.accept("foo");
-        indender.accept("bar");
-        indender.accept("baz");
+        indenter.accept("bar");
+        indenter.accept("baz");
         addLine.accept("doo");
 
         assertEquals("foo\n" +

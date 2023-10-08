@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,8 @@ public final class SeqNonEmptyWithAppendedDefault<T> extends AbstractSeq<T> impl
     @Override
     @SafeVarargs
     public final SeqNonEmptyWithAppended<T> appended(T... items) {
-        // when there are no items to be added there is no need to create a object, just return this object.
+        // when there are no items to be added there is no need to create 
+        // an object, just return this object.
         if (items.length == 0) {
             return this;
         }
@@ -77,14 +78,15 @@ public final class SeqNonEmptyWithAppendedDefault<T> extends AbstractSeq<T> impl
     private List<T> getListToAppend() {
         // Optimization: when the list was not yet "appended" we can just append
         // the new items at the end of the "sharedList" and share the list with
-        // the new Seq. For the old Seq we will just used the first "size"
-        // elements. Therefore we remembered the size in an extra field.
+        // the new Seq. For the old Seq we will just use the first "size"
+        // elements. Therefore, we remembered the size in an extra field.
         return (sharedList.size() == size) ? sharedList : new ArrayList<>(getList());
     }
 
     @Override
     public SeqNonEmptyWithAppended<T> appended(Iterable<T> items) {
-        // when there are no items to be added there is no need to create a object, just return this object.
+        // when there are no items to be added there is no need to create 
+        // an object, just return this object.
         if (IterableUtil.isEmpty(items)) {
             return this;
         }

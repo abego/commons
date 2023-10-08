@@ -362,16 +362,20 @@ public final class StringUtil {
                         0, string.length()));
     }
 
+    /**
+     * Returns the given {@code text} converted to an HTML text fragment
+     * so rendering the result as HTML will display the original {@code text}.
+     */
     @Nullable
-    public static String toHtml(@Nullable String s) {
-        if (s == null) {
+    public static String toHtml(@Nullable String text) {
+        if (text == null) {
             return null;
         }
 
-        StringBuilder result = new StringBuilder(s.length());
-        int len = s.length();
+        StringBuilder result = new StringBuilder(text.length());
+        int len = text.length();
         for (int i = 0; i < len; i++) {
-            char c = s.charAt(i);
+            char c = text.charAt(i);
             switch (c) {
                 //noinspection MagicCharacter
                 case '&':
@@ -685,11 +689,7 @@ public final class StringUtil {
     }
 
     public static String firstLine(String text) {
-        String[] lines = lines(text);
-        if (lines.length == 0) {
-            throw new NoSuchElementException();
-        }
-        return lines[0];
+        return lines(text)[0];
     }
 
     //region Checks

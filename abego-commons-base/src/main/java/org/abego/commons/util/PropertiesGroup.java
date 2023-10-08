@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ import static org.abego.commons.util.PropertiesUtil.workingDirectory;
  *     <ul>
  *         <li> the working directory</li>
  *         <li> the home directory</li>
- *         <li> the abego config directory ({@code "{homeDirectory}/.config/abego.org/"})</li>
+ *         <li> the config directory ({@code "{homeDirectory}/.config/abego.org/"}) (*)</li>
  *     </ul>
  *     </li>
  * </ul>
@@ -58,8 +58,8 @@ import static org.abego.commons.util.PropertiesUtil.workingDirectory;
  * <ul>
  *     <li>group- and user-specific ({@code "{groupName}-{userName}.properties"})</li>
  *     <li>group-specific ({@code "{groupName}.properties"})</li>
- *     <li>shared and user-specific ({@code "abego-{userName}.properties"})</li>
- *     <li>shared ({@code "abego.properties"})</li>
+ *     <li>shared and user-specific ({@code "abego-{userName}.properties"}) (*)</li>
+ *     <li>shared ({@code "abego.properties"}) (*)</li>
  * </ul>
  * The following rules hold:
  * <ul>
@@ -67,7 +67,7 @@ import static org.abego.commons.util.PropertiesUtil.workingDirectory;
  *     defined in a Properties file.</li>
  *     <li>A group-specific value overrules any shared value.</li>
  *     <li>A value defined in the working directory overrules any value defined
- *     in the home directory, which overrules any value defined in the abego
+ *     in the home directory, which overrules any value defined in the 
  *     config directory.</li>
  *     <li>Within a directory a user-specific value overrules a non-user-specific value.</li>
  * </ul>
@@ -91,32 +91,50 @@ import static org.abego.commons.util.PropertiesUtil.workingDirectory;
  * {@code "{workingDirectory}"}, {@code "{homeDirectory}"} and
  * {@code "{userName}"} correspond to the System properties
  * {@code "{user.dir}"}, {@code "{user.home}"} and {@code "{user.name}"}.
+ * <p>
+ * (*) The config directory {@code `.config/abego.org/`} and the name of the 
+ * shared group {@code `abego`} can be customized when using the factory
+ * method {@link #newPropertiesGroup(String, String, String)}. 
  */
 public final class PropertiesGroup {
     private static final String PROPERTIES_FILE_EXTENSION = ".properties";
+    @SuppressWarnings("DuplicateStringLiteralInspection")
     private static final String SHARED_GROUP = "abego"; //NON-NLS
+    private static final String CONFIG_DIRECTORY = ".config/abego.org"; //NON-NLS
 
     private final String groupName;
+    private final String sharedGroupName;
+    private final String configDirectory;
     @Nullable
     private Properties properties;
 
-    private PropertiesGroup(String groupName) {
+    private PropertiesGroup(
+            String groupName, String sharedGroupName, String configDirectory) {
+        //noinspection CallToSuspiciousStringMethod
+        if (groupName.equals(sharedGroupName)) {
+            throw new IllegalArgumentException(
+                    "`" + sharedGroupName + "` is the shared name and must not be used as a groupName.");
+        }
+
         this.groupName = groupName;
+        this.sharedGroupName = sharedGroupName;
+        this.configDirectory = configDirectory;
+    }
+
+    public static PropertiesGroup newPropertiesGroup(
+            String groupName, String sharedGroupName, String configDirectory) {
+        return new PropertiesGroup(groupName, sharedGroupName, configDirectory);
     }
 
     public static PropertiesGroup newPropertiesGroup(String groupName) {
-        return new PropertiesGroup(groupName);
+        return new PropertiesGroup(groupName, SHARED_GROUP, CONFIG_DIRECTORY);
     }
 
-    private static Properties readPropertiesGroup(String groupName) {
-        //noinspection CallToSuspiciousStringMethod
-        if (groupName.equals(SHARED_GROUP)) {
-            throw new IllegalArgumentException(
-                    "`" + SHARED_GROUP + "` must not be used as a groupName");
-        }
-
+    private static Properties readPropertiesGroup(
+            String groupName, String sharedGroupName, String configDirectory) {
         try {
-            Properties result = readProperties(propertiesGroupFilesInReversedLookupOrder(groupName));
+            Properties result = readProperties(
+                    propertiesGroupFilesInReversedLookupOrder(groupName, sharedGroupName, configDirectory));
             addProperties(result, System.getProperties());
             return result;
         } catch (IOException e) {
@@ -126,27 +144,28 @@ public final class PropertiesGroup {
 
     /**
      * Returns the reversed default lookup path for properties files with the
-     * given {@code groupName}, as defined on {@link #readPropertiesGroup(String)}.
+     * given {@code groupName}, as defined on {@link #readPropertiesGroup(String, String, String)}.
      * <p>
      * Notice: the {@link File}s are returned reversed to the order given
-     * in {@link #readPropertiesGroup(String)}. This fits to the approach to
+     * in {@link #readPropertiesGroup(String, String, String)}. This fits to the approach to
      * fill a Properties object by loading content from multiple files, with
      * the later ones overwriting the former ones. This way a lookup in the
      * Properties object will see the "last" value written for a key, i.e.
      * from the later ones in the list. (See {@link PropertiesIOUtil#readProperties(File...)}
      */
-    private static File[] propertiesGroupFilesInReversedLookupOrder(String groupName) {
+    private static File[] propertiesGroupFilesInReversedLookupOrder(
+            String groupName, String sharedGroupName, String configDirectory) {
         File workDir = workingDirectory();
         File homeDir = homeDirectory();
-        File configDir = new File(homeDirectory(), ".config/abego.org");
+        File configDir = new File(homeDirectory(), configDirectory);
         //noinspection StringConcatenation
         String fileName = groupName + PROPERTIES_FILE_EXTENSION;
         //noinspection StringConcatenation
         String userSpecificFileName = groupName + "-" + userName() + PROPERTIES_FILE_EXTENSION;
         //noinspection StringConcatenation
-        String sharedFileName = SHARED_GROUP + PROPERTIES_FILE_EXTENSION;
+        String sharedFileName = sharedGroupName + PROPERTIES_FILE_EXTENSION;
         //noinspection StringConcatenation
-        String sharedUserSpecificFileName = SHARED_GROUP + "-" + userName() + PROPERTIES_FILE_EXTENSION;
+        String sharedUserSpecificFileName = sharedGroupName + "-" + userName() + PROPERTIES_FILE_EXTENSION;
         return new File[]{
                 new File(configDir, sharedFileName),
                 new File(configDir, sharedUserSpecificFileName),
@@ -165,7 +184,7 @@ public final class PropertiesGroup {
 
     public Properties getProperties() {
         if (properties == null) {
-            properties = readPropertiesGroup(groupName);
+            properties = readPropertiesGroup(groupName, sharedGroupName, configDirectory);
         }
         return properties;
     }

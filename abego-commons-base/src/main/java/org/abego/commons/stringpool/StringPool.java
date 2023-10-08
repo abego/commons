@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ import org.eclipse.jdt.annotation.Nullable;
  *
  * <p>A {@code null} String has the ID {@code 0}.</p>
  *
- *  @deprecated use https://github.com/abego/abego-stringpool instead
+ * @deprecated use <a href="https://github.com/abego/abego-stringpool">https://github.com/abego/abego-stringpool</a> instead
  */
 @SuppressWarnings("EmptyMethod")
 @Deprecated

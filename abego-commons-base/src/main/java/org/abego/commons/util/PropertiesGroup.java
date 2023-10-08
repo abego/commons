@@ -67,7 +67,7 @@ import static org.abego.commons.util.PropertiesUtil.workingDirectory;
  *     defined in a Properties file.</li>
  *     <li>A group-specific value overrules any shared value.</li>
  *     <li>A value defined in the working directory overrules any value defined
- *     in the home directory, which overrules any value defined in the 
+ *     in the home directory, which overrules any value defined in the
  *     config directory.</li>
  *     <li>Within a directory a user-specific value overrules a non-user-specific value.</li>
  * </ul>
@@ -92,9 +92,9 @@ import static org.abego.commons.util.PropertiesUtil.workingDirectory;
  * {@code "{userName}"} correspond to the System properties
  * {@code "{user.dir}"}, {@code "{user.home}"} and {@code "{user.name}"}.
  * <p>
- * (*) The config directory {@code `.config/abego.org/`} and the name of the 
+ * (*) The config directory {@code `.config/abego.org/`} and the name of the
  * shared group {@code `abego`} can be customized when using the factory
- * method {@link #newPropertiesGroup(String, String, String)}. 
+ * method {@link #newPropertiesGroup(String, String, String)}.
  */
 public final class PropertiesGroup {
     private static final String PROPERTIES_FILE_EXTENSION = ".properties";

@@ -72,7 +72,7 @@ public final class IterableUtil {
      * @param nullValueText the text to use as an item's text when the item is
      *                      <code>null</code>.
      *                      [Default: "null"]
-     * @param stopLength    when the text constructed reaches or exceeds a 
+     * @param stopLength    when the text constructed reaches or exceeds a
      *                      length of <code>stopLength</code> no more item texts
      *                      are appended but an <code>"..."</code>
      *                      [Default: Integer.MAX_VALUE]

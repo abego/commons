@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,7 @@ public final class SeqNonEmptyUtil {
      * array of type <code>T[]</code> with <code>items</code>.
      *
      * @param items the items to include in the {@link SeqNonEmpty}
-     * @param <T> the type of the {@code items}
+     * @param <T>   the type of the {@code items}
      * @return a {@link SeqNonEmpty} with the {@code items}
      */
     @SafeVarargs

@@ -361,10 +361,10 @@
 - SeqNonEmptyWithAppended#appended fails when used twice on same Seq
 - StringPoolDefault Iterators don't throw NoSuchElementException
 - StringUtil#splitWhitespaceSeparatedString ignores trailing whitespaces
-- Unclear error message in ClassUtil#newInstanceOfClassNamed when instance is not of  expected type
+- Unclear error message in ClassUtil#newInstanceOfClassNamed when instance is not of expected type
 - VLQUtil fails for encodings of numbers > Integer#MAX_VALUE
 - WriterUtil#writer fails when file does not exist.
-- class FullyQualifiedName is final but extended by ClassName 
+- class FullyQualifiedName is final but extended by ClassName
 
 ### Deprecated
 
@@ -395,7 +395,6 @@
 
 - Fix JavaDoc issues
 
-
 ## 0.9.4
 
 ### New
@@ -414,13 +413,12 @@
 - TimeoutSupplier
 - TimeoutUncheckedException
 
-
 #### Methods
 
 - ArrayUtil#iterator(T[])
 - ClassUtil#resource(Class, String)
 - ListUtil#list(T...)
-- ListUtil#nthItemAsStringOrNull(List<?>, int) 
+- ListUtil#nthItemAsStringOrNull(List<?>, int)
 - ObjectUtil#checkType(Object, Class)
 - PrintWriter#printWriter
 - StringUtil#appendEscapedChar
@@ -431,13 +429,12 @@
 - StringUtil#quoted
 - StringUtil#singleQuoted
 
-
 ### Improvements
 
 - Sonar and JaCoCo support added
 - Warnings fixed
 - Increased code coverage
-- Improved Documentation 
+- Improved Documentation
 - Unused code removed
 - Nullable annotations used
 - Renames (in internal and test code)
@@ -452,11 +449,9 @@
 - RunOnClose and RunOnCloseUtil now final and in "org.abego.commons.lang"
 - ToFileInHeaderLineWriter now final
 
-
 ### Bug Fixes
 
 - ToFileInHeaderLineWriter fails when directory for output is missing
-
 
 ## 0.9.3
 

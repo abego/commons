@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,22 +67,22 @@ class FileDiffUtilTest {
         assertEquals("", directoryDifferences(a, a));
 
         assertEquals(MessageFormat.format(
-                "Only in {0}/a: .DS_Store\nOnly in {0}/b: f2\n" +
-                        "diff -r {0}/a/f3 {0}/b/f3\n" +
-                        "1c1\n" +
-                        "< foo\n" +
-                        "---\n" +
-                        "> bar\n", root.getAbsolutePath()),
+                        "Only in {0}/a: .DS_Store\nOnly in {0}/b: f2\n" +
+                                "diff -r {0}/a/f3 {0}/b/f3\n" +
+                                "1c1\n" +
+                                "< foo\n" +
+                                "---\n" +
+                                "> bar\n", root.getAbsolutePath()),
                 directoryDifferences(a, b));
 
         // with IGNORE_DOT_DS_STORE_FILES
         assertEquals(MessageFormat.format(
-                "Only in {0}/b: f2\n" +
-                        "diff -r {0}/a/f3 {0}/b/f3\n" +
-                        "1c1\n" +
-                        "< foo\n" +
-                        "---\n" +
-                        "> bar\n", root.getAbsolutePath()),
+                        "Only in {0}/b: f2\n" +
+                                "diff -r {0}/a/f3 {0}/b/f3\n" +
+                                "1c1\n" +
+                                "< foo\n" +
+                                "---\n" +
+                                "> bar\n", root.getAbsolutePath()),
                 directoryDifferences(a, b, IGNORE_DOT_DS_STORE_FILES));
     }
 }

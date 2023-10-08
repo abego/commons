@@ -189,6 +189,7 @@ public final class PropertiesGroup {
         return properties;
     }
 
+    @Nullable
     public String getProperty(String key) {
         return getProperties().getProperty(key);
     }

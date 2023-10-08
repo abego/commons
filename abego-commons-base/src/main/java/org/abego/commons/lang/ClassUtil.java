@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ import static org.abego.commons.lang.exception.UncheckedException.newUncheckedEx
 
 public final class ClassUtil {
 
-    static final String RESOURCE_NOT_FOUND_MESSAGE = "Resource not found"; //NON-NLS
+    static final String RESOURCE_NOT_FOUND_MESSAGE = "Resource not found: %s (in %s)"; //NON-NLS
 
     ClassUtil() {
         throw new MustNotInstantiateException();
@@ -55,7 +55,8 @@ public final class ClassUtil {
         @Nullable URL url = theClass.getResource(resourceName);
         if (url == null) {
             throw new MissingResourceException(
-                    RESOURCE_NOT_FOUND_MESSAGE, theClass.getName(), resourceName);
+                    String.format(RESOURCE_NOT_FOUND_MESSAGE, resourceName, theClass.getName()),
+                    theClass.getName(), resourceName);
         }
         return url;
     }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,8 @@
 
 package org.abego.commons.io;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -34,16 +36,13 @@ import java.io.UncheckedIOException;
 public final class IOFunctionUtil {
 
     IOFunctionUtil() {
-        throw new UnsupportedOperationException("Must not instantiate");
+        throw new MustNotInstantiateException();
     }
 
     public static <T> T applyInputStreamOfFileOn(File file, IOFunction<FileInputStream, T> block) {
         try {
-            FileInputStream stream = new FileInputStream(file);
-            try {
+            try (FileInputStream stream = new FileInputStream(file)) {
                 return block.apply(stream);
-            } finally {
-                stream.close();
             }
         } catch (FileNotFoundException e) {
             throw new UncheckedFileNotFoundException(e);
@@ -54,11 +53,8 @@ public final class IOFunctionUtil {
 
     public static <T> T applyOutputStreamOfFileOn(File file, IOFunction<FileOutputStream, T> block) {
         try {
-            FileOutputStream stream = new FileOutputStream(file);
-            try {
+            try (FileOutputStream stream = new FileOutputStream(file)) {
                 return block.apply(stream);
-            } finally {
-                stream.close();
             }
         } catch (FileNotFoundException e) {
             throw new UncheckedFileNotFoundException(e);

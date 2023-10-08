@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,20 +27,25 @@ package org.abego.commons.formattedtext;
 import java.awt.*;
 import java.util.Stack;
 
-import static org.abego.commons.lang.StringUtil.toHtml;
+import static org.abego.commons.lang.StringUtil.escapeForHtml;
 
 /**
- * TODO: move to API (initially copied from abego-commons-swing and currently
- *  only used in test code)
+ * A FormattedTextProcessor that builds HTML text fragments corresponding to
+ * any given {@link FormattedText}.
+ * <p>
+ * Typically, you will use {@link #toHTML(FormattedText)} to get the HTML text
+ * fragment corresponding to a given {@link FormattedText}. However, you may use
+ * this class as a 'normal' {@link FormattedTextProcessor}, e.g. to build
+ * HTML from multiple {@link FormattedText} instances. In that case the
+ * {@link #build()} will return the resulting HTML text.
  */
-final class FormattedTextProcessorForHTML implements FormattedTextProcessor {
+public final class FormattedTextProcessorForHTML implements FormattedTextProcessor {
 
     private final StringBuilder text = new StringBuilder();
     private final Stack<Runnable> endAction = new Stack<>();
     private boolean isFormatted = false;
     private int boldLevel = 0;
     private int italicLevel = 0;
-
 
     private FormattedTextProcessorForHTML() {
     }
@@ -49,9 +54,18 @@ final class FormattedTextProcessorForHTML implements FormattedTextProcessor {
         return new FormattedTextProcessorForHTML();
     }
 
+    /**
+     * Returns the HTML text corresponding to the given {@code formattedText}.
+     */
+    public static String toHTML(FormattedText formattedText) {
+        FormattedTextProcessorForHTML builder = newFormattedTextProcessorForHTML();
+        formattedText.processWith(builder);
+        return builder.build();
+    }
+
     @Override
     public FormattedTextProcessorForHTML text(String s) {
-        text.append(toHtml(s));
+        text.append(escapeForHtml(s));
         return this;
     }
 
@@ -66,9 +80,9 @@ final class FormattedTextProcessorForHTML implements FormattedTextProcessor {
     public FormattedTextProcessorForHTML beginColor(Color color) {
         isFormatted = true;
 
-        text.append(String.format("<font color=\"#%02x%02x%02x\">",
+        text.append(String.format("<font color=\"#%02x%02x%02x\">", //NON-NLS
                 color.getRed(), color.getGreen(), color.getBlue()));
-        atEndAppendText("</font>");
+        atEndAppendText("</font>"); //NON-NLS
         return this;
     }
 
@@ -105,7 +119,9 @@ final class FormattedTextProcessorForHTML implements FormattedTextProcessor {
     @Override
     public FormattedTextProcessorForHTML end() {
         if (endAction.empty()) {
-            throw new IllegalStateException("Extra end. begin and end must be balanced.");
+            //noinspection DuplicateStringLiteralInspection
+            throw new IllegalStateException(
+                    "Extra end. begin and end must be balanced."); //NON-NLS
         }
         endAction.pop().run();
         return this;
@@ -115,9 +131,19 @@ final class FormattedTextProcessorForHTML implements FormattedTextProcessor {
         return isFormatted;
     }
 
+    /**
+     * Returns the HTML text fragment currently collected.
+     * <p>
+     * {@code #build()} may be called multiple times. Calls
+     * to the {@link FormattedText}-defining methods ({@link #text(String)},
+     * {@link #beginBold()}, {@link #end()}, ...) between subsequent builds are
+     * additive, i.e. extend the previous HTML text fragment.
+     */
     public String build() {
         if (!endAction.empty()) {
-            throw new IllegalStateException("Missing end. begin and end must be balanced.");
+            //noinspection DuplicateStringLiteralInspection
+            throw new IllegalStateException(
+                    "Missing end. begin and end must be balanced."); //NON-NLS
         }
         return text.toString();
     }
@@ -126,7 +152,8 @@ final class FormattedTextProcessorForHTML implements FormattedTextProcessor {
         endAction.push(() -> {});
     }
 
-    private void atEndAppendText(String textToAppend) {
+    private void atEndAppendText(
+            @SuppressWarnings("SameParameterValue") String textToAppend) {
         endAction.push(() -> this.text.append(textToAppend));
     }
 }

@@ -31,10 +31,11 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -403,6 +404,18 @@ public final class StringUtil {
     }
 
     /**
+     * Returns the given {@code text} `HTML-escaped`, i.e. any character with a
+     * special meaning in HTML is properly escaped so rendering the result as
+     * HTML will display the original {@code text}.
+     * <p>
+     * (Same as {@link #toHtml(String)}).
+     */
+    @Nullable
+    public static String escapeForHtml(@Nullable String s) {
+        return toHtml(s);
+    }
+
+    /**
      * Return a (double) quoted version of <code>text</code>.
      *
      * <p>Non-ASCII characters are "backslash-u..." escaped, resulting in a
@@ -596,6 +609,58 @@ public final class StringUtil {
                 text, range.getStart(), range.getEnd(), newRangeText);
     }
 
+    /**
+     * Returns the {@code string} with the {@code prefix} removed or the full
+     * {@code string} when {@code string} does not start with {@code prefix} or
+     * {@code prefix} is {@code null}.
+     */
+    public static String removePrefix(String string, @Nullable String prefix) {
+        return prefix != null && string.startsWith(prefix)
+                ? string.substring(prefix.length()) : string;
+    }
+
+    /**
+     * Returns the string as a "unix String", i.e. using newline ('\n') as a
+     * line separator.
+     * <p>
+     * The method assumes the string passed in either uses "\r\n", "\n\r" or
+     * "\n" as line separators.
+     */
+    public static String unixString(String string) {
+        return string.replace("\r", "");
+    }
+
+    /**
+     * Sorts the lines of the string and returns the result as a "unix String",
+     * i.e. using newline ('\n') as a line separator.
+     * <p>
+     * The returned string will not end with a line separator.
+     * Empty lines are removed.
+     */
+    public static String sortedUnixLines(String string) {
+        String[] lines = org.abego.commons.lang.StringUtil.lines(string);
+        Arrays.sort(lines);
+        return org.abego.commons.lang.StringUtil.join("\n", (Object[]) lines)
+                .trim();
+    }
+
+    /**
+     * Returns the {@code string} with all slashes ("/") replaced by dots (".").
+     */
+    public static String slashesToDots(String string) {
+        return string.replaceAll("/", ".");
+    }
+
+    /**
+     * Returns the prefix of the {@code string} before the {@code delimiter}
+     * or the full {@code string} when {@code string} does not contain the
+     * {@code delimiter}.
+     */
+    public static String prefixBefore(String string, String delimiter) {
+        int i = string.indexOf(delimiter);
+        return i >= 0 ? string.substring(0, i) : string;
+    }
+
     // endregion
 
     //region Queries
@@ -737,6 +802,15 @@ public final class StringUtil {
             return isAnyPredicateTrue(allChecks, valueToTest);
         }
     }
+
+    /**
+     * Returns a {@link Consumer} that receives the text passed to the given
+     * {@code consumer} indented by one tab ('\t').
+     */
+    public static Consumer<String> indent(Consumer<String> consumer) {
+        return s -> consumer.accept("\t" + s);
+    }
+
     // endregion
 
 

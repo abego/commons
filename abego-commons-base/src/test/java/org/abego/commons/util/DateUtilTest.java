@@ -24,6 +24,7 @@
 
 package org.abego.commons.util;
 
+import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
@@ -31,8 +32,16 @@ import java.util.Date;
 
 import static java.util.Calendar.MILLISECOND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DateUtilTest {
+
+    @Test
+    void constructor() {
+        assertThrows(MustNotInstantiateException.class, DateUtil::new);
+    }
+
+
     @Test
     void smoketest() {
         Calendar cal = Calendar.getInstance();

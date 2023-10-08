@@ -27,7 +27,7 @@ import org.abego.commons.lang.ArrayUtil;
 import org.abego.commons.lang.StringUtil;
 import org.abego.commons.lang.ThrowableUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
-import org.abego.commons.seq.SeqUtil;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.BufferedWriter;
@@ -38,16 +38,37 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.UncheckedIOException;
+import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.abego.commons.io.FileCannotBeDeletedException.newFileCannotBeDeletedException;
+import static org.abego.commons.io.InputStreamUtil.copyStream;
+import static org.abego.commons.lang.StringUtil.removePrefix;
+import static org.abego.commons.util.ListUtil.toList;
 
 public final class FileUtil {
 
@@ -283,6 +304,15 @@ public final class FileUtil {
         return false;
     }
 
+    public static boolean allFilesExist(File... files) {
+        for (File file : files) {
+            if (!file.exists()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Return the text of <code>file</code> (an UTF-8 encoded text file).
      */
@@ -439,13 +469,78 @@ public final class FileUtil {
     }
 
     /**
-     * Returns an array with {@link File} objects corresponding to the semicolon
-     * ({@code ';'}) separated list of file pathes in {@code filePathes}.
+     * Returns an array with {@link File} objects corresponding to the
+     * list of file pathes in {@code text}, each item in the list separated by
+     * {@code separator}.
      */
-    public static File[] filesFromFilePathes(String filePathes) {
-        return SeqUtil.newSeq(filePathes.split(";"))
-                .map(File::new)
-                .stream().toArray(File[]::new);
+    public static File[] parseFiles(String text, String separator) {
+        if (text.isEmpty()) {
+            return new File[0];
+        }
+
+        Set<File> pathes = new HashSet<>();
+        List<File> files = new ArrayList<>();
+        for (String s : text.split(Pattern.quote(separator))) {
+            File f = new File(s).getAbsoluteFile();
+            // don't add duplicates
+            if (pathes.add(f)) {
+                files.add(f);
+            }
+        }
+        return files.toArray(new File[0]);
+    }
+
+    /**
+     * Returns an array with {@link File} objects corresponding to the
+     * list of file pathes in {@code text}, each item in the list separated by
+     * the system's path separator.
+     */
+    public static File[] parseFiles(String text) {
+        return parseFiles(text, getPathSeparator());
+    }
+
+    /**
+     * Returns all files defined in paths, assuming that each String in paths
+     * is a {@code separator}-separated list of file paths.
+     */
+    public static File[] parseFiles(Iterable<String> paths, String separator) {
+        List<File> files = new ArrayList<>();
+        paths.forEach(s -> files.addAll(toList(parseFiles(s, separator))));
+        return files.toArray(new File[0]);
+    }
+
+    /**
+     * Returns all files defined in paths, assuming that each String in paths
+     * is a list of file paths separated by the system's path separator.
+     */
+    public static File[] parseFiles(Iterable<String> paths) {
+        return parseFiles(paths, getPathSeparator());
+    }
+
+    /**
+     * Returns all {@link File}s containing in the given {@code directory}.
+     * <p>
+     * Throws an {@link Exception} when {@code directory} does not exist or
+     * is not a directory.
+     */
+    public static File[] filesInDirectory(File directory) {
+        checkIsDirectory(directory);
+
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new IllegalStateException("Got 'null' for `listFiles` for " + directory.getAbsolutePath()); //NON-NLS
+        }
+        return files;
+    }
+
+    /**
+     * Return the absolute paths of the given {@code files}, separated by
+     * newlines.
+     */
+    public static String filePathLines(File[] files) {
+        return Arrays.stream(files)
+                .map(File::getAbsolutePath)
+                .collect(Collectors.joining("\n"));
     }
 
     //endregion
@@ -493,6 +588,16 @@ public final class FileUtil {
                     "Could not change the `readOnly` state of file {0} to {1}", // NON-NLS
                     file.getAbsolutePath(),
                     state)));
+        }
+    }
+
+    /**
+     * Checks if the {@code file} is a directory, throwing an {@link Exception}
+     * otherwise.
+     */
+    public static void checkIsDirectory(File file) {
+        if (!file.isDirectory()) {
+            throw new IllegalArgumentException("Not a directory: " + file.getAbsolutePath());
         }
     }
 
@@ -693,16 +798,46 @@ public final class FileUtil {
         }
     }
 
+    public static void copyFilesDeep(File sourceFile,
+                                     File targetDirectory) {
+        ensureDirectoryExists(targetDirectory);
+
+        if (sourceFile.isDirectory()) {
+            File[] files = filesInDirectory(sourceFile);
+            File dir = new File(targetDirectory, sourceFile.getName());
+            ensureDirectoryExists(dir);
+            for (File child : files) {
+                copyFilesDeep(child, dir);
+            }
+        } else {
+            // single file to copy
+            copyFile(sourceFile, new File(targetDirectory, sourceFile.getName()));
+        }
+    }
+
+    public static void copyFilesInDirectoryDeep(File sourceDirectory,
+                                                File targetDirectory) {
+        checkIsDirectory(sourceDirectory);
+
+        File[] files = filesInDirectory(sourceDirectory);
+        ensureDirectoryExists(targetDirectory);
+        for (File child : files) {
+            copyFilesDeep(child, targetDirectory);
+        }
+    }
+
     public static void copyResourcesToDirectory(
-            File source,
+            File directory,
             String absoluteResourceDirectoryPath,
             String... fileNames) {
+        String prefix = ensureTrailingSlash(absoluteResourceDirectoryPath);
+
         for (String name : fileNames) {
             //noinspection StringConcatenation
             FileUtil.copyResourceToFile(
                     Object.class,
-                    absoluteResourceDirectoryPath + name,
-                    new File(source, name));
+                    prefix + name,
+                    new File(directory, name));
         }
     }
 
@@ -711,13 +846,224 @@ public final class FileUtil {
             File directory,
             String absoluteResourceDirectoryPath,
             String... fileNames) {
+        String prefix = ensureTrailingSlash(absoluteResourceDirectoryPath);
         for (String name : fileNames) {
             FileUtil.copyResourceToFile(
                     Object.class,
-                    absoluteResourceDirectoryPath + name,
+                    prefix + name,
                     new File(directory, new File(name).getName()));
         }
     }
+
+    public static void copyResourcesDeep(
+            URL rootResourceUrl, File targetDirectory) {
+
+        copyResourcesDeep(rootResourceUrl, targetDirectory, false);
+    }
+
+    public static void copyResourcesInLocationDeep(
+            URL rootResourceUrl, File targetDirectory) {
+
+        copyResourcesDeep(rootResourceUrl, targetDirectory, true);
+    }
+
+    private static void copyResourcesDeep(
+            URL rootResourceUrl, File targetDirectory, boolean copyDirectoryContent) {
+
+        try {
+            URLConnection urlConnection = rootResourceUrl.openConnection();
+            if (urlConnection instanceof JarURLConnection) {
+                copyJarResourcesDeep(
+                        (JarURLConnection) urlConnection, targetDirectory);
+            } else {
+                if (copyDirectoryContent) {
+                    copyFilesInDirectoryDeep(
+                            new File(rootResourceUrl.getPath()), targetDirectory);
+                } else {
+                    copyFilesDeep(
+                            new File(rootResourceUrl.getPath()), targetDirectory);
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public static void copyResourcesDeep(
+            Class<?> theClass, String resourceName, File targetDirectory) {
+        copyResourcesDeep(theClass, resourceName, targetDirectory, false);
+    }
+
+    public static void copyResourcesInLocationDeep(
+            Class<?> theClass, String resourceName, File targetDirectory) {
+        copyResourcesDeep(theClass, resourceName, targetDirectory, true);
+    }
+
+    /**
+     * Copy (the content of) the resource <code>resourceName</code> of
+     * <code>theClass</code> to <code>file</code>.
+     */
+    private static void copyResourcesDeep(
+            Class<?> theClass, String resourceName, File targetDirectory, boolean copyDirectoryContent) {
+
+        URL resource = theClass.getResource(resourceName);
+        if (resource == null) {
+            throw new IllegalArgumentException(
+                    String.format("Resource '%s' missing in class %s", resourceName, theClass));
+        }
+
+        copyResourcesDeep(resource, targetDirectory, copyDirectoryContent);
+    }
+
+    private static void copyJarResourcesDeep(
+            JarURLConnection jarURLConnection, File targetDirectory) throws IOException {
+
+        JarFile jarFile = jarURLConnection.getJarFile();
+        String prefix = jarURLConnection.getEntryName();
+
+        for (Enumeration<JarEntry> e = jarFile.entries(); e.hasMoreElements(); ) {
+            JarEntry entry = e.nextElement();
+            if (prefix == null || entry.getName().startsWith(prefix)) {
+                String filename = removePrefix(entry.getName(), prefix);
+
+                File f = new File(targetDirectory, filename);
+                if (!entry.isDirectory()) {
+                    try (InputStream entryInputStream = jarFile.getInputStream(entry);
+                         FileOutputStream fos = new FileOutputStream(f)) {
+                        copyStream(entryInputStream, fos);
+                    }
+                } else {
+                    ensureDirectoryExists(f);
+                }
+            }
+        }
+    }
+
+
+    public static File[] filesInDirectoryAndDeeper(File directory, Predicate<File> selector) {
+        List<File> result = new ArrayList<>();
+        withFilesInDirectoryAndDeeperDo(directory, selector, result::add);
+        return result.toArray(new File[0]);
+    }
+
+    public static File[] filesInDirectoryAndDeeper(File directory) {
+        return filesInDirectoryAndDeeper(directory, f -> true);
+    }
+
+    public static void withFilesInDirectoryAndDeeperDo(
+            File directory, Predicate<File> selector, Consumer<File> action) {
+        try {
+            Files.walkFileTree(directory.toPath(), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+                    File file = path.toFile();
+                    if (selector.test(file)) {
+                        action.accept(file);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public static void withFilesInDirectoryAndDeeperDo(File directory, Consumer<File> action) {
+        withFilesInDirectoryAndDeeperDo(directory, f -> true, action);
+    }
+
+
+    //region writeFilesIfOutdated
+
+    /**
+     * Writes the {@code targetFile} using {@code writeFile} when the
+     * targetFile does not exist or any file of the {@code dependencies} has
+     * changed since the targetFile was created.
+     * <p>
+     * To be able to check if any file of the {@code dependencies} has changed
+     * a hidden file ".info.{nameOfTargetFile}" is maintained in the directory
+     * of the targetFile.
+     * <p>
+     * The method will fail when files of the dependencies are changed while
+     * the targetFile is created.
+     * <p>
+     * Calls {@code onFileUpToDate} when the file is up-to-date and
+     * {@code writeFile} is not called.
+     */
+    public static void writeFileIfOutdated(
+            File targetFile, File[] dependencies, Consumer<File> writeFile, Runnable onFileUpToDate) {
+
+        File infoFile = new File(
+                targetFile.getAbsoluteFile().getParentFile(),
+                ".info." + targetFile.getName());
+        writeFilesIfOutdated(
+                new File[]{targetFile}, infoFile, dependencies,
+                writeFile, onFileUpToDate);
+    }
+
+    /**
+     * As {@link #writeFileIfOutdated(File, File[], Consumer, Runnable)}, but
+     * without the option to pass an {@code onFileUpToDate} Runnable.
+     */
+    public static void writeFileIfOutdated(
+            File targetFile, File[] dependencies, Consumer<File> writeFile) {
+        writeFileIfOutdated(targetFile, dependencies, writeFile, () -> {});
+    }
+
+    private static void writeFilesIfOutdated(
+            File[] targetFiles, File infoFile, File[] dependencies, Consumer<File> writeFile, Runnable onFileUpToDate) {
+
+        String dependenciesSummary = fileSummaryText(dependencies);
+        if (allFilesExist(targetFiles) && infoFile.exists()) {
+            // We don't need to create a new targetFiles when they already exist 
+            // and all files they depend on haven't changed since the last time
+            // the targetFiles were created.
+            String oldFileSummary = textOf(infoFile);
+            if (oldFileSummary.equals(dependenciesSummary)) {
+                onFileUpToDate.run();
+                return;
+            }
+        }
+
+        for (File f : targetFiles) {
+            deleteFile(f);
+        }
+        deleteFile(infoFile);
+
+        for (File f : targetFiles) {
+            writeFile.accept(f);
+        }
+
+        // The dependencies must not change while we create our target files 
+        // otherwise we may have some inconsistent state.
+        if (!dependenciesSummary.equals(fileSummaryText(dependencies))) {
+            String affectedFileBulletList = Arrays.stream(targetFiles)
+                    .map(f -> "- " + f.getAbsolutePath())
+                    .collect(Collectors.joining(System.lineSeparator()));
+            throw new IllegalStateException(
+                    String.format("The dependencies changed while processing.%nAffected:%s ", //NON-NLS
+                            affectedFileBulletList));
+        }
+
+        writeText(infoFile, dependenciesSummary);
+    }
+
+
+    private static String fileSummaryText(File[] files) {
+        return Arrays.stream(files)
+                .sorted()
+                .map(f -> f.getAbsolutePath() + " - " + f.length() + " - " + f.lastModified())
+                .collect(Collectors.joining("\n"));
+    }
+    //endregion
     //endregion
 
+    public static String getPathSeparator() {
+        return System.getProperty("path.separator");
+    }
+
+    @NonNull
+    private static String ensureTrailingSlash(String string) {
+        return string.endsWith("/") ? string : string + "/";
+    }
 }

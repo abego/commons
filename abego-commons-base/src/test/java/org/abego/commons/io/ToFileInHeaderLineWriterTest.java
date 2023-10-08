@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -60,21 +60,28 @@ class ToFileInHeaderLineWriterTest {
         File file = tempFileForRun();
         String text = "hello\nworld!";
 
-        Writer writer = toFileInHeaderLineWriter();
-        writer.write(file.getAbsolutePath());
-        writer.write("\n");
-        writer.write(text);
+        try (Writer writer = toFileInHeaderLineWriter()) {
+            writer.write(file.getAbsolutePath());
+            writer.write("\n");
+            writer.write(text);
 
-        writer.flush();
+            writer.flush();
+        }
 
         assertEquals(text, FileUtil.textOf(file));
     }
 
     @Test
     void close_missingFileInHeader() {
-        Writer writer = toFileInHeaderLineWriter();
-
-        assertThrows(IOException.class, writer::close);
+        IOException e = assertThrows(IOException.class, () -> {
+            //noinspection EmptyTryBlock
+            try (Writer ignored = toFileInHeaderLineWriter()) {
+                // intentionally empty
+            }
+        });
+        assertEquals(
+                "No file found in first line of output.",
+                e.getMessage());
     }
 
     @Test

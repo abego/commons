@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,10 +56,11 @@ class PrintStreamUtilTest {
 
     @Test
     void newPrintStreamToNullDevice_OK() {
-        PrintStream stream = PrintStreamUtil.newPrintStreamToNullDevice();
+        try (PrintStream stream = PrintStreamUtil.newPrintStreamToNullDevice()) {
 
-        stream.println("foo");
+            stream.println("foo");
 
-        assertFalse(stream.checkError());
+            assertFalse(stream.checkError());
+        }
     }
 }

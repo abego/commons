@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,10 +57,11 @@ class ReaderUtilTest {
         File file = tempFileForRun();
         write(file, SAMPLE_TEXT);
 
-        Reader reader = ReaderUtil.reader(file, UTF_8);
-        assertEquals(SAMPLE_TEXT_CHAR_0, reader.read());
-        assertEquals(SAMPLE_TEXT_CHAR_1, reader.read());
-        assertEquals(SAMPLE_TEXT_CHAR_2, reader.read());
+        try (Reader reader = ReaderUtil.reader(file, UTF_8)) {
+            assertEquals(SAMPLE_TEXT_CHAR_0, reader.read());
+            assertEquals(SAMPLE_TEXT_CHAR_1, reader.read());
+            assertEquals(SAMPLE_TEXT_CHAR_2, reader.read());
+        }
     }
 
     @Test
@@ -94,8 +95,12 @@ class ReaderUtilTest {
     void newReader_File_missingFile(@TempDir File dir) {
         File file = new File(dir, "MissingTest.txt");
 
-        UncheckedIOException e = assertThrows(UncheckedIOException.class,
-                () -> ReaderUtil.newReader(file));
+        UncheckedIOException e = assertThrows(UncheckedIOException.class, () -> {
+            //noinspection EmptyTryBlock
+            try (Reader ignored = ReaderUtil.newReader(file)) {
+                // intentionally empty
+            }
+        });
         assertEquals(
                 String.format("Error when creating reader for file '%s'",
                         file.getAbsolutePath()),

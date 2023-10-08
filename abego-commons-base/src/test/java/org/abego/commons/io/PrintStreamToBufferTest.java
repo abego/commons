@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,18 +38,19 @@ class PrintStreamToBufferTest {
 
     @Test
     void case_happyPath() {
-        PrintStreamToBuffer stream = newPrintStreamToBuffer();
+        try (PrintStreamToBuffer stream = newPrintStreamToBuffer()) {
 
-        // printed text can be accessed via #getText (and #toString)
-        stream.print(SAMPLE_TEXT);
+            // printed text can be accessed via #getText (and #toString)
+            stream.print(SAMPLE_TEXT);
 
-        assertEquals(SAMPLE_TEXT, stream.text());
-        assertEquals(SAMPLE_TEXT, stream.toString());
+            assertEquals(SAMPLE_TEXT, stream.text());
+            assertEquals(SAMPLE_TEXT, stream.toString());
 
-        // printing more text appends it to the old one
-        stream.print(SAMPLE_TEXT);
+            // printing more text appends it to the old one
+            stream.print(SAMPLE_TEXT);
 
-        assertEquals(SAMPLE_TEXT + SAMPLE_TEXT, stream.text());
+            assertEquals(SAMPLE_TEXT + SAMPLE_TEXT, stream.text());
+        }
     }
 
     @Test

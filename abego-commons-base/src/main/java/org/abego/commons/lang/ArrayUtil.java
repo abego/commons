@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -125,5 +125,28 @@ public final class ArrayUtil {
             }
         }
         return null;
+    }
+
+    @Nullable
+    public static <T> T firstOrNull(T[] array) {
+        return firstOrNull(array, i -> true);
+    }
+
+    @SafeVarargs
+    public static <T> T[] concatenate(T[] array1, T @Nullable ... array2) {
+        if (array2 == null) {
+            return array1;
+        }
+        T[] result = Arrays.copyOf(array1, array1.length + array2.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
+        return result;
+    }
+
+    @SafeVarargs
+    public static <T> T[] concatenate(T item, T... array2) {
+        T[] result = Arrays.copyOf(array2, 1 + array2.length);
+        System.arraycopy(array2, 0, result, 1, array2.length);
+        result[0] = item;
+        return result;
     }
 }

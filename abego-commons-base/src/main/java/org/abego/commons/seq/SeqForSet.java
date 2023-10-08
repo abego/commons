@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ import static org.abego.commons.util.ListUtil.toList;
 // --> 'Subclasses that add fields should override "equals"'
 // (No need to override "equals" as AbstractSeq implements "equals" in an abstract way using the iterator)
 final class SeqForSet<T> extends AbstractSeq<T> implements SeqNonEmpty<T> {
+    @SuppressWarnings("DuplicateStringLiteralInspection")
     static final String SET_MUST_NOT_BE_EMPTY_MESSAGE = "Set must not be empty"; //NON-NLS
     private final Set<T> set;
     @Nullable

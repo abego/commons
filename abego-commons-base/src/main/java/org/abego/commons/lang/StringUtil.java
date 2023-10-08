@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,7 +67,7 @@ public final class StringUtil {
     private static final Pattern ESCAPED_CHAR = Pattern.compile("\\\\(.)");
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final Pattern END_OF_LINE_PATTERN = Pattern
-            .compile("\\r?\\n");
+            .compile("(\\r\\n)|(\\n\\r?)");
 
     //region Factories / Conversions
 

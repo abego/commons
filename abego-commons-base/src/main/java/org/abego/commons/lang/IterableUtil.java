@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -79,7 +79,7 @@ public final class IterableUtil {
      */
     public static <T> void appendTextOf(
             StringBuilder stringBuilder,
-            Iterable<T> items,
+            Iterable<@Nullable T> items,
             CharSequence separator,
             String emptyText,
             Function<T, String> textOfItem,

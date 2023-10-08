@@ -291,6 +291,11 @@ public final class IterableUtil {
         return null;
     }
 
+    @Nullable
+    public static <T> T firstOrNull(Iterable<T> iterable) {
+        return firstOrNull(iterable, i -> true);
+    }
+
     /**
      * Sorts the texts of the {@code iterable}'s items (as defined by
      * {@code itemTextProvider}) and returns them as {@code '\n'}-separated lines.

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -160,8 +160,6 @@ public final class SeqUtil {
     public static <T, S extends T> Seq<T> newSeq(Iterable<S> iterable) {
         if (iterable instanceof List) return newSeq((List<T>) iterable);
         if (iterable instanceof Set) return newSeq((Set<T>) iterable);
-        if (iterable instanceof Stream) //noinspection unchecked
-            return newSeq((Stream<T>) iterable);
 
         return isEmpty(iterable) ? SeqFactories.emptySeq() : newSeqForIterable(iterable);
     }

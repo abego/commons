@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -85,7 +85,8 @@ public final class JSONPointer implements UnaryOperator<@Nullable Object> {
      * <tr><td>"/m~0n"</td><td>8</td></tr>
      * </table>
      *
-     * @param jsonPointer a JSON Pointer, as defined in RFC 6901 (https://tools.ietf.org/html/rfc6901)
+     * @param jsonPointer a JSON Pointer, as defined in RFC 6901 
+     *                    (<a href="https://tools.ietf.org/html/rfc6901">https://tools.ietf.org/html/rfc6901</a>)
      */
     @Nullable
     public static Object referencedValue(Object root, String jsonPointer) {

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ class JSONPointerTest {
 
     /**
      * Return the JSON document given in chapter 5 of RFC 6901
-     * (https://tools.ietf.org/html/rfc6901).
+     * (<a href="https://tools.ietf.org/html/rfc6901">https://tools.ietf.org/html/rfc6901</a>).
      *
      * <p>
      * It looks like this:

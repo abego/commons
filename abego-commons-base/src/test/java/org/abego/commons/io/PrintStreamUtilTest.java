@@ -26,12 +26,16 @@ package org.abego.commons.io;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 
+import static org.abego.commons.io.FileUtil.textOf;
 import static org.abego.commons.io.InputStreamUtil.newInputStream;
 import static org.abego.commons.io.PrintStreamUtil.newPrintStream;
+import static org.abego.commons.io.PrintStreamUtil.newPrintStreamToBufferedFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -62,5 +66,16 @@ class PrintStreamUtilTest {
 
             assertFalse(stream.checkError());
         }
+    }
+
+    @Test
+    void newPrintStreamToBufferedFileOK(@TempDir File tempDir) {
+        File file = new File(tempDir, "file");
+
+        try (PrintStream stream = newPrintStreamToBufferedFile(file)) {
+            stream.print("foo");
+        }
+
+        assertEquals("foo", textOf(file));
     }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -129,7 +129,9 @@ class LineAwareWriterDecoratorTest {
         public void processLineContent(char[] characterArray,
                                        int startOffset, int length)
                 throws IOException {
+            //noinspection resource
             originalWriter().write(Integer.toString(lineNumber));
+            //noinspection resource
             originalWriter().write(": ");
             super.processLineContent(characterArray, startOffset, length);
         }

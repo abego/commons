@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,6 +57,7 @@ public class LineAwareWriterDecorator extends LineSplittingWriter {
 
     @Override
     public void flush() throws IOException {
+        //noinspection resource
         originalWriter().flush();
     }
 
@@ -80,6 +81,7 @@ public class LineAwareWriterDecorator extends LineSplittingWriter {
     protected void processLineContent(
             char[] characterArray, int startOffset, int length)
             throws IOException {
+        //noinspection resource
         originalWriter().write(characterArray, startOffset, length);
     }
 
@@ -92,6 +94,7 @@ public class LineAwareWriterDecorator extends LineSplittingWriter {
     @Override
     protected void processLineSeparator(String lineSeparator)
             throws IOException {
+        //noinspection resource
         originalWriter().write(lineSeparator);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,9 @@ package org.abego.commons.util;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 
-import java.util.Iterator;
-import java.util.ServiceLoader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 import static java.util.ServiceLoader.load;
 
@@ -37,13 +38,61 @@ public final class ServiceLoaderUtil {
         throw new MustNotInstantiateException();
     }
 
-    public static <T> T loadService(Class<T> service) {
-        ServiceLoader<T> loader = load(service);
-        Iterator<T> iterator = loader.iterator();
-        if (!iterator.hasNext())
-            throw new IllegalArgumentException(
-                    String.format("No implementation found for %s", service)); //NON-NLS
+    //region loadService
+    public static <T> T loadService(
+            Class<T> service, ClassLoader loader, Predicate<T> selector) {
+        int i = 0;
+        for (T candidate : load(service, loader)) {
+            i++;
+            if (selector.test(candidate)) {
+                return candidate;
+            }
+        }
 
-        return iterator.next();
+        String message = i == 0
+                ? String.format("No implementation found for %s", service)//NON-NLS
+                : String.format("No appropriate implementation found for %s, %d checked.", service, i);//NON-NLS
+
+        throw new IllegalArgumentException(message);
     }
+
+    public static <T> T loadService(Class<T> service, ClassLoader loader) {
+        return loadService(service, loader, o -> true);
+    }
+
+    public static <T> T loadService(Class<T> service, Predicate<T> selector) {
+        return loadService(
+                service, Thread.currentThread().getContextClassLoader(), selector);
+    }
+
+    public static <T> T loadService(Class<T> service) {
+        return loadService(service, o -> true);
+    }
+    //endregion
+
+    //region loadServices
+    public static <T> Iterable<T> loadServices(
+            Class<T> service, ClassLoader loader, Predicate<T> selector) {
+        List<T> result = new ArrayList<>();
+        for (T candidate : load(service, loader)) {
+            if (selector.test(candidate)) {
+                result.add(candidate);
+            }
+        }
+        return result;
+    }
+
+    public static <T> Iterable<T> loadServices(Class<T> service, ClassLoader loader) {
+        return loadServices(service, loader, o -> true);
+    }
+
+    public static <T> Iterable<T> loadServices(Class<T> service, Predicate<T> selector) {
+        return loadServices(
+                service, Thread.currentThread().getContextClassLoader(), selector);
+    }
+
+    public static <T> Iterable<T> loadServices(Class<T> service) {
+        return loadServices(service, o -> true);
+    }
+    //endregion
 }

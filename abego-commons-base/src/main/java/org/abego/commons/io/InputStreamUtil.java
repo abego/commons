@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -80,12 +82,18 @@ public final class InputStreamUtil {
         runIOCode(() -> copy(inputStream, file.toPath(), REPLACE_EXISTING));
     }
 
+    private static final int COPY_STREAM_BUFFER_SIZE = 4096;
+
     /**
      * Reads the (UTF-8 encoded) {@code inputStream} line-by-line and passes
      * the lines to the {@code lineProcessor}.
      * <p>
      * The {@code lineProcessor} is also informed when the reading starts/ends.
+     * <p>
+     *
+     * @deprecated Use {@link org.abego.commons.lineprocessing.LineProcessing} instead.
      */
+    @Deprecated
     public static void readLineWise(InputStream inputStream, LineProcessor lineProcessor) throws IOException {
         lineProcessor.start();
         int lineNumber = 0;
@@ -102,6 +110,19 @@ public final class InputStreamUtil {
             } while (line != null);
         }
         lineProcessor.end(lineNumber);
+    }
+
+    public static void copyStream(InputStream is, OutputStream os) {
+        try {
+            byte[] buf = new byte[COPY_STREAM_BUFFER_SIZE];
+
+            int len;
+            while ((len = is.read(buf)) > 0) {
+                os.write(buf, 0, len);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
 

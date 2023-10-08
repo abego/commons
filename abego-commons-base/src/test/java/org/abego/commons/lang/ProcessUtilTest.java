@@ -22,43 +22,24 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.util;
+package org.abego.commons.lang;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class SetUtilTest {
-
-    private static void assertEqualsIgnoringOrder(String expectedAsText, Set<String> actual) {
-        String actualAsTest = actual.size() + "\n"
-                + actual.stream().sorted().collect(Collectors.joining("\n"));
-        assertEquals(expectedAsText, actualAsTest);
-    }
-
+class ProcessUtilTest {
     @Test
-    void constructor() {
-        assertThrows(MustNotInstantiateException.class, SetUtil::new);
-    }
+    void smoketest() {
+        StringBuilder output = new StringBuilder();
 
+        ProcessUtil.runCommand(
+                new String[]{"ls", "pom.xml"},
+                s -> {
+                    output.append(s);
+                    output.append('\n');
+                });
 
-    @Test
-    void asSet() {
-        assertEqualsIgnoringOrder("0\n",
-                SetUtil.asSet());
-
-        assertEqualsIgnoringOrder("1\nA",
-                SetUtil.asSet("A"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C", "B", "A", "A"));
+        assertEquals("pom.xml\n", output.toString());
     }
 }

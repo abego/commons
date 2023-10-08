@@ -24,41 +24,45 @@
 
 package org.abego.commons.util;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class SetUtilTest {
+class PropertiesGroupTest {
+    @Test
+    void smoketest() {
+        PropertiesGroup pg = PropertiesGroup.newPropertiesGroup(
+                "abego.commons.testing", "testing.abego", ".config/abego.de/testing");
+        Properties props = pg.getProperties();
+        // use some "strange" property names to avoid the test fails because
+        // accidently somebody used the same name in a shared/global properties
+        // file.
+        String fooValue = pg.getProperty("foo-used-for-abego.commons-tests");
+        String barValue = pg.getProperty("bar-used-for-abego.commons-tests", "baz");
 
-    private static void assertEqualsIgnoringOrder(String expectedAsText, Set<String> actual) {
-        String actualAsTest = actual.size() + "\n"
-                + actual.stream().sorted().collect(Collectors.joining("\n"));
-        assertEquals(expectedAsText, actualAsTest);
+        assertNotNull(props);
+        assertNull(fooValue);
+        assertEquals("baz", barValue);
+
+
+        PropertiesGroup pg2 =
+                PropertiesGroup.newPropertiesGroup("abego.commons.testing2");
+        assertNotNull(pg2);
+
     }
 
     @Test
-    void constructor() {
-        assertThrows(MustNotInstantiateException.class, SetUtil::new);
-    }
+    void wrongGroupName() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> PropertiesGroup.newPropertiesGroup("abego"));
 
-
-    @Test
-    void asSet() {
-        assertEqualsIgnoringOrder("0\n",
-                SetUtil.asSet());
-
-        assertEqualsIgnoringOrder("1\nA",
-                SetUtil.asSet("A"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C", "B", "A", "A"));
+        assertEquals(
+                "`abego` is the shared name and must not be used as a groupName.",
+                e.getMessage());
     }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.abego.commons.lang.ThrowableUtil.allMessages;
 import static org.abego.commons.lang.ThrowableUtil.allMessagesOrClassName;
 import static org.abego.commons.lang.ThrowableUtil.messageOrClassName;
+import static org.abego.commons.lang.ThrowableUtil.messageOrToString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -44,6 +45,15 @@ class ThrowableUtilTest {
     void messageOrClassName_ok() {
         assertEquals("java.lang.IllegalArgumentException",
                 messageOrClassName(new IllegalArgumentException()));
+
+        assertEquals("abc",
+                messageOrClassName(new IllegalArgumentException("abc")));
+    }
+
+    @Test
+    void messageOrToString_ok() {
+        assertEquals("java.lang.IllegalArgumentException",
+                messageOrToString(new IllegalArgumentException()));
 
         assertEquals("abc",
                 messageOrClassName(new IllegalArgumentException("abc")));

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,12 @@ package org.abego.commons.io;
 
 import org.abego.commons.TestData;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.eclipse.jdt.annotation.NonNull;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -39,6 +42,8 @@ import static org.abego.commons.TestData.SAMPLE_ISO_8859_1_TXT_TEXT;
 import static org.abego.commons.TestData.SAMPLE_TXT_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_TXT_TEXT;
 import static org.abego.commons.io.FileUtil.tempFileForRun;
+import static org.abego.commons.io.InputStreamUtil.newInputStream;
+import static org.abego.commons.io.InputStreamUtil.readLineWise;
 import static org.abego.commons.io.InputStreamUtil.textOf;
 import static org.abego.commons.io.InputStreamUtil.write;
 import static org.abego.commons.lang.ClassUtil.resourceAsStream;
@@ -93,5 +98,38 @@ class InputStreamUtilTest {
         assertEquals(SAMPLE_TXT_TEXT, FileUtil.textOf(file));
     }
 
+    @NonNull
+    private static String generateSampleText(int size) {
+        StringBuilder builder = new StringBuilder();
+        int i = 0;
+        while (builder.length() < size) {
+            builder.append(i);
+            builder.append("\n");
+        }
+        String text = builder.toString();
+        return text;
+    }
 
+    @Test
+    void readLineWiseSmokeTest() throws IOException {
+        InputStream in = newInputStream("foo\nbar");
+        StringBuilder out = new StringBuilder();
+        readLineWise(in, (line, lineNumber) ->
+                out.append(String.format("%d: %s\n", lineNumber, line)));
+
+        assertEquals("1: foo\n2: bar\n", out.toString());
+    }
+
+    @Test
+    void copyStream() {
+        // the text to copy should have a certain size to ensure it does
+        // not fit into the internal buffer of copyStream.
+        String text = generateSampleText(10000);
+        InputStream input = newInputStream(text);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        InputStreamUtil.copyStream(input, output);
+
+        assertEquals(text, ByteArrayOutputStreamUtil.textOf(output));
+    }
 }

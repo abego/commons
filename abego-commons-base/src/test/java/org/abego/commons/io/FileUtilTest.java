@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,17 +25,24 @@
 package org.abego.commons.io;
 
 import org.abego.commons.TestData;
+import org.abego.commons.lang.ClassUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.abego.commons.net.URLUtil;
 import org.eclipse.jdt.annotation.Nullable;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import static org.abego.commons.TestData.EMPTY_TEXT;
@@ -55,6 +62,7 @@ import static org.abego.commons.io.FileUtil.ensureFileExists;
 import static org.abego.commons.io.FileUtil.existingFileOrNull;
 import static org.abego.commons.io.FileUtil.file;
 import static org.abego.commons.io.FileUtil.fileForRun;
+import static org.abego.commons.io.FileUtil.getPathSeparator;
 import static org.abego.commons.io.FileUtil.isDirectory;
 import static org.abego.commons.io.FileUtil.normalFile;
 import static org.abego.commons.io.FileUtil.pathRelativeTo;
@@ -760,6 +768,228 @@ class FileUtilTest {
         assertEquals(".foo", FileUtil.removeFileExtension(".foo"));
         assertEquals(".foo", FileUtil.removeFileExtension(".foo.txt"));
         assertEquals(".foo", FileUtil.removeFileExtension(".foo."));
+    }
+
+    @Test
+    void filesInDirectory(@TempDir File tempDir) {
+        File[] files = FileUtil.filesInDirectory(tempDir);
+        assertEquals(0, files.length);
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> FileUtil.filesInDirectory(new File(tempDir, "missing")));
+        Assertions.assertTrue(e.getMessage().startsWith("Not a directory:"));
+    }
+
+    @Test
+    void filePathLines(@TempDir File tempDir) {
+        File file1 = new File(tempDir, "file1");
+        File file2 = new File(tempDir, "file2");
+
+        assertEquals("", FileUtil.filePathLines(new File[]{}));
+        assertEquals(
+                file1.getAbsolutePath(),
+                FileUtil.filePathLines(new File[]{file1}));
+        assertEquals(
+                file1.getAbsolutePath() + "\n" + file2.getAbsolutePath(),
+                FileUtil.filePathLines(new File[]{file1, file2}));
+    }
+
+    @Test
+    void allFilesExist(@TempDir File tempDir) {
+        File file = new File(tempDir, "file");
+        FileUtil.writeText(file, "foo");
+        File missing = new File(tempDir, "missing");
+
+        assertTrue(FileUtil.allFilesExist());
+        assertTrue(FileUtil.allFilesExist(file));
+        assertFalse(FileUtil.allFilesExist(file, missing));
+        assertFalse(FileUtil.allFilesExist(missing));
+    }
+
+    @Test
+    void canonicalPath(@TempDir File tempDir) throws IOException {
+        File file = new File(tempDir, "file");
+
+        assertEquals(file.getCanonicalPath(), FileUtil.canonicalPath(file));
+    }
+
+    @Test
+    void parseFiles() {
+        File[] files = FileUtil.parseFiles("", ";");
+
+        assertEquals(0, files.length);
+
+
+        files = FileUtil.parseFiles("file1;file2;file1", ";");
+
+        assertEquals(2, files.length);
+        assertEquals("file1", files[0].getName());
+        assertEquals("file2", files[1].getName());
+    }
+
+    @Test
+    void parseFilesIterable() {
+
+        File[] files = FileUtil.parseFiles(new ArrayList<>(), ";");
+        assertEquals(0, files.length);
+
+        List<String> list = new ArrayList<>();
+        list.add("file1");
+        list.add("file2;file3");
+        files = FileUtil.parseFiles(list, ";");
+
+        assertEquals(3, files.length);
+        assertEquals("file1", files[0].getName());
+        assertEquals("file2", files[1].getName());
+        assertEquals("file3", files[2].getName());
+    }
+
+    @Test
+    void parseFilesImplicitSeparator() {
+        String sep = getPathSeparator();
+        File[] files = FileUtil.parseFiles("");
+        assertEquals(0, files.length);
+
+        files = FileUtil.parseFiles("file1" + sep + "file2" + sep + "file1");
+        assertEquals(2, files.length);
+        assertEquals("file1", files[0].getName());
+        assertEquals("file2", files[1].getName());
+    }
+
+    @Test
+    void findExistingDirectory(@TempDir File tempDir) {
+        assertEquals(tempDir, FileUtil.findExistingDirectory(
+                new File[]{tempDir}));
+        assertNull(FileUtil.findExistingDirectory(
+                new File[]{new File(tempDir, "missing")}));
+        assertNull(FileUtil.findExistingDirectory(
+                new File[]{}));
+    }
+
+    @Test
+    void findExistingDirectoryWithFilePaths(@TempDir File tempDir) {
+        assertEquals(tempDir.getAbsolutePath(), FileUtil.findExistingDirectory(
+                new String[]{tempDir.getAbsolutePath()}));
+        assertNull(FileUtil.findExistingDirectory(
+                new String[]{new File(tempDir, "missing").getAbsolutePath()}));
+        assertNull(FileUtil.findExistingDirectory(
+                new String[]{}));
+    }
+
+    @Test
+    void copyResourcesToDirectory(@TempDir File tempDir) {
+        FileUtil.copyResourcesToDirectory(
+                tempDir,
+                "/org/abego/commons/dir1",
+                "foo.txt", "subdir/bar.txt");
+
+        assertTrue(new File(tempDir, "foo.txt").isFile());
+        assertTrue(new File(tempDir, "subdir/bar.txt").isFile());
+    }
+
+    @Test
+    void copyResourcesToDirectoryFlat(@TempDir File tempDir) {
+        FileUtil.copyResourcesToDirectoryFlat(
+                tempDir,
+                "/org/abego/commons/dir1",
+                "foo.txt", "subdir/bar.txt");
+
+        assertTrue(new File(tempDir, "foo.txt").isFile());
+        assertTrue(new File(tempDir, "bar.txt").isFile());
+    }
+
+    @Test
+    void copyResourcesDeep(@TempDir File tempDir) {
+        FileUtil.copyResourcesDeep(
+                getClass(), "/org/abego/commons/dir1", tempDir);
+
+        assertTrue(new File(tempDir, "dir1/foo.txt").isFile());
+        assertTrue(new File(tempDir, "dir1/subdir/bar.txt").isFile());
+    }
+
+    @Test
+    void copyResourcesDeepMissingResource(@TempDir File tempDir) {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () ->
+                FileUtil.copyResourcesDeep(
+                        getClass(), "/org/abego/commons/missingDir", tempDir));
+        assertEquals("Resource '/org/abego/commons/missingDir' missing in class class org.abego.commons.io.FileUtilTest", e.getMessage());
+    }
+
+    @Test
+    void copyResourcesInLocationDeep(@TempDir File tempDir) {
+        FileUtil.copyResourcesInLocationDeep(
+                getClass(), "/org/abego/commons/dir1", tempDir);
+
+        assertTrue(new File(tempDir, "foo.txt").isFile());
+        assertTrue(new File(tempDir, "subdir/bar.txt").isFile());
+    }
+
+    @Test
+    void copyResourcesInLocationDeepWithURL(@TempDir File tempDir) {
+        FileUtil.copyResourcesInLocationDeep(
+                Objects.requireNonNull(getClass().getResource("/org/abego/commons/dir1")), tempDir);
+
+        assertTrue(new File(tempDir, "foo.txt").isFile());
+        assertTrue(new File(tempDir, "subdir/bar.txt").isFile());
+    }
+
+    @Test
+    void copyResourcesDeepWithURL(@TempDir File tempDir) {
+        URL resource = getClass().getResource("/org/abego/commons/dir1");
+        if (resource == null) {
+            throw new IllegalStateException("Resource missing");
+        }
+        FileUtil.copyResourcesDeep(resource, tempDir);
+
+        assertTrue(new File(tempDir, "dir1/foo.txt").isFile());
+        assertTrue(new File(tempDir, "dir1/subdir/bar.txt").isFile());
+    }
+
+    @Test
+    void copyResourcesDeepJarFile(@TempDir File tempDir) {
+        URL resource = ClassUtil.resource(
+                getClass(), "/org/abego/commons/hello.jar");
+
+        FileUtil.copyResourcesDeep(resource, tempDir);
+
+        // The jar-file is copied, but not the content extracted
+        assertTrue(new File(tempDir, "hello.jar").isFile());
+        assertFalse(new File(tempDir, "META-INF/MANIFEST.MF").isFile());
+        assertFalse(new File(tempDir, "org/abego/commons/Main.class").isFile());
+    }
+
+    @Test
+    void copyResourcesDeepJarFileContent(@TempDir File tempDir) {
+        URL resource = getClass().getResource("/org/abego/commons/hello.jar");
+        if (resource == null) {
+            throw new IllegalStateException("Resource missing");
+        }
+
+        URL jarProtocolUrl = URLUtil.asJarProtocolURL(resource);
+        FileUtil.copyResourcesDeep(jarProtocolUrl, tempDir);
+
+        // The jar-file is NOT copied, but its content extracted
+        // (because we are using the "jar:" protocol)
+        assertFalse(new File(tempDir, "hello.jar").isFile());
+        assertTrue(new File(tempDir, "META-INF/MANIFEST.MF").isFile());
+        assertTrue(new File(tempDir, "org/abego/commons/Main.class").isFile());
+    }
+
+    @Test
+    void emptyFile(@TempDir File tempDir) {
+        File file = new File(tempDir, "file.txt");
+
+        FileUtil.emptyFile(file);
+
+        assertEquals("", FileUtil.textOf(file));
+    }
+
+    @Test
+    void mkdirs(@TempDir File tempDir) {
+        FileUtil.mkdirs(tempDir, "foo/bar");
+
+        assertTrue(new File(tempDir, "foo").isDirectory());
+        assertTrue(new File(tempDir, "foo/bar").isDirectory());
     }
 
 }

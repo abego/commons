@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static org.abego.commons.lang.ObjectUtil.ignore;
@@ -548,5 +549,113 @@ class StringUtilTest {
         assertFalse(containsAnyOf("foobarbaz", "x"));
         // non of many not match
         assertFalse(containsAnyOf("foobarbaz", "x", "y", "y2"));
+    }
+
+    @Test
+    void linecount() {
+        assertEquals(1, StringUtil.lineCount(""));
+        assertEquals(1, StringUtil.lineCount("a"));
+        assertEquals(2, StringUtil.lineCount("a\nb"));
+        assertEquals(2, StringUtil.lineCount("a\r\nb"));
+        assertEquals(3, StringUtil.lineCount("a\n\nb"));
+        assertEquals(3, StringUtil.lineCount("a\r\n\r\nb"));
+        assertEquals(4, StringUtil.lineCount("a\n\nb\n"));
+    }
+
+    @Test
+    void compareToIgnoreCaseStable() {
+
+        // Notice: when comparing case-sensitive: "A" < "B" < "a" < "b"
+
+        assertTrue(StringUtil.compareToIgnoreCaseStable("A", "B") < 0);
+        assertTrue(StringUtil.compareToIgnoreCaseStable("a", "B") < 0);
+
+        assertEquals(0, StringUtil.compareToIgnoreCaseStable("A", "A"));
+        assertTrue(StringUtil.compareToIgnoreCaseStable("a", "A") > 0);
+    }
+
+    @Test
+    void endsWithIgnoreCase() {
+        assertTrue(StringUtil.endsWithIgnoreCase("foo.txt", ".txt"));
+        assertTrue(StringUtil.endsWithIgnoreCase("foo.TXT", ".txt"));
+        assertTrue(StringUtil.endsWithIgnoreCase("foo.txt", ".TxT"));
+        assertTrue(StringUtil.endsWithIgnoreCase("foo.TXT", ".TxT"));
+
+        assertFalse(StringUtil.endsWithIgnoreCase("foo", ".TxT"));
+        assertFalse(StringUtil.endsWithIgnoreCase("", ".TxT"));
+    }
+
+    @Test
+    void newIncludesStringPredicate() {
+        String[] options = {"foo", "bar*"};
+        Predicate<String> predicate = StringUtil.newIncludesStringPredicate(options);
+
+        // without wildcard
+        assertTrue(predicate.test("foo"));
+        assertFalse(predicate.test("fo"));
+        assertFalse(predicate.test("fooo"));
+
+        // with wildcard
+        assertTrue(predicate.test("bar"));
+        assertFalse(predicate.test("ba"));
+        assertTrue(predicate.test("barr"));
+        assertFalse(predicate.test(""));
+    }
+
+    @Test
+    void indent() {
+        StringBuilder out = new StringBuilder();
+        Consumer<String> addLine = s -> {
+            out.append(s);
+            out.append("\n");
+        };
+        Consumer<String> indender = StringUtil.indent(addLine);
+
+        addLine.accept("foo");
+        indender.accept("bar");
+        indender.accept("baz");
+        addLine.accept("doo");
+
+        assertEquals("foo\n" +
+                "\tbar\n" +
+                "\tbaz\n" +
+                "doo\n", out.toString());
+    }
+
+    @Test
+    void removePrefix() {
+        assertEquals("oo", StringUtil.removePrefix("foo", "f"));
+        assertEquals("foo", StringUtil.removePrefix("foo", "x"));
+        assertEquals("foo", StringUtil.removePrefix("foo", ""));
+        assertEquals("", StringUtil.removePrefix("", "bar"));
+    }
+
+    @Test
+    void unixString() {
+        assertEquals("", StringUtil.unixString(""));
+        assertEquals("a\nb\n", StringUtil.unixString("a\nb\n"));
+        assertEquals("a\nb\n", StringUtil.unixString("a\r\nb\r\n"));
+        assertEquals("a\nb\n", StringUtil.unixString("a\n\rb\n\r"));
+    }
+
+    @Test
+    void sortedUnixLines() {
+        assertEquals("a\nb\nc\nd", StringUtil.sortedUnixLines("b\na\r\nd\n\rc\n"));
+    }
+
+    @Test
+    void slashesToDots() {
+        assertEquals(".a.b..cd.", StringUtil.slashesToDots("/a/b//cd/"));
+        assertEquals("ab.cd", StringUtil.slashesToDots("ab/cd"));
+        assertEquals("abc", StringUtil.slashesToDots("abc"));
+        assertEquals("", StringUtil.slashesToDots(""));
+    }
+
+    @Test
+    void d() {
+        assertEquals("foo", StringUtil.prefixBefore("foobar", "bar"));
+        assertEquals("foo", StringUtil.prefixBefore("foobarbar", "bar"));
+        assertEquals("foobar", StringUtil.prefixBefore("foobar", "baz"));
+        assertEquals("", StringUtil.prefixBefore("foobar", "foo"));
     }
 }

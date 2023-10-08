@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.abego.commons.formattedtext.FormattedTextProcessorForHTML.newFormattedTextProcessorForHTML;
 import static org.abego.commons.range.IntRangeDefault.newIntRange;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -51,16 +50,11 @@ class FormattedTextUtilTest {
     void toFormattedTextOK() {
         FormattedText ft = FormattedTextUtil.toFormattedText("foo");
 
-        FormattedTextProcessorSampleUsingDefaults processor = new FormattedTextProcessorSampleUsingDefaults();
+        FormattedTextProcessorSampleUsingDefaults processor =
+                new FormattedTextProcessorSampleUsingDefaults();
         ft.processWith(processor);
 
         assertEquals("foo", processor.getText());
-    }
-
-    private static String toHTML(FormattedText formattedText) {
-        FormattedTextProcessorForHTML builder = newFormattedTextProcessorForHTML();
-        formattedText.processWith(builder);
-        return builder.build();
     }
 
     @Test
@@ -74,7 +68,7 @@ class FormattedTextUtilTest {
                 text, ranges, color, FormattedText.FontStyle.BOLD);
 
         assertEquals("foo<b><font color=\"#ffff00\">bar</font></b>",
-                toHTML(ft));
+                FormattedTextProcessorForHTML.toHTML(ft));
     }
 
     @Test
@@ -87,7 +81,8 @@ class FormattedTextUtilTest {
                 text, ranges, null, FormattedText.FontStyle.ITALIC);
 
         assertTrue(result instanceof FormattedText);
-        assertEquals("f<i>oo</i>bar", toHTML((FormattedText) result));
+        assertEquals("f<i>oo</i>bar",
+                FormattedTextProcessorForHTML.toHTML((FormattedText) result));
     }
 
     @Test

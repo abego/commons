@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -146,6 +146,42 @@ class ProgressWithRangeImplTest {
                 "[3 s] Topic (4 of 10, 40 %, remaining time: 4 s) - four\n" +
                 "[9 s] Topic (9 of 10, 90 %, remaining time: 1 s) - nine\n" +
                 "[10 s] Topic (10 of 10, 100 %, remaining time: 0 s) - eleven->ten\n", printStream.text());
+    }
+
+    @Test
+    void smoketestOpenEnd() {
+        PrintStreamToBuffer printStream = PrintStreamToBuffer.newPrintStreamToBuffer();
+        ProgressWithRange.Listener listener =
+                Progresses.createProgressListenerWithOutputTo(printStream);
+
+        // we need to "control the time" for reliable tests
+        Var<Long> currentMillis = VarUtil.newVar(0L);
+        ProgressWithRange.Options options = new ProgressWithRange.Options() {
+            @Override
+            public LongSupplier getCurrentMillisSupplier() {
+                return currentMillis::get;
+            }
+        };
+
+        // set maxValue to Integer.MAX_VALUE to define an "open end" progress
+        ProgressWithRange progress = ProgressWithRangeImpl.createProgressWithRange(
+                "Topic", 0, Integer.MAX_VALUE,
+                listener,
+                options);
+
+        progress.update(0, "");
+        assertEquals("[0 s] Topic (0)\n", printStream.text());
+
+        // update with no time elapsed, no event 
+        progress.update(1, "one");
+        assertEquals("[0 s] Topic (0)\n", printStream.text());
+
+        // 2 seconds later, event emitted 
+        currentMillis.set(2000L);
+        progress.update(2, "two");
+        assertEquals("" +
+                "[0 s] Topic (0)\n" +
+                "[2 s] Topic (2) - two\n", printStream.text());
     }
 
     @Test

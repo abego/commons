@@ -22,43 +22,34 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.util;
+package org.abego.commons.seq;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class SetUtilTest {
+class SeqForSetTest {
 
-    private static void assertEqualsIgnoringOrder(String expectedAsText, Set<String> actual) {
-        String actualAsTest = actual.size() + "\n"
-                + actual.stream().sorted().collect(Collectors.joining("\n"));
-        assertEquals(expectedAsText, actualAsTest);
+    @Test
+    void smoketest() {
+        HashSet<Object> set = new HashSet<>();
+        set.add("foo");
+
+        SeqForSet<Object> seq = SeqForSet.newSeqForSet(set);
+        assertEquals(1, seq.size());
+        assertEquals("foo", seq.item(0));
+        assertEquals("foo", seq.stream().findFirst().orElse("bar"));
     }
 
     @Test
-    void constructor() {
-        assertThrows(MustNotInstantiateException.class, SetUtil::new);
+    void newSeqForSetEmptySet() {
+        IllegalArgumentException e = Assertions.assertThrows(
+                IllegalArgumentException.class, () ->
+                        SeqForSet.newSeqForSet(new HashSet<>()));
+        assertEquals("Set must not be empty", e.getMessage());
     }
 
-
-    @Test
-    void asSet() {
-        assertEqualsIgnoringOrder("0\n",
-                SetUtil.asSet());
-
-        assertEqualsIgnoringOrder("1\nA",
-                SetUtil.asSet("A"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C", "B", "A", "A"));
-    }
 }

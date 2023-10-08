@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 
 package org.abego.commons.util;
 
+import org.abego.commons.lang.IterableUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ServiceConfigurationError;
 
 import static org.abego.commons.util.ServiceLoaderUtil.loadService;
+import static org.abego.commons.util.ServiceLoaderUtil.loadServices;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -66,6 +68,34 @@ class ServiceLoaderUtilTest {
     }
 
     private interface MyTestInterface {
+    }
+
+    @Test
+    void loadServices_happyPath() {
+        Iterable<LoadServiceTestInterfaceWithPublicClass> services =
+                loadServices(LoadServiceTestInterfaceWithPublicClass.class);
+
+        Assertions.assertFalse(IterableUtil.isEmpty(services));
+    }
+
+    @Test
+    void loadServices_happyPath_withPredicate() {
+
+        Iterable<LoadServiceTestInterfaceWithPublicClass> services =
+                loadServices(
+                        LoadServiceTestInterfaceWithPublicClass.class,
+                        // predicate is false, i.e. no service will be returned
+                        s -> false);
+
+        Assertions.assertTrue(IterableUtil.isEmpty(services));
+    }
+
+    @Test
+    void loadServices_missingImplementation() {
+        Iterable<MyTestInterface> services =
+                loadServices(MyTestInterface.class);
+
+        Assertions.assertTrue(IterableUtil.isEmpty(services));
     }
 
 }

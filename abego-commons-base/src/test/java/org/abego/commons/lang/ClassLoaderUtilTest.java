@@ -22,43 +22,58 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.util;
+package org.abego.commons.lang;
 
+import org.abego.commons.io.FileUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class SetUtilTest {
-
-    private static void assertEqualsIgnoringOrder(String expectedAsText, Set<String> actual) {
-        String actualAsTest = actual.size() + "\n"
-                + actual.stream().sorted().collect(Collectors.joining("\n"));
-        assertEquals(expectedAsText, actualAsTest);
-    }
-
+class ClassLoaderUtilTest {
     @Test
     void constructor() {
-        assertThrows(MustNotInstantiateException.class, SetUtil::new);
+        assertThrows(MustNotInstantiateException.class, ClassLoaderUtil::new);
+    }
+
+    @Test
+    void smoketest() throws FileNotFoundException, ClassNotFoundException {
+        URL url = getClass().getResource("/org/abego/commons/hello.jar");
+        if (url == null) {
+            throw new FileNotFoundException();
+        }
+        File[] jarFiles = new File[]{FileUtil.toFile(url)};
+
+        ClassLoader cl = ClassLoaderUtil.classLoaderUsingJars(jarFiles);
+
+        assertNotNull(cl);
+        Class<?> c = cl.loadClass("org.abego.commons.Main");
+        assertEquals("Main", c.getSimpleName());
+    }
+
+    @Test
+    void missingFile() {
+        File[] jarFiles = new File[]{new File("no-such-jar")};
+
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> ClassLoaderUtil.classLoaderUsingJars(jarFiles));
+        assertTrue(e.getMessage().startsWith("Missing file:"));
     }
 
 
     @Test
-    void asSet() {
-        assertEqualsIgnoringOrder("0\n",
-                SetUtil.asSet());
+    void myClassLoader() {
+        File[] noJarFiles = new File[0];
 
-        assertEqualsIgnoringOrder("1\nA",
-                SetUtil.asSet("A"));
+        ClassLoader cl = ClassLoaderUtil.classLoaderUsingJars(noJarFiles);
 
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C", "B", "A", "A"));
+        assertNotNull(cl);
     }
 }

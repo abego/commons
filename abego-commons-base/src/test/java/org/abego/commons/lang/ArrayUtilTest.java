@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import static org.abego.commons.TestData.SAMPLE_TEXT;
 import static org.abego.commons.TestData.SAMPLE_TEXT_2;
@@ -45,6 +46,7 @@ import static org.abego.commons.lang.StringUtil.array;
 import static org.abego.commons.lang.StringUtil.arrayOfNullables;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ArrayUtilTest {
@@ -128,8 +130,6 @@ class ArrayUtilTest {
 
     @Test
     void lastItem_OK() {
-        String[] array0 = new String[]{};
-
         assertEquals("foo", lastItem(new String[]{"foo"}));
         assertEquals("bar", lastItem(new String[]{"foo", "bar"}));
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
@@ -143,5 +143,63 @@ class ArrayUtilTest {
         assertArrayEquals(new String[]{}, ArrayUtil.allButLastItem(new String[]{"a"}));
         assertArrayEquals(new String[]{"a"}, ArrayUtil.allButLastItem(new String[]{"a", "b"}));
         assertArrayEquals(new String[]{"a", "b"}, ArrayUtil.allButLastItem(new String[]{"a", "b", "c"}));
+    }
+
+    @Test
+    void firstOrNull() {
+        assertNull(ArrayUtil.firstOrNull(new String[]{}));
+        assertEquals("a", ArrayUtil.firstOrNull(new String[]{"a"}));
+        assertEquals("a", ArrayUtil.firstOrNull(new String[]{"a", "b"}));
+
+        Predicate<String> isB = s -> s.equals("b");
+
+        assertNull(ArrayUtil.firstOrNull(new String[]{}, isB));
+        assertNull(ArrayUtil.firstOrNull(new String[]{"a"}, isB));
+        assertEquals("b", ArrayUtil.firstOrNull(new String[]{"a", "b"}, isB));
+    }
+
+    @Test
+    void concatenateItemAndArray() {
+        String[] arr1 = ArrayUtil.concatenate("a");
+        assertEquals("a", StringUtil.join(",", (Object[]) arr1));
+
+        String[] arr2 = ArrayUtil.concatenate("a", "b");
+        assertEquals("a,b", StringUtil.join(",", (Object[]) arr2));
+
+        String[] arr3 = ArrayUtil.concatenate("a", "b", "c");
+        assertEquals("a,b,c", StringUtil.join(",", (Object[]) arr3));
+    }
+
+    @Test
+    void concatenateArrayAndArray() {
+
+        // empty array at the left
+
+        String[] emptyArray = new String[0];
+
+        String[] arr1 = ArrayUtil.concatenate(emptyArray, "a");
+        assertEquals("a", StringUtil.join(",", (Object[]) arr1));
+
+        String[] arr2 = ArrayUtil.concatenate(emptyArray, "a", "b");
+        assertEquals("a,b", StringUtil.join(",", (Object[]) arr2));
+
+        String[] arr3 = ArrayUtil.concatenate(emptyArray, "a", "b", "c");
+        assertEquals("a,b,c", StringUtil.join(",", (Object[]) arr3));
+
+        // non-empty array at the left
+
+        String[] arr4 = ArrayUtil.concatenate(arr3);
+        assertEquals("a,b,c", StringUtil.join(",", (Object[]) arr4));
+
+        String[] arr5 = ArrayUtil.concatenate(arr3, (String[]) null);
+        assertEquals("a,b,c", StringUtil.join(",", (Object[]) arr5));
+
+        String[] arr6 = ArrayUtil.concatenate(arr3, "d");
+        assertEquals("a,b,c,d", StringUtil.join(",", (Object[]) arr6));
+
+        String[] arr7 = ArrayUtil.concatenate(arr3, "d", "e");
+        assertEquals("a,b,c,d,e", StringUtil.join(",", (Object[]) arr7));
+
+
     }
 }

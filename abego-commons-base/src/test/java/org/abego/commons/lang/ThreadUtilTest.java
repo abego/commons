@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.abego.commons.lang.ThreadUtil.runAsync;
+import static org.abego.commons.lang.ThreadUtil.runInNewThread;
 import static org.abego.commons.lang.ThreadUtil.sleep;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -108,6 +109,25 @@ class ThreadUtilTest {
         Blackboard<String> bb = BlackboardDefault.newBlackboardDefault();
 
         Thread thread = runAsync(() -> bb.add("running"));
+
+        // Wait for the output of the thread and the thread terminates
+        long startTime = System.currentTimeMillis();
+        int timeoutMillis = 1000;
+        while (!bb.contains("running") && thread.getState() != Thread.State.TERMINATED) {
+            if (System.currentTimeMillis() - startTime > timeoutMillis) {
+                fail("Timeout: thread was not running");
+            }
+            ThreadUtil.sleep(10);
+        }
+
+    }
+
+    @Test
+    void runInNewThreadOK() {
+
+        Blackboard<String> bb = BlackboardDefault.newBlackboardDefault();
+
+        Thread thread = runInNewThread(() -> bb.add("running"));
 
         // Wait for the output of the thread and the thread terminates
         long startTime = System.currentTimeMillis();

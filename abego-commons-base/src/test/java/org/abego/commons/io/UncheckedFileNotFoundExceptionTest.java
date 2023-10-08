@@ -22,43 +22,37 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.util;
+package org.abego.commons.io;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-class SetUtilTest {
-
-    private static void assertEqualsIgnoringOrder(String expectedAsText, Set<String> actual) {
-        String actualAsTest = actual.size() + "\n"
-                + actual.stream().sorted().collect(Collectors.joining("\n"));
-        assertEquals(expectedAsText, actualAsTest);
-    }
-
+class UncheckedFileNotFoundExceptionTest {
     @Test
-    void constructor() {
-        assertThrows(MustNotInstantiateException.class, SetUtil::new);
+    void smoketest() {
+        FileNotFoundException cause = new FileNotFoundException();
+
+        UncheckedFileNotFoundException e = Assertions.assertThrows(UncheckedFileNotFoundException.class,
+                () -> {
+                    throw new UncheckedFileNotFoundException("foo", cause);
+                });
+
+        assertSame("foo", e.getMessage());
+        assertSame(cause, e.getCause());
+
+        e = Assertions.assertThrows(UncheckedFileNotFoundException.class,
+                () -> {
+                    throw new UncheckedFileNotFoundException(cause);
+                });
+
+        assertEquals("java.io.FileNotFoundException", e.getMessage());
+        assertSame(cause, e.getCause());
+
     }
 
-
-    @Test
-    void asSet() {
-        assertEqualsIgnoringOrder("0\n",
-                SetUtil.asSet());
-
-        assertEqualsIgnoringOrder("1\nA",
-                SetUtil.asSet("A"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C", "B", "A", "A"));
-    }
 }

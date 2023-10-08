@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,13 +31,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.abego.commons.lang.IterableUtil.appendTextOf;
 import static org.abego.commons.lang.IterableUtil.areEqual;
 import static org.abego.commons.lang.IterableUtil.firstOrNull;
 import static org.abego.commons.lang.IterableUtil.hashCodeForIterable;
 import static org.abego.commons.lang.IterableUtil.join;
 import static org.abego.commons.lang.IterableUtil.size;
 import static org.abego.commons.lang.IterableUtil.textOf;
+import static org.abego.commons.lang.IterableUtil.toStringOfIterable;
 import static org.abego.commons.util.ListUtil.list;
+import static org.abego.commons.util.ListUtil.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -81,6 +84,38 @@ class IterableUtilTest {
         assertEquals("", join(", ", empty));
         assertEquals("a, b, c", join(", ", abc));
         assertEquals("a, b, null, c", join(", ", abNullc));
+    }
+
+    @Test
+    void appendTextOfWithEllipsis() {
+        StringBuilder out = new StringBuilder();
+        List<String> items = toList("foo", null, "bar", "", "baz", "doo");
+
+        appendTextOf(
+                out, items, ",", "empty", String::toString, "NULL", 16);
+
+        assertEquals("foo,NULL,bar,,baz,...", out.toString());
+    }
+
+    @Test
+    void appendTextOfWithEmptyText() {
+        StringBuilder out = new StringBuilder();
+        List<String> items = toList();
+
+        appendTextOf(
+                out, items, ",", "empty", String::toString, "null", 2);
+
+        assertEquals("empty", out.toString());
+    }
+
+    @Test
+    void toStringOfIterableOk() {
+        List<String> items = toList("foo", null, "bar", "", "baz", "doo");
+
+        String actual = toStringOfIterable(items);
+
+        assertEquals("java.util.ArrayList[foo, null, bar, , baz, doo]", actual);
+
     }
 
     @Test

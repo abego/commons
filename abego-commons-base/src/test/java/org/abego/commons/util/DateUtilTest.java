@@ -24,41 +24,26 @@
 
 package org.abego.commons.util;
 
-import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Calendar;
+import java.util.Date;
 
+import static java.util.Calendar.MILLISECOND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class SetUtilTest {
-
-    private static void assertEqualsIgnoringOrder(String expectedAsText, Set<String> actual) {
-        String actualAsTest = actual.size() + "\n"
-                + actual.stream().sorted().collect(Collectors.joining("\n"));
-        assertEquals(expectedAsText, actualAsTest);
-    }
-
+class DateUtilTest {
     @Test
-    void constructor() {
-        assertThrows(MustNotInstantiateException.class, SetUtil::new);
-    }
+    void smoketest() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(2023, Calendar.OCTOBER, 14, 13, 3, 42);
+        cal.set(MILLISECOND, 123);
+        Date date = cal.getTime();
 
-
-    @Test
-    void asSet() {
-        assertEqualsIgnoringOrder("0\n",
-                SetUtil.asSet());
-
-        assertEqualsIgnoringOrder("1\nA",
-                SetUtil.asSet("A"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C"));
-
-        assertEqualsIgnoringOrder("3\nA\nB\nC",
-                SetUtil.asSet("A", "B", "C", "B", "A", "A"));
+        assertEquals("2023-10-14T13:03:42.123", DateUtil.isoDateTimeMillis(date));
+        assertEquals("2023-10-14T13:03:42", DateUtil.isoDateTime(date));
+        assertEquals("2023-10-14", DateUtil.isoDate(date));
+        assertEquals("13:03:42", DateUtil.isoTime(date));
+        assertEquals("13:03:42.123", DateUtil.isoTimeMillis(date));
     }
 }

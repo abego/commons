@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,13 +65,31 @@ class PredicateUtilTest {
     }
 
     @Test
-    void and() {
+    void andOnIterable() {
         Predicate<Integer> isEven = n -> n % 2 == 0;
         Predicate<Integer> isDividableByThree = n -> n % 3 == 0;
         Iterable<Predicate<Integer>> predicates =
                 toList(isEven, isDividableByThree);
 
         Predicate<Integer> isDividableBySix = PredicateUtil.and(predicates);
+
+        assertTrue(isDividableBySix.test(0));
+        assertFalse(isDividableBySix.test(1));
+        assertFalse(isDividableBySix.test(2));
+        assertFalse(isDividableBySix.test(3));
+        assertFalse(isDividableBySix.test(4));
+        assertFalse(isDividableBySix.test(5));
+        assertTrue(isDividableBySix.test(6));
+        assertFalse(isDividableBySix.test(7));
+    }
+
+    @Test
+    void andOnVarArgs() {
+        Predicate<Integer> isEven = n -> n % 2 == 0;
+        Predicate<Integer> isDividableByThree = n -> n % 3 == 0;
+
+        Predicate<Integer> isDividableBySix =
+                PredicateUtil.and(isEven, isDividableByThree);
 
         assertTrue(isDividableBySix.test(0));
         assertFalse(isDividableBySix.test(1));

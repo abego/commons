@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,6 @@ import java.net.URL;
 
 import static org.abego.commons.TestData.MISSING_RESOURCE_NAME;
 import static org.abego.commons.TestData.SAMPLE_TXT_RESOURCE_NAME;
-import static org.abego.commons.lang.ClassUtil.RESOURCE_NOT_FOUND_MESSAGE;
 import static org.abego.commons.lang.ClassUtil.classNameOrNull;
 import static org.abego.commons.lang.ClassUtil.newInstanceOfClassNamed;
 import static org.abego.commons.lang.ClassUtil.packagePath;
@@ -65,7 +64,9 @@ class ClassUtilTest {
         Exception e = assertThrows(Exception.class,
                 () -> resource(getClass(), MISSING_RESOURCE_NAME));
 
-        assertEquals(RESOURCE_NOT_FOUND_MESSAGE, e.getMessage());
+        assertEquals(
+                "Resource not found: missing.txt (in org.abego.commons.lang.ClassUtilTest)",
+                e.getMessage());
     }
 
     @Test

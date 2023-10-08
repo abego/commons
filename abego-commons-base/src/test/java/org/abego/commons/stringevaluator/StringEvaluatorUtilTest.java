@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,38 +22,32 @@
  * SOFTWARE.
  */
 
-package org.abego.commons.seq;
+package org.abego.commons.stringevaluator;
 
-import java.util.Iterator;
-import java.util.WeakHashMap;
-import java.util.function.Function;
+import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.junit.jupiter.api.Test;
 
-import static org.abego.commons.util.IteratorUsingAccessor.newIteratorUsingAccessor;
+import java.util.Properties;
 
-// Currently not used, needs more testing
-class LazyMappedSeq<T, R> extends MappedSeq<R> {
-    private final Seq<T> originalSeq;
-    private final Function<? super T, ? extends R> mapper;
-    private final WeakHashMap<T, R> cache = new WeakHashMap<>();
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    private LazyMappedSeq(Seq<T> originalSeq, Function<? super T, ? extends R> mapper) {
-        this.originalSeq = originalSeq;
-        this.mapper = mapper;
+class StringEvaluatorUtilTest {
+    @Test
+    void constructor() {
+        assertThrows(MustNotInstantiateException.class, StringEvaluatorUtil::new);
     }
 
-    @Override
-    public Iterator<R> iterator() {
-        return newIteratorUsingAccessor(originalSeq.size(), this::item);
+    @Test
+    void evaluatedString() {
+        Properties properties = new Properties();
+        properties.setProperty("name1", "one");
+        properties.setProperty("name2", "two");
+        String s = ">>{name1}|{name2}|{name3}<<";
+
+        String result = StringEvaluatorUtil.evaluatedString(s, properties);
+
+        assertEquals(">>one|two|{name3}<<", result);
     }
 
-    @Override
-    public int size() {
-        return originalSeq.size();
-    }
-
-    @Override
-    public R item(int index) {
-        T origItem = originalSeq.item(index);
-        return cache.computeIfAbsent(origItem, mapper);
-    }
 }

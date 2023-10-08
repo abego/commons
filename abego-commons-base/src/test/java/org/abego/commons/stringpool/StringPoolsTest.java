@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,15 @@
 
 package org.abego.commons.stringpool;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class StringPoolsTest {
 
@@ -53,9 +57,29 @@ class StringPoolsTest {
     }
 
     @Test
-    void newMutableStringPool() {
+    void mutableStringPoolSmokeTest() {
         MutableStringPool stringPool = StringPools.newMutableStringPool();
 
-        assertNotNull(stringPool);
+        int a = stringPool.add("a");
+        int a2 = stringPool.add("a");
+
+        assertEquals(a, a2);
+
+        Iterable<StringPool.StringAndID> all = stringPool.allStringAndIDs();
+        Iterator<StringPool.StringAndID> iterator = all.iterator();
+        assertNull(iterator.next().getString());
+        assertEquals("a", iterator.next().getString());
+
+        int b = stringPool.add("b");
+
+        assertEquals("a", stringPool.getString(a));
+        assertEquals("b", stringPool.getString(b));
+        assertEquals("b", stringPool.getStringOrNull(b));
+
+        assertNull(stringPool.getStringOrNull(0));
+
+        IllegalArgumentException e = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> stringPool.getStringOrNull(-1));
+        assertEquals("Invalid id", e.getMessage());
     }
 }

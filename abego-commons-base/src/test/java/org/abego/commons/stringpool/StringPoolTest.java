@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 package org.abego.commons.stringpool;
 
 
+import org.abego.commons.lang.IterableUtil;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
 
@@ -36,6 +37,7 @@ import static org.abego.commons.stringpool.StringPoolBuilderDefault.newStringPoo
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -262,6 +264,30 @@ class StringPoolTest {
     }
 
     @Test
+    void addJoinedEmptyString() {
+        StringPoolBuilder spb = newStringPoolBuilder();
+
+        spb.addJoined("");
+        spb.addJoined("", "");
+
+        StringPool sp = spb.build();
+
+        assertEquals("", IterableUtil.firstOrNull(sp.allStrings()));
+    }
+
+    @Test
+    void addJoinedNullString() {
+        StringPoolBuilder spb = newStringPoolBuilder();
+
+        spb.addJoined((String) null);
+        spb.addJoined(null, null);
+
+        StringPool sp = spb.build();
+
+        assertNull(IterableUtil.firstOrNull(sp.allStrings()));
+    }
+
+    @Test
     void byteAccess() {
         StringPoolBuilder spb = newStringPoolBuilder();
 
@@ -304,7 +330,7 @@ class StringPoolTest {
 
         spb.add("Hello");
 
-        StringPool sp = spb.build();
+        spb.build();
 
         // The current implementation supports byte access
         assertTrue(spb.contains(null));

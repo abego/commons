@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,10 @@
 package org.abego.commons.lang;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.eclipse.jdt.annotation.Nullable;
 import org.junit.jupiter.api.Test;
+
+import java.util.function.Supplier;
 
 import static org.abego.commons.lang.ObjectUtil.checkType;
 import static org.abego.commons.lang.ObjectUtil.compareAsTexts;
@@ -33,6 +36,7 @@ import static org.abego.commons.lang.ObjectUtil.ignore;
 import static org.abego.commons.lang.ObjectUtil.valueOrElse;
 import static org.abego.commons.lang.ObjectUtil.valueOrFail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -95,9 +99,22 @@ class ObjectUtilTest {
     }
 
     @Test
-    void valueOrElseOK() {
+    void valueOrFail_withMessageSupplier() {
 
-        assertEquals("foo", valueOrElse("foo", "bar"));
+        String value = "foo";
+        Supplier<String> messageSupplier = () -> "value is null";
+
+        assertEquals(value, ObjectUtil.valueOrFail(value, messageSupplier));
+
+        NullPointerException e = assertThrows(NullPointerException.class,
+                () -> ObjectUtil.valueOrFail(null, messageSupplier));
+        assertEquals("value is null", e.getMessage());
+    }
+
+    @Test
+    void valueOrElseOK() {
+        @Nullable String foo = "foo";
+        assertEquals("foo", valueOrElse(foo, "bar"));
         assertEquals("bar", valueOrElse(null, "bar"));
     }
 
@@ -115,4 +132,24 @@ class ObjectUtilTest {
         assertTrue(compareAsTexts("Foo", "foo") < 0);
         assertTrue(compareAsTexts("foo", "Foo") > 0);
     }
+
+    @Test
+    void allAreNotNull() {
+        assertTrue(ObjectUtil.allAreNotNull());
+        assertTrue(ObjectUtil.allAreNotNull("a"));
+        assertTrue(ObjectUtil.allAreNotNull("a", 0));
+
+        assertFalse(ObjectUtil.allAreNotNull((Object) null));
+        assertFalse(ObjectUtil.allAreNotNull("a", null));
+        assertFalse(ObjectUtil.allAreNotNull("a", "b", null));
+        assertFalse(ObjectUtil.allAreNotNull(null, null));
+    }
+
+    @Test
+    void instanceOfOrNull() {
+        assertEquals("foo", ObjectUtil.instanceOfOrNull("foo", String.class));
+        assertNull(ObjectUtil.instanceOfOrNull(1, String.class));
+        assertNull(ObjectUtil.instanceOfOrNull(null, String.class));
+    }
 }
+

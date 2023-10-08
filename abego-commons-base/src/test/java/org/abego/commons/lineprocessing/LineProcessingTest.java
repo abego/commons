@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,9 @@ package org.abego.commons.lineprocessing;
 import org.abego.commons.lineprocessing.LineProcessing.ScriptBuilder;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
 
+import static org.abego.commons.io.InputStreamUtil.newInputStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -49,8 +49,9 @@ class LineProcessingTest {
                 out.append("- foo found\n"));
         builder.onMatch("bar", (c, s) ->
                 out.append("- bar found\n"));
-        builder.onMatch("\\w\\w\\w\\w", (c, s) ->
-                out.append("- 4-letter word found\n"));
+        builder.onMatch("(\\w)\\w\\w\\w", (c, s) ->
+                out.append(String.format("- 4-letter word, first char: %s\n",
+                        c.m().group(1))));
         builder.onDefault((c, s) ->
                 out.append(String.format("- unknown: %s\n", c.m().group())));
         builder.onEndOfText((c, s) ->
@@ -66,7 +67,7 @@ class LineProcessingTest {
                 "- foo found\n" +
                 "line 3: baz\n" +
                 "line 4: booz\n" +
-                "- 4-letter word found\n" +
+                "- 4-letter word, first char: b\n" +
                 "line 5: foo\n" +
                 "- foo found\n" +
                 "\n" +
@@ -115,7 +116,7 @@ class LineProcessingTest {
 
         LineProcessing.Script script = builder.build();
 
-        Exception e = assertThrows(UnsupportedOperationException.class,
+        Exception e = assertThrows(Exception.class,
                 () -> script.process("bar"));
         assertEquals("No matcher defined", e.getMessage());
     }
@@ -132,8 +133,8 @@ class LineProcessingTest {
 
         LineProcessing.Script script = builder.build();
 
-        ByteArrayInputStream inputStream =
-                new ByteArrayInputStream("bar".getBytes(StandardCharsets.UTF_8));
+        InputStream inputStream = newInputStream("bar");
+
         script.process(inputStream);
 
         assertEquals("line 1: bar - pattern? false\n", out.toString());

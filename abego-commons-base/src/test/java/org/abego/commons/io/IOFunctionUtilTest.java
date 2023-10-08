@@ -25,10 +25,12 @@
 package org.abego.commons.io;
 
 import org.abego.commons.lang.exception.MustNotInstantiateException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 
@@ -40,6 +42,14 @@ class IOFunctionUtilTest {
     @Test
     void constructor() {
         assertThrows(MustNotInstantiateException.class, IOFunctionUtil::new);
+    }
+
+    @Test
+    void withException() {
+        IOFunction<String, String> f = s -> {throw new IOException("foo");};
+
+        IOException e = assertThrows(IOException.class, () -> f.apply(""));
+        Assertions.assertEquals("foo", e.getMessage());
     }
 
     @Test

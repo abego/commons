@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,15 @@
 
 package org.abego.commons.text;
 
+import java.io.InputStream;
+
 /**
  * Used for "line-by-line" text processing.
+ * <p>
+ *
+ * @deprecated Use {@link org.abego.commons.lineprocessing.LineProcessing} instead.
  */
+@Deprecated
 public interface LineProcessor {
 
     /**
@@ -36,6 +42,8 @@ public interface LineProcessor {
      * Line separators are not included in the {@code line}.
      * <p>
      * One can assume a LineProcessor is called with increasing lineNumbers.
+     * <p>
+     * See {@link org.abego.commons.io.InputStreamUtil#readLineWise(InputStream, LineProcessor)}.
      */
     void processLine(String line, int lineNumber);
 
@@ -49,6 +57,6 @@ public interface LineProcessor {
      * Called after all lines are processed, also providing the total number
      * of lines processed.
      */
-    default void end(int lineCount) {
+    default void end(@SuppressWarnings("unused") int lineCount) {
     }
 }

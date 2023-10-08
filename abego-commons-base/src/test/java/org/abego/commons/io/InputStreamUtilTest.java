@@ -120,10 +120,22 @@ class InputStreamUtilTest {
     }
 
     @Test
-    void copyStream() {
-        // the text to copy should have a certain size to ensure it does
-        // not fit into the internal buffer of copyStream.
+    void copyStream_large() {
+        // The text to copy should have a certain size to ensure it does
+        // not fit into the internal buffer of copyStream. This way we 
+        // also test the "across blocks" code.
         String text = generateSampleText(10000);
+        InputStream input = newInputStream(text);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        InputStreamUtil.copyStream(input, output);
+
+        assertEquals(text, ByteArrayOutputStreamUtil.textOf(output));
+    }
+
+    @Test
+    void copyStream_small() {
+        String text = generateSampleText(100);
         InputStream input = newInputStream(text);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
 

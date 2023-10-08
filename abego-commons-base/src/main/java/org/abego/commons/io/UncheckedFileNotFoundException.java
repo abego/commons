@@ -27,6 +27,12 @@ package org.abego.commons.io;
 import java.io.FileNotFoundException;
 import java.io.UncheckedIOException;
 
+/**
+ * The "unchecked Exception" version of {@link FileNotFoundException}.
+ *
+ * @deprecated use {@link UncheckedIOException} instead.
+ */
+@Deprecated
 public class UncheckedFileNotFoundException extends UncheckedIOException {
 
     private static final long serialVersionUID = -4974943049510479197L;

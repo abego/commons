@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2021 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,13 @@ import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.abego.commons.lang.StringUtil.stringOrNull;
 
@@ -116,4 +119,16 @@ public final class ListUtil {
         @Nullable Object item = i >= 0 && i < list.size() ? list.get(i) : null;
         return stringOrNull(item);
     }
+
+    /**
+     * Splits the given list into batches of {@code batchSize} items each, and
+     * the remaining items in the last batch.
+     */
+    public static <T> Collection<List<T>> splitInBatches(List<T> list, int batchSize) {
+        AtomicInteger counter = new AtomicInteger();
+        return list.stream().collect(
+                        Collectors.groupingBy(it -> counter.getAndIncrement() / batchSize))
+                .values();
+    }
+
 }

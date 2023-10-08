@@ -106,8 +106,7 @@ class InputStreamUtilTest {
             builder.append(i);
             builder.append("\n");
         }
-        String text = builder.toString();
-        return text;
+        return builder.toString();
     }
 
     @Test

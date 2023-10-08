@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CollectionUtilTest {
 
+    @SuppressWarnings("DataFlowIssue")
     private static final List<?> LIST_1 = list("a", 1, true, null);
     private static final String EXPECTED_1 = "'a', '1', 'true', null";
     /**

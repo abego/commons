@@ -104,6 +104,7 @@ class SeqUtilTest {
 
     @Test
     void sortedBy_WithNullsOK() {
+        //noinspection DataFlowIssue
         Seq<@Nullable String> items = newSeq("c", null, "aaa", null, "BB");
 
         Seq<@Nullable String> result = items.sortedBy(

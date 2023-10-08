@@ -56,6 +56,7 @@ class IterableUtilTest {
     void textOfOk() {
         Iterable<String> empty = list();
         Iterable<String> abc = list("a", "b", "c");
+        //noinspection DataFlowIssue
         Iterable<@Nullable String> abNullc = list("a", "b", null, "c");
 
         assertEquals("", textOf(empty));
@@ -79,6 +80,7 @@ class IterableUtilTest {
     void join_Ok() {
         Iterable<String> empty = list();
         Iterable<String> abc = list("a", "b", "c");
+        //noinspection DataFlowIssue
         Iterable<@Nullable String> abNullc = list("a", "b", null, "c");
 
         assertEquals("", join(", ", empty));
@@ -89,6 +91,7 @@ class IterableUtilTest {
     @Test
     void appendTextOfWithEllipsis() {
         StringBuilder out = new StringBuilder();
+        //noinspection DataFlowIssue
         List<String> items = toList("foo", null, "bar", "", "baz", "doo");
 
         appendTextOf(
@@ -110,6 +113,7 @@ class IterableUtilTest {
 
     @Test
     void toStringOfIterableOk() {
+        //noinspection DataFlowIssue
         List<String> items = toList("foo", null, "bar", "", "baz", "doo");
 
         String actual = toStringOfIterable(items);
@@ -136,6 +140,7 @@ class IterableUtilTest {
     void hashCodeForIterableOk() {
         List<String> abc = list("a", "b", "c");
         List<String> abc2 = list("a", "b", "c");
+        //noinspection DataFlowIssue
         List<@Nullable String> withNull = list("a", null, "b");
 
         // calling the
@@ -159,6 +164,7 @@ class IterableUtilTest {
     void sizeOK() {
         Iterable<String> empty = list();
         Iterable<String> abc = list("a", "b", "c");
+        //noinspection DataFlowIssue
         Iterable<@Nullable String> abNullc = list("a", "b", null, "c");
 
         assertEquals(0, size(empty));

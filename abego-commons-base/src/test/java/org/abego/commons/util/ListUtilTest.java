@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -100,6 +100,7 @@ class ListUtilTest {
 
     @Test
     void list_ok() {
+        //noinspection DataFlowIssue
         List<?> c = list("a", 1, true, null);
 
         assertEquals(4, c.size());
@@ -118,6 +119,7 @@ class ListUtilTest {
 
     @Test
     void nthItemAsStringOrNull_ok() {
+        //noinspection DataFlowIssue
         List<?> c = list("a", 1, true, null);
 
         assertNull(nthItemAsStringOrNull(c, -1));

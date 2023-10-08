@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Udo Borkowski, (ub@abego.org)
+ * Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import org.abego.commons.io.FileUtil;
 import org.abego.commons.lang.exception.MustNotInstantiateException;
 import org.abego.commons.range.IntRange;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.opentest4j.AssertionFailedError;
 
 import java.io.File;
@@ -35,6 +36,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
 import static org.abego.commons.range.IntRangeDefault.newIntRange;
+import static org.abego.commons.test.JUnit5Util.assertEqualLines;
 import static org.abego.commons.test.JUnit5Util.assertIntRangeEquals;
 import static org.abego.commons.test.JUnit5Util.assertTextContains;
 import static org.abego.commons.test.JUnit5Util.assertTextOfFileEquals;
@@ -121,7 +123,7 @@ class JUnit5UtilTest {
                 IllegalArgumentException.class, "foo", () -> {
                     throw new IllegalStateException("foo");
                 }));
-        assertEquals("Unexpected exception type thrown ==> expected: <java.lang.IllegalArgumentException> but was: <java.lang.IllegalStateException>", e.getMessage());
+        assertEquals("Unexpected exception type thrown, expected: <java.lang.IllegalArgumentException> but was: <java.lang.IllegalStateException>", e.getMessage());
 
         // Does not throw
         e = assertThrows(AssertionFailedError.class, () -> assertThrowsWithMessage(
@@ -161,8 +163,25 @@ class JUnit5UtilTest {
         // Fail case
         AssertionFailedError e = assertThrows(AssertionFailedError.class, () -> castOrFail(Double.class, o1));
         assertEquals("expected java.lang.Double, got java.lang.String", e.getMessage());
+    }
 
+    @Test
+    void equalLines() {
+        assertEqualLines("foo\r\nbar\r\n", "foo\nbar\n");
+        assertEqualLines("foo\nbar\n", "foo\r\nbar\r\n");
+    }
 
+    @Test
+    void assertEqualFiles(@TempDir File tempDir) {
+        File dir1 = FileUtil.mkdirs(tempDir, "dir1");
+        File dir2 = FileUtil.mkdirs(tempDir, "dir2");
+        File file1 = new File(tempDir, "dir1/file");
+        File file2 = new File(tempDir, "dir2/file");
+
+        FileUtil.writeText(file1, "foo");
+        FileUtil.writeText(file2, "foo");
+
+        JUnit5Util.assertEqualFiles(dir1, dir2);
     }
 
 }

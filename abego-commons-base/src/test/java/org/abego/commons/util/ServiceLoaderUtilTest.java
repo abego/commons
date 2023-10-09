@@ -36,7 +36,7 @@ import static org.abego.commons.util.ServiceLoaderUtil.loadServices;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ServiceLoaderUtilTest {
+public class ServiceLoaderUtilTest {
 
     @Test
     void constructor() {
@@ -67,7 +67,7 @@ class ServiceLoaderUtilTest {
         assertEquals("No implementation found for interface org.abego.commons.util.ServiceLoaderUtilTest$MyTestInterface", e.getMessage());
     }
 
-    private interface MyTestInterface {
+    public interface MyTestInterface {
     }
 
     @Test

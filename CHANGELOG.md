@@ -61,6 +61,12 @@ Breaking changes are written in **bold**.
 
 - PropertiesGroup: customizable sharedGroupName and configDirectory
 - IterableUtil.appendTextOf allows `null` in items
+- **FileUtil.copyResourcesToDirectory has additional "Class" parameter**
+  - because of fix: copyResourcesToDirectory/copyResourcesToDirectoryFlat fails
+    when running on Java 17
+- **FileUtil.copyResourcesToDirectoryFlat has additional "Class" parameter**
+  - because of fix: copyResourcesToDirectory/copyResourcesToDirectoryFlat fails
+    when running on Java 17
 - **ReaderUtil.reader(File, Charset) throws _IOException_**
 
 ### Deprecated
@@ -76,8 +82,10 @@ Breaking changes are written in **bold**.
 
 ### Fixed
 
-- FileUtil: error when absoluteResourceDirectoryPath in copyResourcesToDirectory/copyResourcesToDirectoryFlat does not
-  end with "/"
+- FileUtil: error when absoluteResourceDirectoryPath/resourceNamePrefix in
+  copyResourcesToDirectory/copyResourcesToDirectoryFlat does not end with "/"
+- FileUtil: copyResourcesToDirectory/copyResourcesToDirectoryFlat fails
+  when running on Java 17
 - PropertiesGroup: getProperty may return null (now defined as @Nullable)
 
 ## [0.12.0] - 2023-03-06

@@ -828,14 +828,15 @@ public final class FileUtil {
 
     public static void copyResourcesToDirectory(
             File directory,
-            String absoluteResourceDirectoryPath,
+            Class<?> theClass,
+            String resourceNamePrefix,
             String... fileNames) {
-        String prefix = ensureTrailingSlash(absoluteResourceDirectoryPath);
+        String prefix = ensureTrailingSlash(resourceNamePrefix);
 
         for (String name : fileNames) {
             //noinspection StringConcatenation
             FileUtil.copyResourceToFile(
-                    Object.class,
+                    theClass,
                     prefix + name,
                     new File(directory, name));
         }
@@ -844,12 +845,13 @@ public final class FileUtil {
     @SuppressWarnings("StringConcatenation")
     public static void copyResourcesToDirectoryFlat(
             File directory,
-            String absoluteResourceDirectoryPath,
+            Class<?> theClass,
+            String resourceNamePrefix,
             String... fileNames) {
-        String prefix = ensureTrailingSlash(absoluteResourceDirectoryPath);
+        String prefix = ensureTrailingSlash(resourceNamePrefix);
         for (String name : fileNames) {
             FileUtil.copyResourceToFile(
-                    Object.class,
+                    theClass,
                     prefix + name,
                     new File(directory, new File(name).getName()));
         }

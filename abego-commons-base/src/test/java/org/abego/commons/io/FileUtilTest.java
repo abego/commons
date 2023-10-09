@@ -880,6 +880,7 @@ class FileUtilTest {
     void copyResourcesToDirectory(@TempDir File tempDir) {
         FileUtil.copyResourcesToDirectory(
                 tempDir,
+                TestData.class,
                 "/org/abego/commons/dir1",
                 "foo.txt", "subdir/bar.txt");
 
@@ -891,6 +892,7 @@ class FileUtilTest {
     void copyResourcesToDirectoryFlat(@TempDir File tempDir) {
         FileUtil.copyResourcesToDirectoryFlat(
                 tempDir,
+                TestData.class,
                 "/org/abego/commons/dir1",
                 "foo.txt", "subdir/bar.txt");
 

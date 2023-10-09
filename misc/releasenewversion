@@ -2,7 +2,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2022 Udo Borkowski, (ub@abego.org)
+# Copyright (c) 2023 Udo Borkowski, (ub@abego.org)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -55,10 +55,10 @@ nextVersion="$2"
 # --- Checking Git stuff --------------------------------------------------
 echo "Checking Git status... "
 
-# Make sure you are on the `master` branch.
+# Make sure you are on the `main` branch.
 branchname=`git rev-parse --abbrev-ref HEAD`
-if [ "$branchname" != "master" ]; then
-   echo "You are not on the 'master' branch."
+if [ "$branchname" != "main" ]; then
+   echo "You are not on the 'main' branch."
    exit 1
 fi
 
@@ -121,7 +121,7 @@ echo "Deploying release ${version} to Maven Central..."
 # checkout the release version (by tag)
 git checkout "v${version}"
 mvn -DskipTests=true -P release-sign-artifacts clean deploy
-git checkout master # back to main development
+git checkout main # back to main development
 
 echo
 echo "Automatic part of releasing ${version} completed."

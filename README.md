@@ -4,7 +4,7 @@ abego Commons is a collection of utilities to simplify Java development.
 
 ## Download
 
-__Download:__ https://github.com/abego/commons/releases/tag/v0.12.0
+__Download:__ https://github.com/abego/commons/releases/tag/v1.0.0
 
 __Maven:__
 
@@ -12,7 +12,7 @@ __Maven:__
 <dependency>
     <groupId>org.abego.commons</groupId>
     <artifactId>abego-commons-base</artifactId>
-    <version>0.12.0</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -20,7 +20,7 @@ __Maven:__
 <dependency>
     <groupId>org.abego.commons</groupId>
     <artifactId>abego-commons-test</artifactId>
-    <version>0.12.0</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 

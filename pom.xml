@@ -97,7 +97,7 @@
         <!-- version infos -->
         <abego-commons-base.version>${project.version}</abego-commons-base.version>
         <abego-commons-test.version>${project.version}</abego-commons-test.version>
-        <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
         <lombok.version>1.18.8</lombok.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>

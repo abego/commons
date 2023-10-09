@@ -1,6 +1,86 @@
 # CHANGELOG
 
-## 0.12.0
+All notable changes to this project will be documented in this file.
+
+This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Breaking changes are written in **bold**.
+
+## [1.0.0] - 2023-10-09
+
+### Added
+
+#### Packages
+
+- lineprocessing
+
+#### Classes
+
+- ClassLoaderUtil
+- DateUtil
+- FormattedTextProcessorForHTML
+- IORunnable
+- ProcessUtil
+- SeparatedItemScanner
+- SystemTesting
+
+#### Methods
+
+- ArrayUtil.concatenate
+- ArrayUtil.firstOrNull
+- FileUtil.allFilesExist
+- FileUtil.copyFilesDeep
+- FileUtil.copyFilesInDirectoryDeep
+- FileUtil.copyResourcesDeep
+- FileUtil.copyResourcesInLocationDeep
+- FileUtil.filePathLines
+- FileUtil.filesInDirectory
+- FileUtil.filesInDirectoryAndDeeper
+- FileUtil.parseFiles (replaces filesFromFilePathes)
+- FileUtil.withFilesInDirectoryAndDeeperDo
+- InputStreamUtil.copyStream
+- IterableUtil.firstOrNull
+- JUnit5Util.assertEqualFiles
+- JUnit5Util.assertEqualLines
+- ListUtil.splitInBatches
+- LoggerUtil.logStringsAsWarnings
+- ServiceLoaderUtil.loadService // new overloads
+- ServiceLoaderUtil.loadServices // multiple overloads
+- StringUtil.escapeForHtml
+- StringUtil.indent
+- StringUtil.lineCount
+- StringUtil.lines
+- StringUtil.prefixBefore
+- StringUtil.removePrefix
+- StringUtil.slashesToDots
+- StringUtil.sortedUnixLines
+- StringUtil.unixString
+- ThrowableUtil.messageOrToString
+- URLUtil.asJarProtocolURL
+
+### Changed
+
+- PropertiesGroup: customizable sharedGroupName and configDirectory
+- IterableUtil.appendTextOf allows `null` in items
+- **ReaderUtil.reader(File, Charset) throws _IOException_**
+
+### Deprecated
+
+- class LineProcessor
+- method InputStreamUtil.readLineWise
+
+### Removed
+
+- **package stringpool**
+- **method FileUtil.filesFromFilePathes**
+- **method URLUtil.toFile(URL)**
+
+### Fixed
+
+- FileUtil: error when absoluteResourceDirectoryPath in copyResourcesToDirectory/copyResourcesToDirectoryFlat does not
+  end with "/"
+- PropertiesGroup: getProperty may return null (now defined as @Nullable)
+
+## [0.12.0] - 2023-03-06
 
 ### New
 
@@ -117,7 +197,7 @@
 - more tests
 - reduce warnings
 
-## 0.11.0
+## [0.11.0] - 2021-04-09
 
 ### New
 
@@ -164,7 +244,7 @@
 - increase code coverage
 - Improved JavaDoc
 
-## 0.10.0
+## [0.10.0] - 2020-06-03
 
 ### New
 
@@ -376,7 +456,7 @@
 
 - Various improvements, for details see Git log ("Improve:...")
 
-## 0.9.5
+## [0.9.5] - 2019-02-24
 
 ### New
 
@@ -395,7 +475,7 @@
 
 - Fix JavaDoc issues
 
-## 0.9.4
+## [0.9.4] - 2019-02-19
 
 ### New
 
@@ -453,6 +533,6 @@
 
 - ToFileInHeaderLineWriter fails when directory for output is missing
 
-## 0.9.3
+## [0.9.3] - 2018-12-28
 
 - Initial Release

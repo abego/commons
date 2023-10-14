@@ -7,6 +7,11 @@ Breaking changes are written in **bold**.
 
 ## [Unreleased]
 
+## [1.1.0] - 2023-10-14
+
+Re-release, same contents as 1.0.0.
+(Publish process to Nexus had problems, 1.0.0 was removed)
+
 ## [1.0.0] - 2023-10-09
 
 ### Added
